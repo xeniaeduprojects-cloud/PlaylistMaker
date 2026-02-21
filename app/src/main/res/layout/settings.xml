@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
@@ -8,32 +9,21 @@
         android:background="@color/yp_white"
         android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:gravity="center_vertical"
             android:paddingTop="10dp"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
-            android:paddingBottom="6dp">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/return_from_settings_button"
-                android:src="@drawable/ic_arrow_left" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="@string/settings"
-                android:textColor="@color/yp_black"
-                android:fontFamily="@font/ys_display_medium"
-                android:letterSpacing="0"
-                android:textSize="22sp" />
-        </LinearLayout>
+            android:paddingBottom="6dp"
+            app:drawableStartCompat="@drawable/ic_arrow_left"
+            android:drawablePadding="8dp"
+            android:text="@string/settings"
+            android:textColor="@color/yp_black"
+            android:fontFamily="@font/ys_display_medium"
+            android:letterSpacing="0"
+            android:textSize="22sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
