@@ -1,43 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="@color/yp_blue"
-    android:padding="16dp">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/playlist_maker"
-        android:textColor="@color/yp_white"
-        android:fontFamily="@font/ys_display_medium"
-        android:letterSpacing="0"
-        android:textSize="22sp"
-        android:paddingBottom="16dp" />
+        android:layout_height="match_parent"
+        android:background="@color/yp_blue"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btnSearch"
-        style="@style/MainMenuButton"
-        android:layout_marginBottom="8dp"
-        android:text="@string/search"
-        app:icon="@drawable/ic_search" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="6dp"
+            android:text="@string/playlist_maker"
+            android:textColor="@color/yp_white"
+            android:fontFamily="@font/ys_display_medium"
+            android:letterSpacing="0"
+            android:textSize="22sp" />
 
-    <Button
-        android:id="@+id/btnMediaLibrary"
-        style="@style/MainMenuButton"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="@string/media_library"
-        app:icon="@drawable/ic_media" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-    <Button
-        android:id="@+id/btnSettings"
-        style="@style/MainMenuButton"
-        android:layout_marginTop="8dp"
-        android:text="@string/settings"
-        app:icon="@drawable/ic_settings" />
+            <Button
+                android:id="@+id/btnSearch"
+                style="@style/MainMenuButton"
+                android:layout_marginBottom="8dp"
+                android:text="@string/search"
+                app:icon="@drawable/ic_search" />
 
-</LinearLayout>
+            <Button
+                android:id="@+id/btnMediaLibrary"
+                style="@style/MainMenuButton"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/media_library"
+                app:icon="@drawable/ic_media" />
+
+            <Button
+                android:id="@+id/btnSettings"
+                style="@style/MainMenuButton"
+                android:layout_marginTop="8dp"
+                android:text="@string/settings"
+                app:icon="@drawable/ic_settings" />
+
+        </LinearLayout>
+    </LinearLayout>
+</layout>
