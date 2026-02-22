@@ -48,7 +48,7 @@
                 android:contentDescription="@{title}"
                 android:src="@{icon}"
                 android:visibility="@{showSwitch ? View.GONE : View.VISIBLE}"
-                app:tint="@color/yp_black"
+                app:tint="@color/yp_grey"
                 tools:visibility="gone"
                 tools:src="@drawable/ic_arrow_forward" />
 
