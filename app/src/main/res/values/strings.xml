@@ -9,4 +9,6 @@
     <string name="settings_support">Написать в поддержку</string>
     <string name="settings_user_agreement">Пользовательское соглашение</string>
     <string name="return_from_settings_button">Вернуться из настроек</string>
+    <string name="media_library_placeholder">Media library</string>
+    <string name="search_menu_placeholder">Search menu</string>
 </resources>
