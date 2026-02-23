@@ -9,40 +9,28 @@
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbarMain"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/header_padding_top"
-        android:paddingBottom="@dimen/header_padding_bottom"
+        style="@style/AppToolbar"
         app:title="@string/playlist_maker"
-        app:titleTextAppearance="@style/SettingsToolbarTitle"
         app:titleTextColor="@color/yp_white" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSearch"
         style="@style/MainMenuButton"
-        android:layout_marginStart="@dimen/content_padding"
         android:layout_marginTop="@dimen/content_padding"
-        android:layout_marginEnd="@dimen/content_padding"
-        android:layout_marginBottom="@dimen/button_margin"
         android:text="@string/search"
         app:icon="@drawable/ic_search" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnMediaLibrary"
         style="@style/MainMenuButton"
-        android:layout_marginStart="@dimen/content_padding"
         android:layout_marginTop="@dimen/button_margin"
-        android:layout_marginEnd="@dimen/content_padding"
-        android:layout_marginBottom="@dimen/button_margin"
         android:text="@string/media_library"
         app:icon="@drawable/ic_media" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSettings"
         style="@style/MainMenuButton"
-        android:layout_marginStart="@dimen/content_padding"
         android:layout_marginTop="@dimen/button_margin"
-        android:layout_marginEnd="@dimen/content_padding"
         android:text="@string/settings"
         app:icon="@drawable/ic_settings" />
 </LinearLayout>

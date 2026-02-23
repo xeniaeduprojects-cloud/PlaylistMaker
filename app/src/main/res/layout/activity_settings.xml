@@ -9,14 +9,10 @@
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbarSettings"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/header_padding_top"
-        android:paddingBottom="@dimen/header_padding_bottom"
+        style="@style/AppToolbar"
         app:navigationIcon="@drawable/ic_arrow_left"
         app:title="@string/settings"
-        app:titleTextColor="@color/yp_black"
-        app:titleTextAppearance="@style/SettingsToolbarTitle" />
+        app:titleTextColor="@color/yp_black" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:layout_width="match_parent"
@@ -30,29 +26,17 @@
         android:textSize="@dimen/settings_item_text_size" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/SettingsMenuItem"
         android:drawableEnd="@drawable/ic_share"
-        android:paddingHorizontal="@dimen/content_padding"
-        android:paddingVertical="@dimen/settings_item_padding_vertical"
-        android:text="@string/settings_share"
-        android:textSize="@dimen/settings_item_text_size" />
+        android:text="@string/settings_share" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/SettingsMenuItem"
         android:drawableEnd="@drawable/ic_support"
-        android:paddingHorizontal="@dimen/content_padding"
-        android:paddingVertical="@dimen/settings_item_padding_vertical"
-        android:text="@string/settings_support"
-        android:textSize="@dimen/settings_item_text_size" />
+        android:text="@string/settings_support" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/SettingsMenuItem"
         android:drawableEnd="@drawable/ic_arrow_forward"
-        android:paddingHorizontal="@dimen/content_padding"
-        android:paddingVertical="@dimen/settings_item_padding_vertical"
-        android:text="@string/settings_user_agreement"
-        android:textSize="@dimen/settings_item_text_size" />
+        android:text="@string/settings_user_agreement" />
 </LinearLayout>
