@@ -27,6 +27,7 @@
         <item name="android:paddingHorizontal">@dimen/content_padding</item>
         <item name="android:paddingVertical">@dimen/settings_item_padding_vertical</item>
         <item name="android:textSize">@dimen/settings_item_text_size</item>
+        <item name="android:textColor">@color/yp_black</item>
     </style>
 
     <style name="MainMenuButton" parent="Widget.MaterialComponents.Button">
