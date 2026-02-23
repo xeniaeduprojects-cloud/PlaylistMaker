@@ -1,6 +1,5 @@
 package com.praktikum.playlistmaker
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -22,8 +21,7 @@ class SettingsActivity : AppCompatActivity() {
 
         val btnReturnFromSettings = binding.btnReturnFromSettings
         btnReturnFromSettings.setOnClickListener {
-            val displayIntent = Intent(this, MainActivity::class.java)
-            startActivity(displayIntent)
+            finish()
         }
     }
 }
