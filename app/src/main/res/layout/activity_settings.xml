@@ -4,15 +4,16 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/yp_white"
+    android:background="?attr/colorSecondary"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbarSettings"
         style="@style/AppToolbar"
         app:navigationIcon="@drawable/ic_arrow_left"
+        app:navigationIconTint="?attr/colorOnSecondary"
         app:title="@string/settings"
-        app:titleTextColor="@color/yp_black" />
+        app:titleTextColor="?attr/colorOnSecondary" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:layout_width="match_parent"

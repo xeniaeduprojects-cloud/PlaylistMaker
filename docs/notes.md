@@ -33,4 +33,14 @@ https://developer.android.com/develop/ui/views/layout/responsive-adaptive-design
 
 To Do:
 - [x] buttons looks similar, can I use some common "parent" xml tag for them?
-- [ ] double check if it can be used (see: https://habr.com/ru/companies/yandex/articles/282534/)
+- [x] double check if it can be used (see: https://habr.com/ru/companies/yandex/articles/282534/)
+
+## Emulator
+
+```
+adb shell "cmd uimode night yes"
+```
+
+```
+adb shell "cmd uimode night no"
+```
