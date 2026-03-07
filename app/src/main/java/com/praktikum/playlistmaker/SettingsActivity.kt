@@ -1,11 +1,13 @@
 package com.praktikum.playlistmaker
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.praktikum.playlistmaker.databinding.ActivitySettingsBinding
+import androidx.core.net.toUri
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,6 +23,32 @@ class SettingsActivity : AppCompatActivity() {
 
         binding.toolbarSettings.setNavigationOnClickListener {
             finish()
+        }
+
+        binding.textViewShare.setOnClickListener {
+            val message = getString(R.string.share_message)
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, message)
+            }
+
+            val title = getString(R.string.share_chooser_title)
+            startActivity(Intent.createChooser(intent, title));
+        }
+
+        binding.textViewSupport.setOnClickListener {
+            val intent = Intent(Intent.ACTION_SENDTO).apply {
+                data = "mailto:".toUri()
+                putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.support_email)))
+                putExtra(Intent.EXTRA_SUBJECT, getString(R.string.support_email_subject))
+                putExtra(Intent.EXTRA_TEXT, getString(R.string.support_email_text))
+            }
+            startActivity(intent)
+        }
+
+        binding.textViewUserAgreement.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, getString(R.string.user_agreement_url).toUri())
+            startActivity(intent)
         }
     }
 }

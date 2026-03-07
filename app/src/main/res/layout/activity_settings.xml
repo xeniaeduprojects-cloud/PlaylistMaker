@@ -16,6 +16,7 @@
         app:titleTextColor="?attr/colorOnSecondary" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/switchDarkTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/content_margin_top"
@@ -27,16 +28,19 @@
         android:textSize="@dimen/settings_item_text_size" />
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textViewShare"
         style="@style/SettingsMenuItem"
         android:drawableEnd="@drawable/ic_share"
         android:text="@string/settings_share" />
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textViewSupport"
         style="@style/SettingsMenuItem"
         android:drawableEnd="@drawable/ic_support"
         android:text="@string/settings_support" />
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textViewUserAgreement"
         style="@style/SettingsMenuItem"
         android:drawableEnd="@drawable/ic_arrow_forward"
         android:text="@string/settings_user_agreement" />
