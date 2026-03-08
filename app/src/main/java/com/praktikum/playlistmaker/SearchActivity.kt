@@ -1,6 +1,7 @@
 package com.praktikum.playlistmaker
 
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -12,11 +13,16 @@ import androidx.core.view.WindowInsetsCompat
 import com.praktikum.playlistmaker.databinding.ActivitySearchBinding
 
 class SearchActivity : AppCompatActivity() {
+    companion object {
+        private const val SEARCH_QUERY_KEY = "search_query"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivitySearchBinding.inflate(layoutInflater)
         enableEdgeToEdge()
         setContentView(binding.root)
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -40,6 +46,26 @@ class SearchActivity : AppCompatActivity() {
 
             WindowCompat.getInsetsController(window, binding.searchEditText)
                 .hide(WindowInsetsCompat.Type.ime())
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        val binding = ActivitySearchBinding.inflate(layoutInflater)
+        outState.putString(SEARCH_QUERY_KEY, binding.searchEditText.text.toString())
+    }
+
+    override fun onRestoreInstanceState(
+        savedInstanceState: Bundle?,
+        persistentState: PersistableBundle?
+    ) {
+        super.onRestoreInstanceState(savedInstanceState, persistentState)
+
+        savedInstanceState?.let {
+            val binding = ActivitySearchBinding.inflate(layoutInflater)
+            val searchQuery = it.getString(SEARCH_QUERY_KEY, "")
+            binding.searchEditText.setText(searchQuery)
         }
     }
 }
