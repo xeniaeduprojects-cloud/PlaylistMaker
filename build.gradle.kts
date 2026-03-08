@@ -5,3 +5,11 @@ plugins {
     alias(libs.plugins.ktlint) apply false
     alias(libs.plugins.detekt) apply false
 }
+
+tasks.register<Copy>("installGitHooks") {
+    from(file(".githooks"))
+    into(file(".git/hooks"))
+    filePermissions {
+        unix("rwxr-xr-x")
+    }
+}

@@ -1,0 +1,27 @@
+#!/bin/sh
+
+echo "Running ktlint format..."
+./gradlew ktlintFormat
+
+if [ $? -ne 0 ]; then
+    echo "ktlint format failed."
+    exit 1
+fi
+
+echo "Running ktlint check..."
+./gradlew ktlintCheck
+
+if [ $? -ne 0 ]; then
+    echo "ktlint check failed"
+    exit 1
+fi
+
+echo "Running detekt..."
+./gradlew detekt
+
+if [ $? -ne 0 ]; then
+    echo "detekt found issues"
+    exit 1
+fi
+
+exit 0
