@@ -1,16 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="spacing_small">8dp</dimen>
+    <dimen name="spacing_medium">12dp</dimen>
+    <dimen name="spacing_large">16dp</dimen>
+    <dimen name="text_size_normal">16sp</dimen>
     <dimen name="header_padding_top">10dp</dimen>
-    <dimen name="header_padding_start">12dp</dimen>
-    <dimen name="header_padding_end">12dp</dimen>
+    <dimen name="header_padding_start">@dimen/spacing_medium</dimen>
+    <dimen name="header_padding_end">@dimen/spacing_medium</dimen>
     <dimen name="header_padding_bottom">6dp</dimen>
     <dimen name="header_text_size">22sp</dimen>
-    <dimen name="header_text_margin_start">8dp</dimen>
-    <dimen name="content_padding">16dp</dimen>
-    <dimen name="content_margin_top">16dp</dimen>
-    <dimen name="button_margin">8dp</dimen>
+    <dimen name="header_text_margin_start">@dimen/spacing_small</dimen>
+    <dimen name="content_padding">@dimen/spacing_large</dimen>
+    <dimen name="content_margin_top">@dimen/spacing_large</dimen>
+    <dimen name="button_margin">@dimen/spacing_small</dimen>
+    <dimen name="search_corner_radius">8dp</dimen>
     <dimen name="button_corner_radius">16dp</dimen>
     <dimen name="settings_item_height">56dp</dimen>
-    <dimen name="settings_item_text_size">16sp</dimen>
+    <dimen name="settings_item_text_size">@dimen/text_size_normal</dimen>
     <dimen name="settings_item_padding_vertical">20dp</dimen>
+    <dimen name="search_drawable_padding">@dimen/spacing_small</dimen>
+    <dimen name="search_padding_start">@dimen/spacing_medium</dimen>
+    <dimen name="search_padding_end">36dp</dimen>
+    <dimen name="search_text_size">@dimen/text_size_normal</dimen>
 </resources>

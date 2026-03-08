@@ -11,4 +11,39 @@
         android:id="@+id/toolbarSearch"
         style="@style/ScreenToolbar"
         app:title="@string/search" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginHorizontal="@dimen/content_padding"
+        android:background="@drawable/rounded_search_bar">
+
+        <EditText
+            android:id="@+id/searchEditText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:autofillHints="search"
+            android:background="@null"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="@dimen/search_drawable_padding"
+            android:hint="@string/search"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingStart="@dimen/search_padding_start"
+            android:paddingEnd="@dimen/search_padding_end"
+            android:textColor="@color/yp_black"
+            android:textColorHint="@color/yp_search_hint"
+            android:textSize="@dimen/search_text_size" />
+
+        <ImageView
+            android:id="@+id/searchClearButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:contentDescription="@string/clear_search"
+            android:src="@drawable/ic_cross"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
 </LinearLayout>
