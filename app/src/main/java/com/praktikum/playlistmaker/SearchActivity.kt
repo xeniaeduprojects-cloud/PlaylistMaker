@@ -1,7 +1,6 @@
 package com.praktikum.playlistmaker
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -16,10 +15,13 @@ class SearchActivity : AppCompatActivity() {
     companion object {
         private const val SEARCH_QUERY_KEY = "search_query"
     }
+    private lateinit var binding: ActivitySearchBinding
+    private var searchQuery = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivitySearchBinding.inflate(layoutInflater)
+        binding = ActivitySearchBinding.inflate(layoutInflater)
+
         enableEdgeToEdge()
         setContentView(binding.root)
 
@@ -38,7 +40,9 @@ class SearchActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.searchClearButton.visibility = if (s.isNullOrEmpty()) View.GONE else View.VISIBLE
             }
-            override fun afterTextChanged(s: Editable?) {}
+            override fun afterTextChanged(s: Editable?) {
+                searchQuery = s.toString()
+            }
         })
 
         binding.searchClearButton.setOnClickListener {
@@ -51,21 +55,14 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-
-        val binding = ActivitySearchBinding.inflate(layoutInflater)
-        outState.putString(SEARCH_QUERY_KEY, binding.searchEditText.text.toString())
+        outState.putString(SEARCH_QUERY_KEY, searchQuery)
     }
 
     override fun onRestoreInstanceState(
-        savedInstanceState: Bundle?,
-        persistentState: PersistableBundle?
+        savedInstanceState: Bundle
     ) {
-        super.onRestoreInstanceState(savedInstanceState, persistentState)
-
-        savedInstanceState?.let {
-            val binding = ActivitySearchBinding.inflate(layoutInflater)
-            val searchQuery = it.getString(SEARCH_QUERY_KEY, "")
-            binding.searchEditText.setText(searchQuery)
-        }
+        super.onRestoreInstanceState(savedInstanceState)
+        searchQuery = savedInstanceState.getString(SEARCH_QUERY_KEY, "")
+        binding.searchEditText.setText(searchQuery)
     }
 }
