@@ -14,7 +14,7 @@
 
 - https://developer.android.com/topic/architecture/ui-layer#naming-conventions
 
-## Emulator
+## Commands
 
 ```bash
 adb shell "cmd uimode night yes"
@@ -22,4 +22,8 @@ adb shell "cmd uimode night yes"
 
 ```bash
 adb shell "cmd uimode night no"
+```
+
+```bash
+./gradlew installGitHooks
 ```
