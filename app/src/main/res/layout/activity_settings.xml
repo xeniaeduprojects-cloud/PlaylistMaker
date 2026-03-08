@@ -16,13 +16,13 @@
         android:id="@+id/switchDarkTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/content_margin_top"
+        android:layout_marginTop="@dimen/spacing_lg"
         android:gravity="center_vertical"
-        android:paddingHorizontal="@dimen/content_padding"
-        android:paddingVertical="@dimen/settings_item_padding_vertical"
+        android:paddingHorizontal="@dimen/spacing_lg"
+        android:paddingVertical="@dimen/spacing_xl"
         android:checked="true"
         android:text="@string/settings_dark_theme"
-        android:textSize="@dimen/settings_item_text_size" />
+        android:textSize="@dimen/text_body" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/textViewShare"

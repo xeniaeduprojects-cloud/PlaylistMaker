@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary"
     android:orientation="vertical"
-    android:paddingTop="@dimen/content_padding">
+    android:paddingTop="@dimen/spacing_lg">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbarMain"
