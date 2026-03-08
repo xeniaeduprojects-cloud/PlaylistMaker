@@ -9,11 +9,8 @@
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbarSettings"
-        style="@style/AppToolbar"
-        app:navigationIcon="@drawable/ic_arrow_left"
-        app:navigationIconTint="?attr/colorOnSecondary"
-        app:title="@string/settings"
-        app:titleTextColor="?attr/colorOnSecondary" />
+        style="@style/ScreenToolbar"
+        app:title="@string/settings" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/switchDarkTheme"

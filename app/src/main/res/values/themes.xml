@@ -24,6 +24,12 @@
         <item name="titleTextAppearance">@style/SettingsToolbarTitle</item>
     </style>
 
+    <style name="ScreenToolbar" parent="AppToolbar">
+        <item name="navigationIcon">@drawable/ic_arrow_left</item>
+        <item name="navigationIconTint">?attr/colorOnSecondary</item>
+        <item name="titleTextColor">?attr/colorOnSecondary</item>
+    </style>
+
     <style name="SettingsMenuItem">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
