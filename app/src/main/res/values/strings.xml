@@ -8,9 +8,7 @@
     <string name="settings_share">Поделиться приложением</string>
     <string name="settings_support">Написать в поддержку</string>
     <string name="settings_user_agreement">Пользовательское соглашение</string>
-    <string name="return_from_settings_button">Вернуться из настроек</string>
     <string name="media_library_placeholder">Media library</string>
-    <string name="search_menu_placeholder">Search menu</string>
     <string name="share_message">Курс Андроид разработчик: https://practicum.yandex.com/android-developer/</string>
     <string name="share_chooser_title">Поделиться через</string>
     <string name="support_email">support@example.com</string>
