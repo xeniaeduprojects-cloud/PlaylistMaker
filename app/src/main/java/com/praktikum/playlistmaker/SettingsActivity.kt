@@ -1,15 +1,15 @@
 package com.praktikum.playlistmaker
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import android.content.res.Configuration
+import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.praktikum.playlistmaker.databinding.ActivitySettingsBinding
-import androidx.core.net.toUri
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,29 +32,34 @@ class SettingsActivity : AppCompatActivity() {
 
         binding.switchDarkTheme.setOnCheckedChangeListener { _, isChecked ->
             AppCompatDelegate.setDefaultNightMode(
-                if (isChecked) AppCompatDelegate.MODE_NIGHT_YES
-                else AppCompatDelegate.MODE_NIGHT_NO
+                if (isChecked) {
+                    AppCompatDelegate.MODE_NIGHT_YES
+                } else {
+                    AppCompatDelegate.MODE_NIGHT_NO
+                },
             )
         }
 
         binding.textViewShare.setOnClickListener {
             val message = getString(R.string.share_message)
-            val intent = Intent(Intent.ACTION_SEND).apply {
-                type = "text/plain"
-                putExtra(Intent.EXTRA_TEXT, message)
-            }
+            val intent =
+                Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, message)
+                }
 
             val title = getString(R.string.share_chooser_title)
             startActivity(Intent.createChooser(intent, title))
         }
 
         binding.textViewSupport.setOnClickListener {
-            val intent = Intent(Intent.ACTION_SENDTO).apply {
-                data = "mailto:".toUri()
-                putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.support_email)))
-                putExtra(Intent.EXTRA_SUBJECT, getString(R.string.support_email_subject))
-                putExtra(Intent.EXTRA_TEXT, getString(R.string.support_email_text))
-            }
+            val intent =
+                Intent(Intent.ACTION_SENDTO).apply {
+                    data = "mailto:".toUri()
+                    putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.support_email)))
+                    putExtra(Intent.EXTRA_SUBJECT, getString(R.string.support_email_subject))
+                    putExtra(Intent.EXTRA_TEXT, getString(R.string.support_email_text))
+                }
             startActivity(intent)
         }
 

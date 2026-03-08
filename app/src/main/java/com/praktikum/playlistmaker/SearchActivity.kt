@@ -15,6 +15,7 @@ class SearchActivity : AppCompatActivity() {
     companion object {
         private const val SEARCH_QUERY_KEY = "search_query"
     }
+
     private lateinit var binding: ActivitySearchBinding
     private var searchQuery = ""
 
@@ -35,20 +36,37 @@ class SearchActivity : AppCompatActivity() {
             finish()
         }
 
-        binding.searchEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.searchClearButton.visibility = if (s.isNullOrEmpty()) View.GONE else View.VISIBLE
-            }
-            override fun afterTextChanged(s: Editable?) {
-                searchQuery = s.toString()
-            }
-        })
+        binding.searchEditText.addTextChangedListener(
+            object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int,
+                ) {
+                    // Not used
+                }
+
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int,
+                ) {
+                    binding.searchClearButton.visibility = if (s.isNullOrEmpty()) View.GONE else View.VISIBLE
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                    searchQuery = s.toString()
+                }
+            },
+        )
 
         binding.searchClearButton.setOnClickListener {
             binding.searchEditText.text.clear()
 
-            WindowCompat.getInsetsController(window, binding.searchEditText)
+            WindowCompat
+                .getInsetsController(window, binding.searchEditText)
                 .hide(WindowInsetsCompat.Type.ime())
         }
     }
@@ -58,9 +76,7 @@ class SearchActivity : AppCompatActivity() {
         outState.putString(SEARCH_QUERY_KEY, searchQuery)
     }
 
-    override fun onRestoreInstanceState(
-        savedInstanceState: Bundle
-    ) {
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         searchQuery = savedInstanceState.getString(SEARCH_QUERY_KEY, "")
         binding.searchEditText.setText(searchQuery)
