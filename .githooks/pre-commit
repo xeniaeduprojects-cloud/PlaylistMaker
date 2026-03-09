@@ -1,27 +1,30 @@
 #!/bin/sh
+set -e
+
+echo "Stashing unstaged changes..."
+git stash push --keep-index --quiet -m "pre-format-unstaged"
+
+RESTORE_STASH=0
+if git stash list | grep -q "pre-format-unstaged"; then
+    RESTORE_STASH=1
+fi
 
 echo "Running ktlint format..."
 ./gradlew ktlintFormat
 
-if [ $? -ne 0 ]; then
-    echo "ktlint format failed."
-    exit 1
-fi
+git add -u
 
 echo "Running ktlint check..."
 ./gradlew ktlintCheck
 
-if [ $? -ne 0 ]; then
-    echo "ktlint check failed"
-    exit 1
-fi
-
 echo "Running detekt..."
 ./gradlew detekt
 
-if [ $? -ne 0 ]; then
-    echo "detekt found issues"
-    exit 1
+if ! git diff --cached --quiet; then
+    git commit -m "Apply ktlint formatting"
 fi
 
-exit 0
+if [ "$RESTORE_STASH" -eq 1 ]; then
+    echo "Restoring unstaged changes..."
+    git stash pop --quiet
+fi
