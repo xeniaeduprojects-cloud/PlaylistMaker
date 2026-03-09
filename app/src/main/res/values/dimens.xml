@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="header_padding_top">10dp</dimen>
-    <dimen name="header_padding_start">12dp</dimen>
-    <dimen name="header_padding_end">12dp</dimen>
-    <dimen name="header_padding_bottom">6dp</dimen>
-    <dimen name="header_text_size">22sp</dimen>
-    <dimen name="header_text_margin_start">8dp</dimen>
-    <dimen name="content_padding">16dp</dimen>
-    <dimen name="content_margin_top">16dp</dimen>
-    <dimen name="button_margin">8dp</dimen>
-    <dimen name="button_corner_radius">16dp</dimen>
-    <dimen name="settings_item_height">56dp</dimen>
-    <dimen name="settings_item_text_size">16sp</dimen>
-    <dimen name="settings_item_padding_vertical">20dp</dimen>
+    <!-- Spacing -->
+    <dimen name="spacing_xs">6dp</dimen>
+    <dimen name="spacing_sm">8dp</dimen>
+    <dimen name="spacing_md">12dp</dimen>
+    <dimen name="spacing_lg">16dp</dimen>
+    <dimen name="spacing_xl">20dp</dimen>
+
+    <!-- Text sizes -->
+    <dimen name="text_body">16sp</dimen>
+    <dimen name="text_title">22sp</dimen>
+
+    <!-- Component-specific -->
+    <dimen name="toolbar_padding_top">10dp</dimen>
+    <dimen name="corner_radius_sm">8dp</dimen>
+    <dimen name="corner_radius_md">16dp</dimen>
+    <dimen name="search_padding_end">36dp</dimen>
 </resources>

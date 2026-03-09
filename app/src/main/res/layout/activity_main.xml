@@ -4,33 +4,46 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/yp_blue"
-    android:orientation="vertical">
+    android:background="?attr/colorPrimary"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/spacing_lg">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbarMain"
         style="@style/AppToolbar"
         app:title="@string/playlist_maker"
-        app:titleTextColor="@color/yp_white" />
+        app:titleTextColor="?attr/colorOnPrimary" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSearch"
         style="@style/MainMenuButton"
-        android:layout_marginTop="@dimen/content_padding"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="@dimen/spacing_lg"
+        android:layout_marginBottom="@dimen/spacing_sm"
         android:text="@string/search"
         app:icon="@drawable/ic_search" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnMediaLibrary"
         style="@style/MainMenuButton"
-        android:layout_marginTop="@dimen/button_margin"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="@dimen/spacing_lg"
+        android:layout_marginBottom="@dimen/spacing_sm"
         android:text="@string/media_library"
         app:icon="@drawable/ic_media" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSettings"
         style="@style/MainMenuButton"
-        android:layout_marginTop="@dimen/button_margin"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginHorizontal="@dimen/spacing_lg"
+        android:layout_marginBottom="@dimen/spacing_sm"
         android:text="@string/settings"
         app:icon="@drawable/ic_settings" />
 </LinearLayout>
