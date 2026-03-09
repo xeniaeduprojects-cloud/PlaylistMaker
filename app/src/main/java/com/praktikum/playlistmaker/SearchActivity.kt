@@ -1,14 +1,13 @@
 package com.praktikum.playlistmaker
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import com.praktikum.playlistmaker.databinding.ActivitySearchBinding
 
 class SearchActivity : AppCompatActivity() {
@@ -37,28 +36,11 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.searchEditText.addTextChangedListener(
-            object : TextWatcher {
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int,
-                ) {
-                    // Not used
-                }
-
-                override fun onTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    before: Int,
-                    count: Int,
-                ) {
-                    binding.searchClearButton.visibility = if (s.isNullOrEmpty()) View.GONE else View.VISIBLE
-                }
-
-                override fun afterTextChanged(s: Editable?) {
-                    searchQuery = s.toString()
-                }
+            onTextChanged = { s, _, _, _ ->
+                binding.searchClearButton.isVisible = !s.isNullOrEmpty()
+            },
+            afterTextChanged = { s ->
+                searchQuery = s.toString()
             },
         )
 
