@@ -9,7 +9,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.praktikum.playlistmaker.databinding.ActivityMainBinding
 import com.praktikum.playlistmaker.medialibrary.MediaLibraryActivity
-import com.praktikum.playlistmaker.search.SearchActivity
+import com.praktikum.playlistmaker.search.ui.SearchActivity
 import com.praktikum.playlistmaker.settings.SettingsActivity
 
 class MainActivity : AppCompatActivity() {

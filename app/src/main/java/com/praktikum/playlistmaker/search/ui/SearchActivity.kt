@@ -1,4 +1,4 @@
-package com.praktikum.playlistmaker.search
+package com.praktikum.playlistmaker.search.ui
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -8,7 +8,9 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.praktikum.playlistmaker.databinding.ActivitySearchBinding
+import com.praktikum.playlistmaker.search.data.model.Track
 
 class SearchActivity : AppCompatActivity() {
     companion object {
@@ -17,6 +19,8 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySearchBinding
     private var searchQuery = ""
+    private val tracks = mutableListOf<Track>()
+    private lateinit var trackAdapter: TrackAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +37,36 @@ class SearchActivity : AppCompatActivity() {
 
         binding.toolbarSearch.setNavigationOnClickListener {
             finish()
+        }
+
+        tracks.addAll(
+            listOf(
+                Track(
+                    trackName = "Smells Like Teen Spirit",
+                    artistName = "Nirvana",
+                    trackTime = "5:01",
+                    artworkUrl100 =
+                        "https://is5-ssl.mzstatic.com/image/thumb/Music115/v" +
+                            "4/7b/58/c2/7b58c23a-f5a5-5a7c-b9f5-8d5d8f5d5f5d/source/100x100bb.jpg",
+                ),
+                Track(
+                    trackName = "Billie Jean",
+                    artistName = "Michael Jackson",
+                    trackTime = "4:53",
+                    artworkUrl100 =
+                        "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4" +
+                            "/3d/9d/38/3d9d3811-71f0-3a0e-1ada-3004e56ff852/source/100x100bb.jpg",
+                ),
+            ),
+        )
+
+        trackAdapter =
+            TrackAdapter(tracks) { track ->
+            }
+
+        binding.tracksRecyclerView.apply {
+            layoutManager = LinearLayoutManager(this@SearchActivity)
+            adapter = trackAdapter
         }
 
         binding.searchEditText.addTextChangedListener(
