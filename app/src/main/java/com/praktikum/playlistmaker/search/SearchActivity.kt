@@ -1,4 +1,4 @@
-package com.praktikum.playlistmaker
+package com.praktikum.playlistmaker.search
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
