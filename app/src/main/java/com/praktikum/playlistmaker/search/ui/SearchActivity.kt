@@ -74,6 +74,9 @@ class SearchActivity : AppCompatActivity() {
         binding.searchClearButton.isVisible = state.showClearButton
         trackAdapter =
             TrackAdapter(state.tracks) { track ->
+                WindowCompat
+                    .getInsetsController(window, binding.searchEditText)
+                    .hide(WindowInsetsCompat.Type.ime())
                 Toast.makeText(this, "${track.trackName} clicked", Toast.LENGTH_SHORT).show()
             }
         binding.tracksRecyclerView.adapter = trackAdapter
