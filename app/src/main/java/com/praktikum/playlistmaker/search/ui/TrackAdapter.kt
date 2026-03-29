@@ -1,9 +1,7 @@
 package com.praktikum.playlistmaker.search.ui
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.praktikum.playlistmaker.databinding.ItemTrackBinding
 import com.praktikum.playlistmaker.search.data.model.Track
 
 class TrackAdapter(
@@ -13,10 +11,7 @@ class TrackAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): TrackViewHolder {
-        val binding = ItemTrackBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return TrackViewHolder(binding)
-    }
+    ): TrackViewHolder = TrackViewHolder(parent)
 
     override fun onBindViewHolder(
         holder: TrackViewHolder,

@@ -1,14 +1,20 @@
 package com.praktikum.playlistmaker.search.ui
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.praktikum.playlistmaker.R
 import com.praktikum.playlistmaker.databinding.ItemTrackBinding
 import com.praktikum.playlistmaker.search.data.model.Track
 
-class TrackViewHolder(
+class TrackViewHolder private constructor(
     private val binding: ItemTrackBinding,
 ) : RecyclerView.ViewHolder(binding.root) {
+    constructor(parent: ViewGroup) : this(
+        ItemTrackBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+    )
+
     fun bind(track: Track) {
         Glide
             .with(itemView.context)
