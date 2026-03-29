@@ -1,4 +1,4 @@
-package com.praktikum.playlistmaker
+package com.praktikum.playlistmaker.app
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.praktikum.playlistmaker.databinding.ActivityMainBinding
+import com.praktikum.playlistmaker.medialibrary.MediaLibraryActivity
+import com.praktikum.playlistmaker.search.ui.SearchActivity
+import com.praktikum.playlistmaker.settings.SettingsActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,11 +25,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         val btnSearchClickListener: View.OnClickListener =
-            object : View.OnClickListener {
-                override fun onClick(v: View?) {
-                    val displayIntent = Intent(this@MainActivity, SearchActivity::class.java)
-                    startActivity(displayIntent)
-                }
+            View.OnClickListener {
+                val displayIntent = Intent(this@MainActivity, SearchActivity::class.java)
+                startActivity(displayIntent)
             }
         binding.btnSearch.setOnClickListener(btnSearchClickListener)
 

@@ -1,4 +1,4 @@
-package com.praktikum.playlistmaker
+package com.praktikum.playlistmaker.settings
 
 import android.content.Intent
 import android.content.res.Configuration
@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.praktikum.playlistmaker.R
 import com.praktikum.playlistmaker.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
