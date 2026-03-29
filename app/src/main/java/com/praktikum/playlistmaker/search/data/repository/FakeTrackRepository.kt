@@ -47,6 +47,27 @@ class FakeTrackRepository : TrackRepository {
                     "https://is5-ssl.mzstatic.com/image/thumb/Music125/v4/a0/4d/c4/" +
                         "a04dc484-03cc-02aa-fa82-5334fcb4bc16/18UMGIM24878.rgb.jpg/100x100bb.jpg",
             ),
+            Track(
+                trackName = "Who knows",
+                artistName = "Who knows",
+                trackTime = "0:35",
+                artworkUrl100 =
+                    "https://there-is-no-image-here.com/",
+            ),
+            Track(
+                trackName = "I am the extremely long long long long track name",
+                artistName = "Who knows",
+                trackTime = "0:35",
+                artworkUrl100 =
+                    "https://there-is-no-image-here.com/",
+            ),
+            Track(
+                trackName = "Who knows",
+                artistName = "I am the extremely long long long long long long long long artist name",
+                trackTime = "0:35",
+                artworkUrl100 =
+                    "https://there-is-no-image-here.com/",
+            ),
         )
 
     override fun searchTracks(query: String): Flow<List<Track>> =

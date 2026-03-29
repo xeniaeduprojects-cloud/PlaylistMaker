@@ -18,4 +18,5 @@
     <string name="clear_search">Очистить поиск</string>
     <string name="album_art_description">Обложка альбома</string>
     <string name="view_track_description">Стрелка направо</string>
+    <string name="track_subtitle_format">%1$s • %2$s</string>
 </resources>

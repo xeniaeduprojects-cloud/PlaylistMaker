@@ -3,13 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="@dimen/spacing_md"
+    android:paddingStart="@dimen/track_item_horizontal_padding"
+    android:paddingEnd="@dimen/track_item_horizontal_padding"
+    android:paddingTop="@dimen/spacing_sm"
+    android:paddingBottom="@dimen/spacing_sm"
     android:background="?attr/selectableItemBackground">
 
     <ImageView
         android:id="@+id/trackAlbumArt"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_gravity="center_vertical"
         android:scaleType="centerCrop"
         android:contentDescription="@string/album_art_description" />
@@ -26,7 +29,7 @@
             android:id="@+id/trackTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:textSize="@dimen/text_body"
             android:textColor="?attr/colorOnSecondary"
             android:maxLines="1"
             android:ellipsize="end" />
@@ -44,8 +47,8 @@
 
     <ImageView
         android:id="@+id/trackChevron"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_gravity="center_vertical"
         android:src="@drawable/ic_arrow_forward"
         android:contentDescription="@string/view_track_description" />
