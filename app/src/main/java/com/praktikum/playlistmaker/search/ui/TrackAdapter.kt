@@ -5,9 +5,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.praktikum.playlistmaker.search.data.model.Track
 
 class TrackAdapter(
-    private val tracks: List<Track>,
     private val onTrackClick: (Track) -> Unit,
 ) : RecyclerView.Adapter<TrackViewHolder>() {
+    private var tracks: List<Track> = emptyList()
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -25,4 +26,11 @@ class TrackAdapter(
     }
 
     override fun getItemCount(): Int = tracks.size
+
+    fun updateTracks(newTracks: List<Track>) {
+        tracks = newTracks
+        // NB: google says to use diffutil, but it requires ids,
+        // which are not present in the model now. And fake data is small enough.
+        notifyDataSetChanged()
+    }
 }

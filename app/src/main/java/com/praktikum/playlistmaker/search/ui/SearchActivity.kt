@@ -39,7 +39,13 @@ class SearchActivity : AppCompatActivity() {
             finish()
         }
 
-        trackAdapter = TrackAdapter(emptyList()) { }
+        trackAdapter =
+            TrackAdapter { track ->
+                WindowCompat
+                    .getInsetsController(window, binding.searchEditText)
+                    .hide(WindowInsetsCompat.Type.ime())
+                Toast.makeText(this, "${track.trackName} clicked", Toast.LENGTH_SHORT).show()
+            }
 
         binding.tracksRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@SearchActivity)
@@ -72,14 +78,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun renderState(state: SearchUiState) {
         binding.searchClearButton.isVisible = state.showClearButton
-        trackAdapter =
-            TrackAdapter(state.tracks) { track ->
-                WindowCompat
-                    .getInsetsController(window, binding.searchEditText)
-                    .hide(WindowInsetsCompat.Type.ime())
-                Toast.makeText(this, "${track.trackName} clicked", Toast.LENGTH_SHORT).show()
-            }
-        binding.tracksRecyclerView.adapter = trackAdapter
+        trackAdapter.updateTracks(state.tracks)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
