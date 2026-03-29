@@ -16,7 +16,6 @@
         android:layout_height="@dimen/album_art_size"
         android:layout_gravity="center_vertical"
         android:scaleType="centerCrop"
-        android:background="@drawable/rounded_album_art"
         android:contentDescription="@string/album_art_description" />
 
     <LinearLayout

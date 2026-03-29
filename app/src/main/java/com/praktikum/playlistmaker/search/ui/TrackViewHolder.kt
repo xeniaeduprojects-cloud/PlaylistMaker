@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.praktikum.playlistmaker.R
 import com.praktikum.playlistmaker.databinding.ItemTrackBinding
 import com.praktikum.playlistmaker.search.data.model.Track
@@ -16,6 +17,7 @@ class TrackViewHolder private constructor(
     )
 
     fun bind(track: Track) {
+        val cornerRadiusPx = itemView.context.resources.getDimensionPixelSize(R.dimen.album_art_corner_radius)
         Glide
             .with(itemView.context)
             .load(track.artworkUrl100)
@@ -23,6 +25,7 @@ class TrackViewHolder private constructor(
             .error(R.drawable.album_placeholder)
             .centerCrop()
             .fitCenter()
+            .transform(RoundedCorners(cornerRadiusPx))
             .into(binding.trackAlbumArt)
 
         binding.trackTitle.text = track.trackName
