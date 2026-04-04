@@ -27,3 +27,17 @@ adb shell "cmd uimode night no"
 ```bash
 ./gradlew installGitHooks
 ```
+
+### Questions
+
+```bash
+2026-04-04 23:26:42.831  6701-6708  StrictMode              com.praktikum.playlistmaker          D  StrictMode policy violation: android.os.strictmode.LeakedClosableViolation: A resource was acquired at attached stack trace but never released. See java.io.Closeable for information on avoiding resource leaks. Callsite: RemoteAnimationTarget[leash]
+                                                                                                    	at android.os.StrictMode$AndroidCloseGuardReporter.report(StrictMode.java:2061)
+                                                                                                    	at dalvik.system.CloseGuard.warnIfOpen(CloseGuard.java:338)
+                                                                                                    	at android.view.SurfaceControl.finalize(SurfaceControl.java:1731)
+                                                                                                    	at java.lang.Daemons$FinalizerDaemon.doFinalize(Daemons.java:387)
+                                                                                                    	at java.lang.Daemons$FinalizerDaemon.processReference(Daemons.java:367)
+                                                                                                    	at java.lang.Daemons$FinalizerDaemon.runInternal(Daemons.java:339)
+                                                                                                    	at java.lang.Daemons$Daemon.run(Daemons.java:132)
+                                                                                                    	at java.lang.Thread.run(Thread.java:1119)
+```
