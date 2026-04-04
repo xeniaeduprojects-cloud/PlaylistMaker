@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.praktikum.playlistmaker.search.data.repository.TrackRepository
 import com.praktikum.playlistmaker.search.data.repository.TrackRepositoryImpl
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
@@ -14,16 +16,23 @@ class SearchViewModel(
     private val _uiState = MutableLiveData(SearchUiState())
     val uiState: LiveData<SearchUiState> = _uiState
 
+    private var searchJob: Job? = null
+
+    companion object {
+        private const val SEARCH_DEBOUNCE_DELAY_MS = 300L
+    }
+
     fun onSearchQueryChanged(query: String) {
         _uiState.value =
             _uiState.value?.copy(
                 searchQuery = query,
                 showClearButton = query.isNotEmpty(),
             )
-        searchTracks(query)
+        searchDebounced(query)
     }
 
     fun onClearButtonClicked() {
+        searchJob?.cancel()
         _uiState.value =
             _uiState.value?.copy(
                 searchQuery = "",
@@ -39,15 +48,26 @@ class SearchViewModel(
                 showClearButton = query.isNotEmpty(),
             )
         if (query.isNotEmpty()) {
-            searchTracks(query)
+            searchDebounced(query)
         }
     }
 
-    private fun searchTracks(query: String) {
-        viewModelScope.launch {
-            trackRepository.searchTracks(query).collect { tracks ->
-                _uiState.value = _uiState.value?.copy(tracks = tracks)
+    private fun searchDebounced(query: String) {
+        searchJob?.cancel()
+        if (query.isEmpty()) {
+            _uiState.value = _uiState.value?.copy(tracks = emptyList())
+            return
+        }
+        searchJob =
+            viewModelScope.launch {
+                delay(SEARCH_DEBOUNCE_DELAY_MS)
+                searchTracks(query)
             }
+    }
+
+    private suspend fun searchTracks(query: String) {
+        trackRepository.searchTracks(query).collect { tracks ->
+            _uiState.value = _uiState.value?.copy(tracks = tracks)
         }
     }
 }
