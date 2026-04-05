@@ -46,6 +46,20 @@
 
     </FrameLayout>
 
+    <TextView
+        android:id="@+id/nothingFoundText"
+        style="@style/ErrorMessage"
+        android:text="@string/nothing_found"
+        android:contentDescription="@string/nothing_found_ic_description"
+        app:drawableTopCompat="@drawable/ic_nothing_found" />
+
+    <TextView
+        style="@style/ErrorMessage"
+        android:text="@string/no_connection"
+        android:contentDescription="@string/no_connection_ic_description"
+        android:visibility="visible"
+        app:drawableTopCompat="@drawable/ic_no_connection" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tracksRecyclerView"
         android:layout_width="match_parent"

@@ -19,4 +19,8 @@
     <string name="album_art_description">Обложка альбома</string>
     <string name="view_track_description">Стрелка направо</string>
     <string name="track_subtitle_format">%1$s • %2$s</string>
+    <string name="nothing_found_ic_description">Картинка ничего не найдено</string>
+    <string name="nothing_found">Ничего не нашлось</string>
+    <string name="no_connection">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="no_connection_ic_description">Картинка с сообщением о проблеме со связью</string>
 </resources>

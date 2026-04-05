@@ -9,6 +9,7 @@
 
     <!-- Text sizes -->
     <dimen name="text_body">16sp</dimen>
+    <dimen name="text_error">19sp</dimen>
     <dimen name="text_title">22sp</dimen>
 
     <!-- Component-specific -->
