@@ -81,10 +81,20 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun renderState(state: SearchUiState) {
-        binding.searchClearButton.isVisible = state.showClearButton
-        binding.nothingFoundText.isVisible = state.showNoResults
-        binding.noConnectionLayout.isVisible = state.showNoConnection
-        trackAdapter.updateTracks(state.tracks)
+        binding.searchClearButton.isVisible =
+            when (state) {
+                is SearchUiState.Idle -> false
+                else -> true
+            }
+        binding.nothingFoundText.isVisible = state is SearchUiState.Empty
+        binding.noConnectionLayout.isVisible = state is SearchUiState.Error
+        trackAdapter.updateTracks(
+            when (state) {
+                is SearchUiState.Content -> state.tracks
+                is SearchUiState.Loading -> state.tracks
+                else -> emptyList()
+            },
+        )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

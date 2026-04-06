@@ -16,5 +16,5 @@ suspend fun <T> safeRepositoryCall(block: suspend () -> T): Result<T> =
     } catch (e: IOException) {
         Result.Error("Network connection error: ${e.message ?: ""}")
     } catch (e: Exception) {
-        Result.Error(e.message ?: "Unknown error occurred: ${e.message ?: ""}")
+        Result.Error(e.message ?: "Unknown error occurred")
     }

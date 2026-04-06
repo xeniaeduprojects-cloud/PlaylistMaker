@@ -33,7 +33,6 @@ class SearchViewModel(
         _uiState.value =
             SearchUiState.Loading(
                 searchQuery = query,
-                showClearButton = true,
                 tracks = currentTracks(),
             )
         searchDebounced(query)
@@ -53,12 +52,9 @@ class SearchViewModel(
         _uiState.value =
             SearchUiState.Loading(
                 searchQuery = query,
-                showClearButton = true,
                 tracks = currentTracks(),
             )
-        if (query.isNotEmpty()) {
-            searchDebounced(query)
-        }
+        searchDebounced(query)
     }
 
     private fun searchDebounced(query: String) {
@@ -75,13 +71,6 @@ class SearchViewModel(
     }
 
     private suspend fun searchTracks(query: String) {
-        _uiState.value =
-            SearchUiState.Loading(
-                searchQuery = query,
-                showClearButton = true,
-                tracks = currentTracks(),
-            )
-
         trackRepository.searchTracks(query).collect { result ->
             when (result) {
                 is Result.Success -> {
@@ -89,12 +78,10 @@ class SearchViewModel(
                         if (result.data.isEmpty()) {
                             SearchUiState.Empty(
                                 searchQuery = query,
-                                showClearButton = true,
                             )
                         } else {
                             SearchUiState.Content(
                                 searchQuery = query,
-                                showClearButton = true,
                                 tracks = result.data,
                             )
                         }
@@ -103,7 +90,6 @@ class SearchViewModel(
                     _uiState.value =
                         SearchUiState.Error(
                             searchQuery = query,
-                            showClearButton = true,
                         )
                 }
             }

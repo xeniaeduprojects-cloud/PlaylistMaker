@@ -20,7 +20,7 @@ import com.praktikum.playlistmaker.R
 import com.praktikum.playlistmaker.search.data.model.Result
 import com.praktikum.playlistmaker.search.data.model.Track
 import com.praktikum.playlistmaker.search.data.repository.TrackRepository
-import com.praktikum.playlistmaker.search.di.searchUiModule
+import com.praktikum.playlistmaker.search.di.searchModule
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.not
@@ -47,14 +47,14 @@ class SearchActivityTest {
 
     @Before
     fun setUp() {
-        unloadKoinModules(searchUiModule)
+        unloadKoinModules(searchModule)
         loadKoinModules(testModule)
     }
 
     @After
     fun tearDown() {
         unloadKoinModules(testModule)
-        loadKoinModules(searchUiModule)
+        loadKoinModules(searchModule)
     }
 
     @Test
