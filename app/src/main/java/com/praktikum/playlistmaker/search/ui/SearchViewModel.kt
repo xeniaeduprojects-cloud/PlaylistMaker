@@ -39,6 +39,8 @@ class SearchViewModel(
                 searchQuery = "",
                 tracks = emptyList(),
                 showClearButton = false,
+                showNoConnection = false,
+                showNoResults = false,
             )
     }
 
@@ -56,7 +58,12 @@ class SearchViewModel(
     private fun searchDebounced(query: String) {
         searchJob?.cancel()
         if (query.isEmpty()) {
-            _uiState.value = _uiState.value?.copy(tracks = emptyList())
+            _uiState.value =
+                _uiState.value?.copy(
+                    tracks = emptyList(),
+                    showNoConnection = false,
+                    showNoResults = false,
+                )
             return
         }
         searchJob =
