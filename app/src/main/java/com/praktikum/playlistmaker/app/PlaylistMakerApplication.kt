@@ -4,6 +4,10 @@ import android.app.Application
 import android.os.StrictMode
 import android.util.Log
 import com.praktikum.playlistmaker.BuildConfig
+import com.praktikum.playlistmaker.search.di.searchUiModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 
 class PlaylistMakerApplication : Application() {
     override fun onCreate() {
@@ -12,6 +16,15 @@ class PlaylistMakerApplication : Application() {
             enableStrictMode()
         }
         setupGlobalExceptionHandler()
+        setupKoin()
+    }
+
+    private fun setupKoin() {
+        startKoin {
+            androidLogger()
+            androidContext(this@PlaylistMakerApplication)
+            modules(searchUiModule)
+        }
     }
 
     private fun enableStrictMode() {

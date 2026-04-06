@@ -3,7 +3,6 @@ package com.praktikum.playlistmaker.search.ui
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -12,6 +11,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.praktikum.playlistmaker.databinding.ActivitySearchBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
     companion object {
@@ -19,7 +19,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivitySearchBinding
-    private val viewModel: SearchViewModel by viewModels()
+    private val viewModel: SearchViewModel by viewModel()
     private lateinit var trackAdapter: TrackAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {

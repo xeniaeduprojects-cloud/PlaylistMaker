@@ -6,13 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.praktikum.playlistmaker.search.data.model.Result
 import com.praktikum.playlistmaker.search.data.repository.TrackRepository
-import com.praktikum.playlistmaker.search.data.repository.TrackRepositoryImpl
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
-    private val trackRepository: TrackRepository = TrackRepositoryImpl(),
+    private val trackRepository: TrackRepository,
 ) : ViewModel() {
     private val _uiState = MutableLiveData(SearchUiState())
     val uiState: LiveData<SearchUiState> = _uiState

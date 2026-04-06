@@ -32,6 +32,11 @@ adb shell "cmd uimode night no"
 
 https://samsetdev.medium.com/retrofit-3-0-tutorial-key-differences-from-retrofit-2-682f9fd07a9a
 
+### Koin
+
+https://insert-koin.io/docs/setup/compiler-plugin
+https://insert-koin.io/docs/quickstart/android/
+
 ### Questions
 
 ```bash
