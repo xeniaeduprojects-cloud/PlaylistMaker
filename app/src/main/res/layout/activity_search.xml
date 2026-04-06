@@ -53,12 +53,27 @@
         android:contentDescription="@string/nothing_found_ic_description"
         app:drawableTopCompat="@drawable/ic_nothing_found" />
 
-    <TextView
-        android:id="@+id/noConnectionText"
-        style="@style/ErrorMessage"
-        android:text="@string/no_connection"
-        android:contentDescription="@string/no_connection_ic_description"
-        app:drawableTopCompat="@drawable/ic_no_connection" />
+    <LinearLayout
+        android:id="@+id/noConnectionLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/noConnectionText"
+            style="@style/ErrorMessage"
+            android:visibility="visible"
+            android:text="@string/no_connection"
+            android:contentDescription="@string/no_connection_ic_description"
+            app:drawableTopCompat="@drawable/ic_no_connection" />
+
+        <Button
+            android:id="@+id/refreshButton"
+            style="@style/RefreshButton"
+            android:text="@string/refresh" />
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tracksRecyclerView"

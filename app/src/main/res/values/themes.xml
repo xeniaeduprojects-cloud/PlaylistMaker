@@ -57,9 +57,31 @@
         <item name="android:drawablePadding">@dimen/spacing_md</item>
         <item name="android:layout_marginTop">102dp</item>
         <item name="android:layout_marginHorizontal">24dp</item>
+        <item name="android:paddingBottom">24dp</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textSize">@dimen/text_error</item>
         <item name="android:textColor">?attr/colorOnSecondary</item>
         <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="RefreshButtonBase" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="backgroundTint">@null</item>
+        <item name="android:background">@drawable/rounded_refresh_button</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="contentPaddingTop">10dp</item>
+        <item name="contentPaddingBottom">10dp</item>
+        <item name="contentPaddingLeft">14dp</item>
+        <item name="contentPaddingRight">14dp</item>
+    </style>
+
+    <style name="RefreshButton" parent="RefreshButtonBase">
+        <item name="android:textColor">@color/yp_white</item>
     </style>
 </resources>

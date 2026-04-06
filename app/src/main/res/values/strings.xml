@@ -23,4 +23,5 @@
     <string name="nothing_found">Ничего не нашлось</string>
     <string name="no_connection">Проблемы со связью\n\nЗагрузка не удалась. Проверьте подключение к интернету</string>
     <string name="no_connection_ic_description">Картинка с сообщением о проблеме со связью</string>
+    <string name="refresh">Обновить</string>
 </resources>

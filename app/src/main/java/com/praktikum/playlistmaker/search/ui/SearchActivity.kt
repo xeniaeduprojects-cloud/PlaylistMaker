@@ -54,7 +54,7 @@ class SearchActivity : AppCompatActivity() {
 
         binding.searchEditText.addTextChangedListener(
             afterTextChanged = { s ->
-                viewModel.onSearchQueryChanged(s.toString())
+                viewModel.onSearchQueryRequested(s.toString())
             },
         )
 
@@ -65,6 +65,10 @@ class SearchActivity : AppCompatActivity() {
             WindowCompat
                 .getInsetsController(window, binding.searchEditText)
                 .hide(WindowInsetsCompat.Type.ime())
+        }
+
+        binding.refreshButton.setOnClickListener {
+            viewModel.onSearchQueryRequested(binding.searchEditText.text.toString())
         }
 
         observeViewModel()
@@ -79,7 +83,7 @@ class SearchActivity : AppCompatActivity() {
     private fun renderState(state: SearchUiState) {
         binding.searchClearButton.isVisible = state.showClearButton
         binding.nothingFoundText.isVisible = state.showNoResults
-        binding.noConnectionText.isVisible = state.showNoConnection
+        binding.noConnectionLayout.isVisible = state.showNoConnection
         trackAdapter.updateTracks(state.tracks)
     }
 

@@ -23,7 +23,7 @@ class SearchViewModel(
         private const val SEARCH_DEBOUNCE_DELAY_MS = 300L
     }
 
-    fun onSearchQueryChanged(query: String) {
+    fun onSearchQueryRequested(query: String) {
         _uiState.value =
             _uiState.value?.copy(
                 searchQuery = query,
