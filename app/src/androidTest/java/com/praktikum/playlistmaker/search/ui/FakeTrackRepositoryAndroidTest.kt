@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.flowOf
 
 class FakeTrackRepositoryAndroidTest : TrackRepository {
     private val responses = mutableMapOf<String, Result<List<Track>>>()
+    val searchCallCount = mutableMapOf<String, Int>()
 
     fun setResponse(
         query: String,
@@ -16,5 +17,12 @@ class FakeTrackRepositoryAndroidTest : TrackRepository {
         responses[query] = result
     }
 
-    override fun searchTracks(query: String): Flow<Result<List<Track>>> = flowOf(responses[query] ?: Result.Success(emptyList()))
+    fun resetCallCount() {
+        searchCallCount.clear()
+    }
+
+    override fun searchTracks(query: String): Flow<Result<List<Track>>> {
+        searchCallCount[query] = (searchCallCount[query] ?: 0) + 1
+        return flowOf(responses[query] ?: Result.Success(emptyList()))
+    }
 }

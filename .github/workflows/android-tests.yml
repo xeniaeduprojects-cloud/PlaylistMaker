@@ -1,0 +1,67 @@
+name: Android Test
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  tests:
+    name: Android Tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Run static checks
+        run: ./gradlew detekt ktlintCheck
+
+      - name: Enable KVM group perms
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Run tests and generate Kover XML report
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          arch: x86_64
+          profile: pixel_7_pro
+          script: ./gradlew app:ciAllXmlReports
+
+      - name: Upload Kover XML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: kover-xml-report
+          path: |
+            app/build/reports/kover/report.xml
+
+      - name: Upload instrumented test XML reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-instrumented-test-xml-reports
+          path: |
+            app/build/outputs/androidTest-results/connected/**/*.xml
+            app/build/reports/androidTests/connected/**/*.xml
+
+      - name: Comment coverage on PR
+        if: github.event_name == 'pull_request'
+        uses: pooi/coverage-comment@1.0.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          xml-test-report-path: app/build/reports/kover/report.xml

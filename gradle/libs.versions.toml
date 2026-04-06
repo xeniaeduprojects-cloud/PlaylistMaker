@@ -14,6 +14,7 @@ lifecycle = "2.10.0"
 glide = "5.0.5"
 ktlint = "14.2.0"
 detekt = "1.23.8"
+kover = "0.9.8"
 gson = "2.13.2"
 retrofit = "3.0.0"
 koin = "4.2.0"
@@ -49,3 +50,4 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 koin-compiler = { id = "io.insert-koin.compiler.plugin", version.ref = "koin-plugin" }
+kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }

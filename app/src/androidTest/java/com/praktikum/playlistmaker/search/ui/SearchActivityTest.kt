@@ -156,6 +156,56 @@ class SearchActivityTest {
         onView(withId(R.id.searchClearButton)).check(matches(not(isDisplayed())))
     }
 
+    @Test
+    fun refresh_button_retries_last_failed_search() {
+        val query = "offline"
+        fakeTrackRepository.setResponse(query, Result.Error("network error"))
+
+        launchSearchActivity()
+
+        onView(withId(R.id.searchEditText)).perform(typeText(query), closeSoftKeyboard())
+        onView(isRoot()).perform(waitFor(350))
+
+        onView(withId(R.id.noConnectionLayout)).check(matches(isDisplayed()))
+        onView(withId(R.id.refreshButton)).check(matches(isDisplayed()))
+
+        fakeTrackRepository.setResponse(query, Result.Success(listOf(track("Recovered Song"))))
+        fakeTrackRepository.resetCallCount()
+
+        onView(withId(R.id.refreshButton)).perform(click())
+        onView(isRoot()).perform(waitFor(350))
+
+        onView(withId(R.id.noConnectionLayout)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.trackTitle)).check(matches(isDisplayed()))
+        onView(withId(R.id.trackTitle)).check(matches(withText("Recovered Song")))
+    }
+
+    @Test
+    fun track_time_displays_in_mm_ss_format() {
+        val query = "format"
+        fakeTrackRepository.setResponse(
+            query,
+            Result.Success(
+                listOf(
+                    Track(
+                        trackName = "Test Song",
+                        artistName = "Test Artist",
+                        trackTime = "03:45",
+                        artworkUrl100 = "https://example.com/art.jpg",
+                    ),
+                ),
+            ),
+        )
+
+        launchSearchActivity()
+
+        onView(withId(R.id.searchEditText)).perform(typeText(query), closeSoftKeyboard())
+        onView(isRoot()).perform(waitFor(350))
+
+        onView(withId(R.id.trackSubtitle)).check(matches(isDisplayed()))
+        onView(withId(R.id.trackSubtitle)).check(matches(withText("Test Artist • 03:45")))
+    }
+
     private fun launchSearchActivity() {
         ActivityScenario.launch(SearchActivity::class.java)
     }

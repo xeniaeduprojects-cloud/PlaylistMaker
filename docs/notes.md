@@ -38,6 +38,9 @@ https://insert-koin.io/docs/setup/compiler-plugin
 https://insert-koin.io/docs/quickstart/android/
 https://insert-koin.io/docs/reference/koin-android/instrumented-testing/
 
+### Github Actions
+https://github.com/ReactiveCircus/android-emulator-runner
+
 ### Questions
 
 ```bash

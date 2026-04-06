@@ -1,7 +1,5 @@
-import org.gradle.api.logging.LogLevel
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
-import org.gradle.testing.jacoco.tasks.JacocoReport
 
 plugins {
     alias(libs.plugins.android.application)
@@ -9,7 +7,7 @@ plugins {
     alias(libs.plugins.ktlint)
     alias(libs.plugins.detekt)
     alias(libs.plugins.koin.compiler)
-    id("jacoco")
+    alias(libs.plugins.kover)
 }
 
 android {
@@ -72,85 +70,25 @@ android {
     }
 }
 
-val coverageExcludes =
-    listOf(
-        "**/R.class",
-        "**/R$*.class",
-        "**/BuildConfig.*",
-        "**/Manifest*.*",
-    )
-
-val debugClassDirectories =
-    files(
-        fileTree("${layout.buildDirectory.asFile.get()}/tmp/kotlin-classes/debug") {
-            exclude(coverageExcludes)
-        },
-        fileTree("${layout.buildDirectory.asFile.get()}/intermediates/javac/debug/classes") {
-            exclude(coverageExcludes)
-        },
-    )
-
-val debugSourceDirectories =
-    files(
-        "src/main/java",
-        "src/main/kotlin",
-    )
-
-tasks.register<JacocoReport>("jacocoDebugUnitTestReport") {
-    group = "verification"
-    description = "Generates JaCoCo XML report for debug unit tests"
-    dependsOn("testDebugUnitTest")
-
-    classDirectories.setFrom(debugClassDirectories)
-    sourceDirectories.setFrom(debugSourceDirectories)
-    executionData.setFrom(
-        fileTree(layout.buildDirectory.asFile.get()) {
-            include("outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec")
-            include("jacoco/testDebugUnitTest.exec")
-        },
-    )
-
+kover {
     reports {
-        xml.required.set(true)
-        html.required.set(false)
-        csv.required.set(false)
-        xml.outputLocation.set(
-            layout.buildDirectory.file(
-                "reports/jacoco/jacocoDebugUnitTestReport/jacocoDebugUnitTestReport.xml",
-            ),
-        )
+        filters {
+            excludes {
+                classes(
+                    "*.R",
+                    "*.R$*",
+                    "*.BuildConfig",
+                    "*.Manifest*",
+                )
+            }
+        }
     }
 }
 
-tasks.register<JacocoReport>("jacocoDebugAndroidTestReport") {
+tasks.register("ciAllXmlReports") {
     group = "verification"
-    description = "Generates JaCoCo XML report for debug instrumented tests"
-    dependsOn("connectedDebugAndroidTest")
-
-    classDirectories.setFrom(debugClassDirectories)
-    sourceDirectories.setFrom(debugSourceDirectories)
-    executionData.setFrom(
-        fileTree(layout.buildDirectory.asFile.get()) {
-            include("outputs/code_coverage/debugAndroidTest/connected/**/*.ec")
-        },
-    )
-
-    reports {
-        xml.required.set(true)
-        html.required.set(false)
-        csv.required.set(false)
-        xml.outputLocation.set(
-            layout.buildDirectory.file(
-                "reports/jacoco/jacocoDebugAndroidTestReport/jacocoDebugAndroidTestReport.xml",
-            ),
-        )
-    }
-}
-
-tasks.register("jacocoAllXmlReports") {
-    group = "verification"
-    description = "Generates JaCoCo XML reports for unit and instrumented tests"
-    dependsOn("jacocoDebugUnitTestReport", "jacocoDebugAndroidTestReport")
+    description = "Runs unit and instrumented tests and generates merged Kover XML report"
+    dependsOn("testDebugUnitTest", "connectedDebugAndroidTest", "koverXmlReport")
 }
 
 dependencies {
@@ -187,11 +125,4 @@ ktlint {
 detekt {
     buildUponDefaultConfig = true
     allRules = false
-}
-
-tasks.register<GradleBuild>("androidTestVerbose") {
-    group = "verification"
-    description = "Runs connectedDebugAndroidTest with info-level logging"
-    tasks = listOf("connectedDebugAndroidTest")
-    startParameter.logLevel = LogLevel.INFO
 }
