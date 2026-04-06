@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.praktikum.playlistmaker.search.data.model.Result
+import com.praktikum.playlistmaker.search.data.model.Track
 import com.praktikum.playlistmaker.search.data.repository.TrackRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -13,7 +14,7 @@ import kotlinx.coroutines.launch
 class SearchViewModel(
     private val trackRepository: TrackRepository,
 ) : ViewModel() {
-    private val _uiState = MutableLiveData(SearchUiState())
+    private val _uiState = MutableLiveData<SearchUiState>(SearchUiState.Idle())
     val uiState: LiveData<SearchUiState> = _uiState
 
     private var searchJob: Job? = null
@@ -23,31 +24,37 @@ class SearchViewModel(
     }
 
     fun onSearchQueryRequested(query: String) {
+        if (query.isEmpty()) {
+            searchJob?.cancel()
+            _uiState.value = SearchUiState.Idle()
+            return
+        }
+
         _uiState.value =
-            _uiState.value?.copy(
+            SearchUiState.Loading(
                 searchQuery = query,
-                showClearButton = query.isNotEmpty(),
+                showClearButton = true,
+                tracks = currentTracks(),
             )
         searchDebounced(query)
     }
 
     fun onClearButtonClicked() {
         searchJob?.cancel()
-        _uiState.value =
-            _uiState.value?.copy(
-                searchQuery = "",
-                tracks = emptyList(),
-                showClearButton = false,
-                showNoConnection = false,
-                showNoResults = false,
-            )
+        _uiState.value = SearchUiState.Idle()
     }
 
     fun restoreSearchQuery(query: String) {
+        if (query.isEmpty()) {
+            _uiState.value = SearchUiState.Idle()
+            return
+        }
+
         _uiState.value =
-            _uiState.value?.copy(
+            SearchUiState.Loading(
                 searchQuery = query,
-                showClearButton = query.isNotEmpty(),
+                showClearButton = true,
+                tracks = currentTracks(),
             )
         if (query.isNotEmpty()) {
             searchDebounced(query)
@@ -57,12 +64,7 @@ class SearchViewModel(
     private fun searchDebounced(query: String) {
         searchJob?.cancel()
         if (query.isEmpty()) {
-            _uiState.value =
-                _uiState.value?.copy(
-                    tracks = emptyList(),
-                    showNoConnection = false,
-                    showNoResults = false,
-                )
+            _uiState.value = SearchUiState.Idle()
             return
         }
         searchJob =
@@ -74,30 +76,44 @@ class SearchViewModel(
 
     private suspend fun searchTracks(query: String) {
         _uiState.value =
-            _uiState.value?.copy(
-                showNoConnection = false,
-                showNoResults = false,
+            SearchUiState.Loading(
+                searchQuery = query,
+                showClearButton = true,
+                tracks = currentTracks(),
             )
 
         trackRepository.searchTracks(query).collect { result ->
             when (result) {
                 is Result.Success -> {
                     _uiState.value =
-                        _uiState.value?.copy(
-                            tracks = result.data,
-                            showNoConnection = false,
-                            showNoResults = result.data.isEmpty(),
-                        )
+                        if (result.data.isEmpty()) {
+                            SearchUiState.Empty(
+                                searchQuery = query,
+                                showClearButton = true,
+                            )
+                        } else {
+                            SearchUiState.Content(
+                                searchQuery = query,
+                                showClearButton = true,
+                                tracks = result.data,
+                            )
+                        }
                 }
                 is Result.Error -> {
                     _uiState.value =
-                        _uiState.value?.copy(
-                            tracks = emptyList(),
-                            showNoConnection = true,
-                            showNoResults = false,
+                        SearchUiState.Error(
+                            searchQuery = query,
+                            showClearButton = true,
                         )
                 }
             }
         }
     }
+
+    private fun currentTracks(): List<Track> =
+        when (val state = _uiState.value) {
+            is SearchUiState.Content -> state.tracks
+            is SearchUiState.Loading -> state.tracks
+            else -> emptyList()
+        }
 }
