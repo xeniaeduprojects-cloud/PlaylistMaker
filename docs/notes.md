@@ -36,6 +36,7 @@ https://samsetdev.medium.com/retrofit-3-0-tutorial-key-differences-from-retrofit
 
 https://insert-koin.io/docs/setup/compiler-plugin
 https://insert-koin.io/docs/quickstart/android/
+https://insert-koin.io/docs/reference/koin-android/instrumented-testing/
 
 ### Questions
 
