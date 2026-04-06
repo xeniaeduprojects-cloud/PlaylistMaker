@@ -1,5 +1,6 @@
 package com.praktikum.playlistmaker.search.data.repository
 
+import com.praktikum.playlistmaker.search.data.model.Result
 import com.praktikum.playlistmaker.search.data.model.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -70,15 +71,17 @@ class FakeTrackRepository : TrackRepository {
             ),
         )
 
-    override fun searchTracks(query: String): Flow<List<Track>> =
+    override fun searchTracks(query: String): Flow<Result<List<Track>>> =
         if (query.isBlank()) {
-            flowOf(emptyList())
+            flowOf(Result.Success(emptyList()))
         } else {
             flowOf(
-                tracks.filter {
-                    it.trackName.contains(query, ignoreCase = true) ||
-                        it.artistName.contains(query, ignoreCase = true)
-                },
+                Result.Success(
+                    tracks.filter {
+                        it.trackName.contains(query, ignoreCase = true) ||
+                            it.artistName.contains(query, ignoreCase = true)
+                    },
+                ),
             )
         }
 }

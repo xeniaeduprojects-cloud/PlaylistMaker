@@ -6,4 +6,6 @@ data class SearchUiState(
     val searchQuery: String = "",
     val tracks: List<Track> = emptyList(),
     val showClearButton: Boolean = false,
+    val showNoConnection: Boolean = false,
+    val showNoResults: Boolean = false,
 )

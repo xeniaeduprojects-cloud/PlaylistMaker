@@ -54,10 +54,10 @@
         app:drawableTopCompat="@drawable/ic_nothing_found" />
 
     <TextView
+        android:id="@+id/noConnectionText"
         style="@style/ErrorMessage"
         android:text="@string/no_connection"
         android:contentDescription="@string/no_connection_ic_description"
-        android:visibility="visible"
         app:drawableTopCompat="@drawable/ic_no_connection" />
 
     <androidx.recyclerview.widget.RecyclerView

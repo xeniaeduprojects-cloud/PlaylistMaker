@@ -28,6 +28,10 @@ adb shell "cmd uimode night no"
 ./gradlew installGitHooks
 ```
 
+### Retrofit3
+
+https://samsetdev.medium.com/retrofit-3-0-tutorial-key-differences-from-retrofit-2-682f9fd07a9a
+
 ### Questions
 
 ```bash

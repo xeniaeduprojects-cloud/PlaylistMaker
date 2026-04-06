@@ -78,6 +78,8 @@ class SearchActivity : AppCompatActivity() {
 
     private fun renderState(state: SearchUiState) {
         binding.searchClearButton.isVisible = state.showClearButton
+        binding.nothingFoundText.isVisible = state.showNoResults
+        binding.noConnectionText.isVisible = state.showNoConnection
         trackAdapter.updateTracks(state.tracks)
     }
 

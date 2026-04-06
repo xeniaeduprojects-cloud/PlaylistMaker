@@ -1,5 +1,6 @@
 package com.praktikum.playlistmaker.search.data.repository
 
+import com.praktikum.playlistmaker.search.data.model.Result
 import com.praktikum.playlistmaker.search.data.model.Track
 import com.praktikum.playlistmaker.search.data.network.ITunesRemoteDataSource
 import com.praktikum.playlistmaker.search.data.network.RetrofitProvider
@@ -15,9 +16,12 @@ class TrackRepositoryImpl(
             RetrofitProvider.iTunesApiService,
         ),
 ) : TrackRepository {
-    override fun searchTracks(query: String): Flow<List<Track>> =
+    override fun searchTracks(query: String): Flow<Result<List<Track>>> =
         flow {
-            val tracks = remoteDataSource.searchTracks(query)
-            emit(tracks)
+            val result =
+                safeRepositoryCall {
+                    remoteDataSource.searchTracks(query)
+                }
+            emit(result)
         }.flowOn(Dispatchers.IO)
 }
