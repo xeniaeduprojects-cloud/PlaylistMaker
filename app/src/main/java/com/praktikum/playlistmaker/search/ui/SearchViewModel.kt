@@ -4,49 +4,99 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.praktikum.playlistmaker.search.data.repository.FakeTrackRepository
+import com.praktikum.playlistmaker.search.data.model.Track
+import com.praktikum.playlistmaker.search.data.repository.TrackRepository
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class SearchViewModel : ViewModel() {
-    private val trackRepository = FakeTrackRepository()
-
-    private val _uiState = MutableLiveData(SearchUiState())
+class SearchViewModel(
+    private val trackRepository: TrackRepository,
+) : ViewModel() {
+    private val _uiState = MutableLiveData<SearchUiState>(SearchUiState.Idle())
     val uiState: LiveData<SearchUiState> = _uiState
 
-    fun onSearchQueryChanged(query: String) {
+    private var searchJob: Job? = null
+
+    companion object {
+        private const val SEARCH_DEBOUNCE_DELAY_MS = 300L
+    }
+
+    fun onSearchQueryRequested(query: String) {
+        if (query.isEmpty()) {
+            searchJob?.cancel()
+            _uiState.value = SearchUiState.Idle()
+            return
+        }
+
         _uiState.value =
-            _uiState.value?.copy(
+            SearchUiState.Loading(
                 searchQuery = query,
-                showClearButton = query.isNotEmpty(),
+                tracks = currentTracks(),
             )
-        searchTracks(query)
+        searchDebounced(query)
     }
 
     fun onClearButtonClicked() {
-        _uiState.value =
-            _uiState.value?.copy(
-                searchQuery = "",
-                tracks = emptyList(),
-                showClearButton = false,
-            )
+        searchJob?.cancel()
+        _uiState.value = SearchUiState.Idle()
     }
 
     fun restoreSearchQuery(query: String) {
+        if (query.isEmpty()) {
+            _uiState.value = SearchUiState.Idle()
+            return
+        }
+
         _uiState.value =
-            _uiState.value?.copy(
+            SearchUiState.Loading(
                 searchQuery = query,
-                showClearButton = query.isNotEmpty(),
+                tracks = currentTracks(),
             )
-        if (query.isNotEmpty()) {
-            searchTracks(query)
+        searchDebounced(query)
+    }
+
+    private fun searchDebounced(query: String) {
+        searchJob?.cancel()
+        if (query.isEmpty()) {
+            _uiState.value = SearchUiState.Idle()
+            return
+        }
+        searchJob =
+            viewModelScope.launch {
+                delay(SEARCH_DEBOUNCE_DELAY_MS)
+                searchTracks(query)
+            }
+    }
+
+    private suspend fun searchTracks(query: String) {
+        trackRepository.searchTracks(query).collect { result ->
+            result
+                .onSuccess { tracks ->
+                    _uiState.value =
+                        if (tracks.isEmpty()) {
+                            SearchUiState.Empty(
+                                searchQuery = query,
+                            )
+                        } else {
+                            SearchUiState.Content(
+                                searchQuery = query,
+                                tracks = tracks,
+                            )
+                        }
+                }.onFailure {
+                    _uiState.value =
+                        SearchUiState.Error(
+                            searchQuery = query,
+                        )
+                }
         }
     }
 
-    private fun searchTracks(query: String) {
-        viewModelScope.launch {
-            trackRepository.searchTracks(query).collect { tracks ->
-                _uiState.value = _uiState.value?.copy(tracks = tracks)
-            }
+    private fun currentTracks(): List<Track> =
+        when (val state = _uiState.value) {
+            is SearchUiState.Content -> state.tracks
+            is SearchUiState.Loading -> state.tracks
+            else -> emptyList()
         }
-    }
 }

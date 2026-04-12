@@ -1,8 +1,13 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.detekt)
+    alias(libs.plugins.koin.compiler)
+    alias(libs.plugins.kover)
 }
 
 android {
@@ -22,6 +27,11 @@ android {
     }
 
     buildTypes {
+        debug {
+            enableUnitTestCoverage = true
+            enableAndroidTestCoverage = true
+        }
+
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -34,12 +44,51 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+        }
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
+
+    testOptions {
+        unitTests.all {
+            it.testLogging {
+                events =
+                    setOf(
+                        TestLogEvent.PASSED,
+                        TestLogEvent.FAILED,
+                        TestLogEvent.SKIPPED,
+                    )
+                showStandardStreams = true
+                exceptionFormat = TestExceptionFormat.FULL
+            }
+        }
+    }
+}
+
+kover {
+    reports {
+        filters {
+            excludes {
+                classes(
+                    "*.R",
+                    "*.R$*",
+                    "*.BuildConfig",
+                    "*.Manifest*",
+                )
+            }
+        }
+    }
+}
+
+tasks.register("ciAllXmlReports") {
+    group = "verification"
+    description = "Runs unit and instrumented tests and generates merged Kover XML report"
+    dependsOn("testDebugUnitTest", "connectedDebugAndroidTest", "koverXmlReport")
 }
 
 dependencies {
@@ -50,9 +99,18 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.glide)
+    implementation(libs.gson)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.androidx.arch.core.testing)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.test.core)
+    androidTestImplementation(libs.koin.test)
 }
 
 ktlint {

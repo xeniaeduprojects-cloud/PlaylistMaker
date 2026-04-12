@@ -3,7 +3,6 @@ package com.praktikum.playlistmaker.search.ui
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -12,6 +11,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.praktikum.playlistmaker.databinding.ActivitySearchBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
     companion object {
@@ -19,7 +19,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivitySearchBinding
-    private val viewModel: SearchViewModel by viewModels()
+    private val viewModel: SearchViewModel by viewModel()
     private lateinit var trackAdapter: TrackAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +54,7 @@ class SearchActivity : AppCompatActivity() {
 
         binding.searchEditText.addTextChangedListener(
             afterTextChanged = { s ->
-                viewModel.onSearchQueryChanged(s.toString())
+                viewModel.onSearchQueryRequested(s.toString())
             },
         )
 
@@ -67,6 +67,10 @@ class SearchActivity : AppCompatActivity() {
                 .hide(WindowInsetsCompat.Type.ime())
         }
 
+        binding.refreshButton.setOnClickListener {
+            viewModel.onSearchQueryRequested(binding.searchEditText.text.toString())
+        }
+
         observeViewModel()
     }
 
@@ -77,8 +81,20 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun renderState(state: SearchUiState) {
-        binding.searchClearButton.isVisible = state.showClearButton
-        trackAdapter.updateTracks(state.tracks)
+        binding.searchClearButton.isVisible =
+            when (state) {
+                is SearchUiState.Idle -> false
+                else -> true
+            }
+        binding.nothingFoundText.isVisible = state is SearchUiState.Empty
+        binding.noConnectionLayout.isVisible = state is SearchUiState.Error
+        trackAdapter.updateTracks(
+            when (state) {
+                is SearchUiState.Content -> state.tracks
+                is SearchUiState.Loading -> state.tracks
+                else -> emptyList()
+            },
+        )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
