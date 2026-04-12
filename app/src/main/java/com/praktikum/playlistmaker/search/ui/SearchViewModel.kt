@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.praktikum.playlistmaker.search.data.model.Result
 import com.praktikum.playlistmaker.search.data.model.Track
 import com.praktikum.playlistmaker.search.data.repository.TrackRepository
 import kotlinx.coroutines.Job
@@ -72,27 +71,25 @@ class SearchViewModel(
 
     private suspend fun searchTracks(query: String) {
         trackRepository.searchTracks(query).collect { result ->
-            when (result) {
-                is Result.Success -> {
+            result
+                .onSuccess { tracks ->
                     _uiState.value =
-                        if (result.data.isEmpty()) {
+                        if (tracks.isEmpty()) {
                             SearchUiState.Empty(
                                 searchQuery = query,
                             )
                         } else {
                             SearchUiState.Content(
                                 searchQuery = query,
-                                tracks = result.data,
+                                tracks = tracks,
                             )
                         }
-                }
-                is Result.Error -> {
+                }.onFailure {
                     _uiState.value =
                         SearchUiState.Error(
                             searchQuery = query,
                         )
                 }
-            }
         }
     }
 

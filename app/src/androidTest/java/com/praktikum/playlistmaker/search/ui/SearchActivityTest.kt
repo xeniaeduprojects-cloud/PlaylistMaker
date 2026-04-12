@@ -17,10 +17,10 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.praktikum.playlistmaker.R
-import com.praktikum.playlistmaker.search.data.model.Result
 import com.praktikum.playlistmaker.search.data.model.Track
 import com.praktikum.playlistmaker.search.data.repository.TrackRepository
 import com.praktikum.playlistmaker.search.di.searchModule
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.not
@@ -33,10 +33,12 @@ import org.koin.core.context.loadKoinModules
 import org.koin.core.context.unloadKoinModules
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
+import retrofit2.HttpException
+import retrofit2.Response
 
 @RunWith(AndroidJUnit4::class)
 class SearchActivityTest {
-    private val fakeTrackRepository = FakeTrackRepositoryAndroidTest()
+    private val fakeTrackRepository = TrackRepositoryAndroidTest()
 
     private val testModule by lazy {
         module {
@@ -69,7 +71,7 @@ class SearchActivityTest {
     @Test
     fun search_empty_result_shows_nothing_found_state() {
         val query = "unknown"
-        fakeTrackRepository.setResponse(query, Result.Success(emptyList()))
+        fakeTrackRepository.setResponse(query, Result.success(emptyList()))
 
         launchSearchActivity()
 
@@ -83,7 +85,8 @@ class SearchActivityTest {
     @Test
     fun search_error_shows_no_connection_state() {
         val query = "offline"
-        fakeTrackRepository.setResponse(query, Result.Error("network error"))
+        val httpException = HttpException(Response.error<Any>(500, "".toResponseBody()))
+        fakeTrackRepository.setResponse(query, Result.failure(httpException))
 
         launchSearchActivity()
 
@@ -101,7 +104,7 @@ class SearchActivityTest {
             "This Is A Very Very Very Long Track Name That Must Be Truncated In Single Line Mode"
         fakeTrackRepository.setResponse(
             query,
-            Result.Success(
+            Result.success(
                 listOf(
                     track(
                         name = longTrackTitle,
@@ -126,7 +129,7 @@ class SearchActivityTest {
             "Very Long Artist Name That Should Not Fit Into One Line In The Subtitle TextView"
         fakeTrackRepository.setResponse(
             query,
-            Result.Success(
+            Result.success(
                 listOf(
                     track(
                         name = "Song",
@@ -159,7 +162,8 @@ class SearchActivityTest {
     @Test
     fun refresh_button_retries_last_failed_search() {
         val query = "offline"
-        fakeTrackRepository.setResponse(query, Result.Error("network error"))
+        val httpException = HttpException(Response.error<Any>(500, "".toResponseBody()))
+        fakeTrackRepository.setResponse(query, Result.failure(httpException))
 
         launchSearchActivity()
 
@@ -169,7 +173,7 @@ class SearchActivityTest {
         onView(withId(R.id.noConnectionLayout)).check(matches(isDisplayed()))
         onView(withId(R.id.refreshButton)).check(matches(isDisplayed()))
 
-        fakeTrackRepository.setResponse(query, Result.Success(listOf(track("Recovered Song"))))
+        fakeTrackRepository.setResponse(query, Result.success(listOf(track("Recovered Song"))))
         fakeTrackRepository.resetCallCount()
 
         onView(withId(R.id.refreshButton)).perform(click())
@@ -185,7 +189,7 @@ class SearchActivityTest {
         val query = "format"
         fakeTrackRepository.setResponse(
             query,
-            Result.Success(
+            Result.success(
                 listOf(
                     Track(
                         trackName = "Test Song",

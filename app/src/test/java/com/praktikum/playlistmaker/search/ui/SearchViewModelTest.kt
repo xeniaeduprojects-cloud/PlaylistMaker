@@ -1,7 +1,6 @@
 package com.praktikum.playlistmaker.search.ui
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.praktikum.playlistmaker.search.data.model.Result
 import com.praktikum.playlistmaker.search.data.model.Track
 import com.praktikum.playlistmaker.search.data.repository.TrackRepository
 import com.praktikum.playlistmaker.utils.MainDispatcherRule
@@ -9,10 +8,13 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.StandardTestDispatcher
+import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
+import retrofit2.HttpException
+import retrofit2.Response
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchViewModelTest {
@@ -36,7 +38,7 @@ class SearchViewModelTest {
     fun `search success emits loading then content`() {
         val query = "metallica"
         val expectedTracks = listOf(track("One"))
-        fakeTrackRepository.setResponse(query, Result.Success(expectedTracks))
+        fakeTrackRepository.setResponse(query, Result.success(expectedTracks))
 
         viewModel.onSearchQueryRequested(query)
 
@@ -52,7 +54,7 @@ class SearchViewModelTest {
     @Test
     fun `search empty result emits loading then empty`() {
         val query = "unknown"
-        fakeTrackRepository.setResponse(query, Result.Success(emptyList()))
+        fakeTrackRepository.setResponse(query, Result.success(emptyList()))
 
         viewModel.onSearchQueryRequested(query)
 
@@ -66,7 +68,8 @@ class SearchViewModelTest {
     @Test
     fun `search failure emits loading then error`() {
         val query = "nirvana"
-        fakeTrackRepository.setResponse(query, Result.Error("network error"))
+        val httpException = HttpException(Response.error<Any>(500, "".toResponseBody()))
+        fakeTrackRepository.setResponse(query, Result.failure(httpException))
 
         viewModel.onSearchQueryRequested(query)
 
@@ -80,7 +83,7 @@ class SearchViewModelTest {
     @Test
     fun `clear action resets state and cancels pending search`() {
         val query = "queen"
-        fakeTrackRepository.setResponse(query, Result.Success(listOf(track("Bohemian Rhapsody"))))
+        fakeTrackRepository.setResponse(query, Result.success(listOf(track("Bohemian Rhapsody"))))
 
         viewModel.onSearchQueryRequested(query)
         viewModel.onClearButtonClicked()
@@ -93,8 +96,8 @@ class SearchViewModelTest {
 
     @Test
     fun `debounce processes only latest query`() {
-        fakeTrackRepository.setResponse("first", Result.Success(listOf(track("First Track"))))
-        fakeTrackRepository.setResponse("second", Result.Success(listOf(track("Second Track"))))
+        fakeTrackRepository.setResponse("first", Result.success(listOf(track("First Track"))))
+        fakeTrackRepository.setResponse("second", Result.success(listOf(track("Second Track"))))
 
         viewModel.onSearchQueryRequested("first")
         mainDispatcherRule.testDispatcher.scheduler.advanceTimeBy(150)
@@ -134,7 +137,7 @@ class SearchViewModelTest {
     fun `restore non-empty query debounces then executes search`() {
         val query = "abc"
         val expectedTracks = listOf(track("Recovered Track"))
-        fakeTrackRepository.setResponse(query, Result.Success(expectedTracks))
+        fakeTrackRepository.setResponse(query, Result.success(expectedTracks))
 
         viewModel.restoreSearchQuery(query)
 
@@ -176,7 +179,7 @@ class SearchViewModelTest {
 
         override fun searchTracks(query: String): Flow<Result<List<Track>>> {
             requestedQueries += query
-            return responses[query] ?: flowOf(Result.Success(emptyList()))
+            return responses[query] ?: flowOf(Result.success(emptyList()))
         }
     }
 }
