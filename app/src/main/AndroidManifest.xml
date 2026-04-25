@@ -16,7 +16,8 @@
         android:theme="@style/Base.Theme.PlaylistMaker">
         <activity
             android:name=".search.ui.SearchActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".medialibrary.MediaLibraryActivity"
             android:exported="false" />
