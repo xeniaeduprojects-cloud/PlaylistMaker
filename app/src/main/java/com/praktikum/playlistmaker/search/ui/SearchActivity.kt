@@ -95,11 +95,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun renderState(state: SearchUiState) {
-        binding.searchClearButton.isVisible =
-            when (state) {
-                is SearchUiState.Idle -> false
-                else -> true
-            }
+        binding.searchClearButton.isVisible = state.searchQuery.isNotEmpty()
         binding.nothingFoundText.isVisible = state is SearchUiState.SearchEmpty
         binding.noConnectionLayout.isVisible = state is SearchUiState.Error
         binding.searchHistoryTitle.isVisible = state is SearchUiState.HistoryContent && state.tracks.isNotEmpty()
