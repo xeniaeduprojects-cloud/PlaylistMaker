@@ -1,6 +1,7 @@
 package com.praktikum.playlistmaker.search.ui
 
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.praktikum.playlistmaker.search.data.model.Track
 
@@ -28,9 +29,28 @@ class TrackAdapter(
     override fun getItemCount(): Int = tracks.size
 
     fun updateTracks(newTracks: List<Track>) {
+        val diffCallback = TrackDiffCallback(tracks, newTracks)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
         tracks = newTracks
-        // NB: google says to use diffutil, but it requires ids,
-        // which are not present in the model now. And fake data is small enough.
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
+    }
+
+    private class TrackDiffCallback(
+        private val oldList: List<Track>,
+        private val newList: List<Track>,
+    ) : DiffUtil.Callback() {
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(
+            oldItemPosition: Int,
+            newItemPosition: Int,
+        ): Boolean = oldList[oldItemPosition].trackId == newList[newItemPosition].trackId
+
+        override fun areContentsTheSame(
+            oldItemPosition: Int,
+            newItemPosition: Int,
+        ): Boolean = oldList[oldItemPosition] == newList[newItemPosition]
     }
 }
