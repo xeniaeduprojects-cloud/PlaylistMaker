@@ -8,14 +8,16 @@ import com.praktikum.playlistmaker.util.RecentSet
 
 class TrackHistoryRepositoryImpl(
     private val sharedPreferences: SharedPreferences,
+    private val capacity: Int = HISTORY_CAPACITY,
 ) : TrackHistoryRepository {
     private val gson = Gson()
 
     override fun getHistory(): RecentSet<Long, Track> {
-        val json = sharedPreferences.getString(TRACKS_HISTORY_KEY, null)
-            ?: return RecentSet(10) { it.trackId }
+        val json =
+            sharedPreferences.getString(TRACKS_HISTORY_KEY, null)
+                ?: return RecentSet(capacity) { it.trackId }
         val tracks = gson.fromJson(json, Array<Track>::class.java).toList()
-        return RecentSet.fromList(tracks, 10) { it.trackId }
+        return RecentSet.fromList(tracks, capacity) { it.trackId }
     }
 
     override fun addTrack(track: Track) {
@@ -31,5 +33,6 @@ class TrackHistoryRepositoryImpl(
 
     companion object {
         private const val TRACKS_HISTORY_KEY = "tracks_history"
+        private const val HISTORY_CAPACITY = 10
     }
 }

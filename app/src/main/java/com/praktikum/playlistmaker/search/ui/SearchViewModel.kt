@@ -15,7 +15,7 @@ class SearchViewModel(
     private val trackRepository: TrackRepository,
     private val trackHistoryRepository: TrackHistoryRepository,
 ) : ViewModel() {
-    private val _uiState = MutableLiveData<SearchUiState>(SearchUiState.Idle())
+    private val _uiState = MutableLiveData<SearchUiState>(SearchUiState.HistoryContent(emptyList()))
     val uiState: LiveData<SearchUiState> = _uiState
 
     private var searchJob: Job? = null
@@ -27,7 +27,8 @@ class SearchViewModel(
     fun onSearchQueryRequested(query: String) {
         if (query.isEmpty()) {
             searchJob?.cancel()
-            _uiState.value = SearchUiState.Idle()
+            val trackHistory = trackHistoryRepository.getHistory().toList()
+            _uiState.value = SearchUiState.HistoryContent(trackHistory)
             return
         }
 
@@ -52,7 +53,8 @@ class SearchViewModel(
 
     fun restoreSearchQuery(query: String) {
         if (query.isEmpty()) {
-            _uiState.value = SearchUiState.Idle()
+            val trackHistory = trackHistoryRepository.getHistory().toList()
+            _uiState.value = SearchUiState.HistoryContent(trackHistory)
             return
         }
 
@@ -67,7 +69,8 @@ class SearchViewModel(
     private fun searchDebounced(query: String) {
         searchJob?.cancel()
         if (query.isEmpty()) {
-            _uiState.value = SearchUiState.Idle()
+            val trackHistory = trackHistoryRepository.getHistory().toList()
+            _uiState.value = SearchUiState.HistoryContent(trackHistory)
             return
         }
         searchJob =
@@ -114,6 +117,6 @@ class SearchViewModel(
 
     fun onClearHistoryClicked() {
         trackHistoryRepository.clearHistory()
-        _uiState.value = SearchUiState.Idle()
+        _uiState.value = SearchUiState.HistoryContent(emptyList())
     }
 }

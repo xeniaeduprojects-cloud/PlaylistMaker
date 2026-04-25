@@ -5,7 +5,7 @@ class RecentSet<K, T>(
     private val id: (T) -> K,
 ) {
     private val map =
-        object : LinkedHashMap<K, T>(capacity, 0.75f, true) {
+        object : LinkedHashMap<K, T>(capacity, LOAD_FACTOR, true) {
             override fun removeEldestEntry(eldest: MutableMap.MutableEntry<K, T>) = size > capacity
         }
 
@@ -16,6 +16,8 @@ class RecentSet<K, T>(
     fun toList(): List<T> = map.values.toList().reversed()
 
     companion object {
+        private const val LOAD_FACTOR = 0.75f
+
         fun <K, T> fromList(
             list: List<T>,
             capacity: Int,

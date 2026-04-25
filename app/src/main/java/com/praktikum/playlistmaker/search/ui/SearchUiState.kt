@@ -5,10 +5,6 @@ import com.praktikum.playlistmaker.search.data.model.Track
 sealed class SearchUiState {
     abstract val searchQuery: String
 
-    data class Idle(
-        override val searchQuery: String = "",
-    ) : SearchUiState()
-
     data class Loading(
         override val searchQuery: String,
         val tracks: List<Track> = emptyList(),

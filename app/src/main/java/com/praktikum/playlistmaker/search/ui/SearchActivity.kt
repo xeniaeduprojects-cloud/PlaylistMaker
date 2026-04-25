@@ -1,7 +1,6 @@
 package com.praktikum.playlistmaker.search.ui
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -33,10 +32,10 @@ class SearchActivity : AppCompatActivity() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
-            
+
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             binding.scrollContent.setPadding(0, 0, 0, ime.bottom)
-            
+
             WindowInsetsCompat.CONSUMED
         }
 
@@ -98,27 +97,29 @@ class SearchActivity : AppCompatActivity() {
         binding.searchClearButton.isVisible = state.searchQuery.isNotEmpty()
         binding.nothingFoundText.isVisible = state is SearchUiState.SearchEmpty
         binding.noConnectionLayout.isVisible = state is SearchUiState.Error
-        binding.searchHistoryTitle.isVisible = state is SearchUiState.HistoryContent && state.tracks.isNotEmpty()
-        binding.clearHistoryButton.isVisible = state is SearchUiState.HistoryContent && state.tracks.isNotEmpty()
 
-        when (state) {
-            is SearchUiState.HistoryContent -> {
-                binding.tracksRecyclerView.adapter = historyTrackAdapter
-                historyTrackAdapter.updateTracks(state.tracks)
+        val hasHistory = state is SearchUiState.HistoryContent && state.tracks.isNotEmpty()
+        binding.searchHistoryTitle.isVisible = hasHistory
+        binding.clearHistoryButton.isVisible = hasHistory
+
+        renderTracks(state)
+    }
+
+    private fun renderTracks(state: SearchUiState) {
+        val (adapter, tracks) =
+            when (state) {
+                is SearchUiState.HistoryContent -> historyTrackAdapter to state.tracks
+                is SearchUiState.Loading -> searchTrackAdapter to state.tracks
+                is SearchUiState.SearchContent -> searchTrackAdapter to state.tracks
+                is SearchUiState.SearchEmpty,
+                is SearchUiState.Error,
+                -> searchTrackAdapter to emptyList()
             }
-            is SearchUiState.SearchContent -> {
-                binding.tracksRecyclerView.adapter = searchTrackAdapter
-                searchTrackAdapter.updateTracks(state.tracks)
-            }
-            is SearchUiState.Loading -> {
-                binding.tracksRecyclerView.adapter = searchTrackAdapter
-                searchTrackAdapter.updateTracks(state.tracks)
-            }
-            else -> {
-                binding.tracksRecyclerView.adapter = searchTrackAdapter
-                searchTrackAdapter.updateTracks(emptyList())
-            }
+
+        if (binding.tracksRecyclerView.adapter != adapter) {
+            binding.tracksRecyclerView.adapter = adapter
         }
+        adapter.updateTracks(tracks)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
