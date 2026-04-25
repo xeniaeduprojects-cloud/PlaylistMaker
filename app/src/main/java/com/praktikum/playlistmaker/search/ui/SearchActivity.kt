@@ -20,7 +20,8 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySearchBinding
     private val viewModel: SearchViewModel by viewModel()
-    private lateinit var trackAdapter: TrackAdapter
+    private lateinit var searchTrackAdapter: TrackAdapter
+    private lateinit var historyTrackAdapter: TrackAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,17 +40,16 @@ class SearchActivity : AppCompatActivity() {
             finish()
         }
 
-        trackAdapter =
+        searchTrackAdapter =
             TrackAdapter { track ->
-                WindowCompat
-                    .getInsetsController(window, binding.searchEditText)
-                    .hide(WindowInsetsCompat.Type.ime())
-                Toast.makeText(this, "${track.trackName} clicked", Toast.LENGTH_SHORT).show()
+                viewModel.onTrackClick(track)
             }
+
+        historyTrackAdapter = TrackAdapter()
 
         binding.tracksRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@SearchActivity)
-            adapter = trackAdapter
+            adapter = searchTrackAdapter
         }
 
         binding.searchEditText.addTextChangedListener(
@@ -96,14 +96,25 @@ class SearchActivity : AppCompatActivity() {
         binding.noConnectionLayout.isVisible = state is SearchUiState.Error
         binding.searchHistoryTitle.isVisible = state is SearchUiState.HistoryContent && state.tracks.isNotEmpty()
         binding.clearHistoryButton.isVisible = state is SearchUiState.HistoryContent && state.tracks.isNotEmpty()
-        trackAdapter.updateTracks(
-            when (state) {
-                is SearchUiState.SearchContent -> state.tracks
-                is SearchUiState.Loading -> state.tracks
-                is SearchUiState.HistoryContent -> state.tracks
-                else -> emptyList()
-            },
-        )
+
+        when (state) {
+            is SearchUiState.HistoryContent -> {
+                binding.tracksRecyclerView.adapter = historyTrackAdapter
+                historyTrackAdapter.updateTracks(state.tracks)
+            }
+            is SearchUiState.SearchContent -> {
+                binding.tracksRecyclerView.adapter = searchTrackAdapter
+                searchTrackAdapter.updateTracks(state.tracks)
+            }
+            is SearchUiState.Loading -> {
+                binding.tracksRecyclerView.adapter = searchTrackAdapter
+                searchTrackAdapter.updateTracks(state.tracks)
+            }
+            else -> {
+                binding.tracksRecyclerView.adapter = searchTrackAdapter
+                searchTrackAdapter.updateTracks(emptyList())
+            }
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

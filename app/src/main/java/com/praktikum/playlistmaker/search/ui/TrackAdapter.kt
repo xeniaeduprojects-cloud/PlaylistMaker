@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.praktikum.playlistmaker.search.data.model.Track
 
 class TrackAdapter(
-    private val onTrackClick: (Track) -> Unit,
+    private val onTrackClick: (Track) -> Unit = {},
 ) : RecyclerView.Adapter<TrackViewHolder>() {
     private var tracks: List<Track> = emptyList()
 

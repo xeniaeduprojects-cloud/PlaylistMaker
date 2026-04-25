@@ -11,15 +11,22 @@ class TrackHistoryRepositoryImpl(
 ) : TrackHistoryRepository {
     private val gson = Gson()
 
-    override fun getHistory(): List<Track> {
-        val json = sharedPreferences.getString(TRACKS_HISTORY_KEY, null) ?: return emptyList()
-        return gson.fromJson(json, Array<Track>::class.java).toList()
+    override fun getHistory(): RecentSet<Long, Track> {
+        val json = sharedPreferences.getString(TRACKS_HISTORY_KEY, null)
+            ?: return RecentSet(10) { it.trackId }
+        val tracks = gson.fromJson(json, Array<Track>::class.java).toList()
+        return RecentSet.fromList(tracks, 10) { it.trackId }
     }
 
-    override fun saveHistory(tracks: List<Track>) {
-        val recentTracks = RecentSet.fromList(tracks, 10) { it.trackId }
+    override fun addTrack(track: Track) {
+        val recentTracks = getHistory()
+        recentTracks.put(track)
         val json = gson.toJson(recentTracks.toList())
         sharedPreferences.edit { putString(TRACKS_HISTORY_KEY, json) }
+    }
+
+    override fun clearHistory() {
+        sharedPreferences.edit { remove(TRACKS_HISTORY_KEY) }
     }
 
     companion object {

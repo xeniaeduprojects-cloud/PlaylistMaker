@@ -45,7 +45,7 @@ class SearchViewModel(
     }
 
     fun onSearchTextEditInFocus() {
-        val trackHistory = trackHistoryRepository.getHistory()
+        val trackHistory = trackHistoryRepository.getHistory().toList()
         _uiState.value = SearchUiState.HistoryContent(trackHistory)
     }
 
@@ -106,4 +106,8 @@ class SearchViewModel(
             is SearchUiState.Loading -> state.tracks
             else -> emptyList()
         }
+
+    fun onTrackClick(track: Track) {
+        trackHistoryRepository.addTrack(track)
+    }
 }
