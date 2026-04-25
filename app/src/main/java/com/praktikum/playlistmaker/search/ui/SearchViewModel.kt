@@ -68,11 +68,6 @@ class SearchViewModel(
 
     private fun searchDebounced(query: String) {
         searchJob?.cancel()
-        if (query.isEmpty()) {
-            val trackHistory = trackHistoryRepository.getHistory().toList()
-            _uiState.value = SearchUiState.HistoryContent(trackHistory)
-            return
-        }
         searchJob =
             viewModelScope.launch {
                 delay(SEARCH_DEBOUNCE_DELAY_MS)

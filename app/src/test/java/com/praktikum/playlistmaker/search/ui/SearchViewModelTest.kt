@@ -161,6 +161,56 @@ class SearchViewModelTest {
         assertEquals(expectedTracks, (finalState as SearchUiState.SearchContent).tracks)
     }
 
+    @Test
+    fun `onSearchTextEditInFocus sets history content state`() {
+        val track1 = track("Track 1")
+        val track2 = track("Track 2")
+        fakeTrackHistoryRepository.addTrack(track1)
+        fakeTrackHistoryRepository.addTrack(track2)
+
+        viewModel.onSearchTextEditInFocus()
+
+        val state = viewModel.uiState.value
+        assertTrue(state is SearchUiState.HistoryContent)
+
+        val historyContent = state as SearchUiState.HistoryContent
+        assertEquals(2, historyContent.tracks.size)
+        assertEquals(track2, historyContent.tracks[0])
+        assertEquals(track1, historyContent.tracks[1])
+    }
+
+    @Test
+    fun `onSearchTextEditInFocus with empty history sets empty history content`() {
+        viewModel.onSearchTextEditInFocus()
+
+        val state = viewModel.uiState.value
+        assertTrue(state is SearchUiState.HistoryContent)
+        assertTrue((state as SearchUiState.HistoryContent).tracks.isEmpty())
+    }
+
+    @Test
+    fun `onTrackClick adds track to history`() {
+        val track1 = track("Track 1")
+
+        viewModel.onTrackClick(track1)
+
+        val history = fakeTrackHistoryRepository.getHistory().toList()
+        assertEquals(1, history.size)
+        assertEquals(track1, history[0])
+    }
+
+    @Test
+    fun `onClearHistoryClicked clears history and sets empty history content`() {
+        val track1 = track("Track 1")
+        fakeTrackHistoryRepository.addTrack(track1)
+
+        viewModel.onClearHistoryClicked()
+
+        val state = viewModel.uiState.value
+        assertTrue(state is SearchUiState.HistoryContent)
+        assertTrue((state as SearchUiState.HistoryContent).tracks.isEmpty())
+    }
+
     private fun track(name: String): Track =
         Track(
             trackId = name.hashCode().toLong(),
@@ -188,7 +238,7 @@ class SearchViewModelTest {
     }
 
     private class FakeTrackHistoryRepository : TrackHistoryRepository {
-        private val history = RecentSet<Long, Track>(10) { it.trackId }
+        private var history = RecentSet<Long, Track>(10) { it.trackId }
 
         override fun getHistory(): RecentSet<Long, Track> = history
 
@@ -197,7 +247,7 @@ class SearchViewModelTest {
         }
 
         override fun clearHistory() {
-            // No-op for tests
+            history = RecentSet(10) { it.trackId }
         }
     }
 }
