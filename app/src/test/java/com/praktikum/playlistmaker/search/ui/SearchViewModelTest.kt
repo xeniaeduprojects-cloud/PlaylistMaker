@@ -2,7 +2,9 @@ package com.praktikum.playlistmaker.search.ui
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.praktikum.playlistmaker.search.data.model.Track
+import com.praktikum.playlistmaker.search.data.repository.TrackHistoryRepository
 import com.praktikum.playlistmaker.search.data.repository.TrackRepository
+import com.praktikum.playlistmaker.util.RecentSet
 import com.praktikum.playlistmaker.utils.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -25,13 +27,14 @@ class SearchViewModelTest {
     val mainDispatcherRule = MainDispatcherRule(StandardTestDispatcher())
 
     private val fakeTrackRepository = FakeTrackRepository()
-    private val viewModel = SearchViewModel(fakeTrackRepository)
+    private val fakeTrackHistoryRepository = FakeTrackHistoryRepository()
+    private val viewModel = SearchViewModel(fakeTrackRepository, fakeTrackHistoryRepository)
 
     @Test
-    fun `initial state is idle`() {
+    fun `initial state is history content`() {
         val state = viewModel.uiState.value
 
-        assertTrue(state is SearchUiState.Idle)
+        assertTrue(state is SearchUiState.HistoryContent)
     }
 
     @Test
@@ -90,7 +93,7 @@ class SearchViewModelTest {
 
         mainDispatcherRule.testDispatcher.scheduler.advanceUntilIdle()
 
-        assertTrue(viewModel.uiState.value is SearchUiState.Idle)
+        assertTrue(viewModel.uiState.value is SearchUiState.HistoryContent)
         assertTrue(fakeTrackRepository.requestedQueries.isEmpty())
     }
 
@@ -114,22 +117,22 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `empty query resets to idle and does not call repository`() {
+    fun `empty query resets to history content and does not call repository`() {
         viewModel.onSearchQueryRequested("")
 
         mainDispatcherRule.testDispatcher.scheduler.advanceUntilIdle()
 
-        assertTrue(viewModel.uiState.value is SearchUiState.Idle)
+        assertTrue(viewModel.uiState.value is SearchUiState.HistoryContent)
         assertTrue(fakeTrackRepository.requestedQueries.isEmpty())
     }
 
     @Test
-    fun `restore empty query sets idle and does not call repository`() {
+    fun `restore empty query sets history content and does not call repository`() {
         viewModel.restoreSearchQuery("")
 
         mainDispatcherRule.testDispatcher.scheduler.advanceUntilIdle()
 
-        assertTrue(viewModel.uiState.value is SearchUiState.Idle)
+        assertTrue(viewModel.uiState.value is SearchUiState.HistoryContent)
         assertTrue(fakeTrackRepository.requestedQueries.isEmpty())
     }
 
@@ -160,6 +163,7 @@ class SearchViewModelTest {
 
     private fun track(name: String): Track =
         Track(
+            trackId = name.hashCode().toLong(),
             trackName = name,
             artistName = "Artist",
             trackTime = "3:00",
@@ -180,6 +184,20 @@ class SearchViewModelTest {
         override fun searchTracks(query: String): Flow<Result<List<Track>>> {
             requestedQueries += query
             return responses[query] ?: flowOf(Result.success(emptyList()))
+        }
+    }
+
+    private class FakeTrackHistoryRepository : TrackHistoryRepository {
+        private val history = RecentSet<Long, Track>(10) { it.trackId }
+
+        override fun getHistory(): RecentSet<Long, Track> = history
+
+        override fun addTrack(track: Track) {
+            history.put(track)
+        }
+
+        override fun clearHistory() {
+            // No-op for tests
         }
     }
 }
