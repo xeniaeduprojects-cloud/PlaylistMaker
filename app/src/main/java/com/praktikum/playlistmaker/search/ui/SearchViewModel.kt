@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.praktikum.playlistmaker.search.data.model.Track
+import com.praktikum.playlistmaker.search.data.repository.TrackHistoryRepository
 import com.praktikum.playlistmaker.search.data.repository.TrackRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -12,6 +13,7 @@ import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val trackRepository: TrackRepository,
+    private val trackHistoryRepository: TrackHistoryRepository,
 ) : ViewModel() {
     private val _uiState = MutableLiveData<SearchUiState>(SearchUiState.Idle())
     val uiState: LiveData<SearchUiState> = _uiState
@@ -75,11 +77,11 @@ class SearchViewModel(
                 .onSuccess { tracks ->
                     _uiState.value =
                         if (tracks.isEmpty()) {
-                            SearchUiState.Empty(
+                            SearchUiState.SearchEmpty(
                                 searchQuery = query,
                             )
                         } else {
-                            SearchUiState.Content(
+                            SearchUiState.SearchContent(
                                 searchQuery = query,
                                 tracks = tracks,
                             )
@@ -95,7 +97,7 @@ class SearchViewModel(
 
     private fun currentTracks(): List<Track> =
         when (val state = _uiState.value) {
-            is SearchUiState.Content -> state.tracks
+            is SearchUiState.SearchContent -> state.tracks
             is SearchUiState.Loading -> state.tracks
             else -> emptyList()
         }

@@ -14,13 +14,18 @@ sealed class SearchUiState {
         val tracks: List<Track> = emptyList(),
     ) : SearchUiState()
 
-    data class Content(
+    data class SearchContent(
         override val searchQuery: String,
         val tracks: List<Track>,
     ) : SearchUiState()
 
-    data class Empty(
+    data class SearchEmpty(
         override val searchQuery: String,
+    ) : SearchUiState()
+
+    data class HistoryContent(
+        override val searchQuery: String = "",
+        val tracks: List<Track>,
     ) : SearchUiState()
 
     data class Error(

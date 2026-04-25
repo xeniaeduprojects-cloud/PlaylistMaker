@@ -54,3 +54,7 @@ https://github.com/ReactiveCircus/android-emulator-runner
                                                                                                     	at java.lang.Daemons$Daemon.run(Daemons.java:132)
                                                                                                     	at java.lang.Thread.run(Thread.java:1119)
 ```
+
+### Todo
+
+- CoroutineExceptionHandler - add in the future

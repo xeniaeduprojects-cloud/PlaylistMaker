@@ -47,8 +47,8 @@ class SearchViewModelTest {
         mainDispatcherRule.testDispatcher.scheduler.advanceUntilIdle()
 
         val finalState = viewModel.uiState.value
-        assertTrue(finalState is SearchUiState.Content)
-        assertEquals(expectedTracks, (finalState as SearchUiState.Content).tracks)
+        assertTrue(finalState is SearchUiState.SearchContent)
+        assertEquals(expectedTracks, (finalState as SearchUiState.SearchContent).tracks)
     }
 
     @Test
@@ -62,7 +62,7 @@ class SearchViewModelTest {
 
         mainDispatcherRule.testDispatcher.scheduler.advanceUntilIdle()
 
-        assertTrue(viewModel.uiState.value is SearchUiState.Empty)
+        assertTrue(viewModel.uiState.value is SearchUiState.SearchEmpty)
     }
 
     @Test
@@ -109,7 +109,7 @@ class SearchViewModelTest {
         assertEquals(listOf("second"), fakeTrackRepository.requestedQueries)
 
         val finalState = viewModel.uiState.value
-        assertTrue(finalState is SearchUiState.Content)
+        assertTrue(finalState is SearchUiState.SearchContent)
         assertEquals("second", finalState?.searchQuery)
     }
 
@@ -154,8 +154,8 @@ class SearchViewModelTest {
 
         assertEquals(listOf(query), fakeTrackRepository.requestedQueries)
         val finalState = viewModel.uiState.value
-        assertTrue(finalState is SearchUiState.Content)
-        assertEquals(expectedTracks, (finalState as SearchUiState.Content).tracks)
+        assertTrue(finalState is SearchUiState.SearchContent)
+        assertEquals(expectedTracks, (finalState as SearchUiState.SearchContent).tracks)
     }
 
     private fun track(name: String): Track =

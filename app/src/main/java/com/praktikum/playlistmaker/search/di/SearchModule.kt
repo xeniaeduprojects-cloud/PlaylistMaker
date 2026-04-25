@@ -3,6 +3,8 @@ package com.praktikum.playlistmaker.search.di
 import com.praktikum.playlistmaker.search.data.network.ITunesApiService
 import com.praktikum.playlistmaker.search.data.network.ITunesRemoteDataSource
 import com.praktikum.playlistmaker.search.data.network.TrackRemoteDataSource
+import com.praktikum.playlistmaker.search.data.repository.TrackHistoryRepository
+import com.praktikum.playlistmaker.search.data.repository.TrackHistoryRepositoryImpl
 import com.praktikum.playlistmaker.search.data.repository.TrackRepository
 import com.praktikum.playlistmaker.search.data.repository.TrackRepositoryImpl
 import com.praktikum.playlistmaker.search.ui.SearchViewModel
@@ -27,6 +29,7 @@ val searchModule =
 
         single<TrackRemoteDataSource> { ITunesRemoteDataSource(get()) }
         single<TrackRepository> { TrackRepositoryImpl(get()) }
+        single<TrackHistoryRepository> { TrackHistoryRepositoryImpl() }
 
         viewModelOf(::SearchViewModel)
     }
