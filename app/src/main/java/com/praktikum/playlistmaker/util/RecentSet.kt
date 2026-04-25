@@ -1,12 +1,12 @@
 package com.praktikum.playlistmaker.util
 
-class RecentSet<T>(
+class RecentSet<K, T>(
     private val capacity: Int,
-    private val id: (T) -> String,
+    private val id: (T) -> K,
 ) {
     private val map =
-        object : LinkedHashMap<String, T>(capacity, 0.75f, true) {
-            override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, T>) = size > capacity
+        object : LinkedHashMap<K, T>(capacity, 0.75f, true) {
+            override fun removeEldestEntry(eldest: MutableMap.MutableEntry<K, T>) = size > capacity
         }
 
     fun put(element: T) {
@@ -16,12 +16,12 @@ class RecentSet<T>(
     fun toList(): List<T> = map.values.toList().reversed()
 
     companion object {
-        fun <T> fromList(
+        fun <K, T> fromList(
             list: List<T>,
             capacity: Int,
-            id: (T) -> String,
-        ): RecentSet<T> {
-            val set = RecentSet<T>(capacity, id)
+            id: (T) -> K,
+        ): RecentSet<K, T> {
+            val set = RecentSet<K, T>(capacity, id)
             list.reversed().forEach { set.put(it) }
             return set
         }

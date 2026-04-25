@@ -60,11 +60,7 @@ class SearchActivity : AppCompatActivity() {
 
         binding.searchEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
-                // 1. create DS for keeping search history
-                // 2. get history from SP -> DS
-                // 3. if not empty -> show history
-                // 4. if empty -> hide history
-                // TODO("AND if empty, show the history")
+                viewModel.onSearchTextEditInFocus()
             }
         }
 
@@ -98,8 +94,8 @@ class SearchActivity : AppCompatActivity() {
             }
         binding.nothingFoundText.isVisible = state is SearchUiState.SearchEmpty
         binding.noConnectionLayout.isVisible = state is SearchUiState.Error
-        binding.searchHistoryTitle.isVisible = state is SearchUiState.HistoryContent
-        binding.clearHistoryButton.isVisible = state is SearchUiState.HistoryContent
+        binding.searchHistoryTitle.isVisible = state is SearchUiState.HistoryContent && state.tracks.isNotEmpty()
+        binding.clearHistoryButton.isVisible = state is SearchUiState.HistoryContent && state.tracks.isNotEmpty()
         trackAdapter.updateTracks(
             when (state) {
                 is SearchUiState.SearchContent -> state.tracks

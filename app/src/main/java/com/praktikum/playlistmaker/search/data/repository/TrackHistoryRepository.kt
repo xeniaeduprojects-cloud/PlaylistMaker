@@ -4,4 +4,6 @@ import com.praktikum.playlistmaker.search.data.model.Track
 
 interface TrackHistoryRepository {
     fun getHistory(): List<Track>
+
+    fun saveHistory(tracks: List<Track>)
 }

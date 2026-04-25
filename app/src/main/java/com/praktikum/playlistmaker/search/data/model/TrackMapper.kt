@@ -5,7 +5,7 @@ import java.util.Locale
 
 @Suppress("ForbiddenComment")
 fun ITunesTrackDto.toTrack(): Track? {
-    if (trackName == null || artistName == null || artworkUrl100 == null) {
+    if (trackId == null || trackName == null || artistName == null || artworkUrl100 == null) {
         // TODO: how to handle null values? should it be exception  here?
         return null
     }
@@ -16,6 +16,7 @@ fun ITunesTrackDto.toTrack(): Track? {
         } ?: "00:00"
 
     return Track(
+        trackId = trackId,
         trackName = trackName,
         artistName = artistName,
         trackTime = trackTimeFormatted,

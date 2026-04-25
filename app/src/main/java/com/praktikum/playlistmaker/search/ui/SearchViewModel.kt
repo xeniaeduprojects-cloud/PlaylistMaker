@@ -44,6 +44,11 @@ class SearchViewModel(
         _uiState.value = SearchUiState.Idle()
     }
 
+    fun onSearchTextEditInFocus() {
+        val trackHistory = trackHistoryRepository.getHistory()
+        _uiState.value = SearchUiState.HistoryContent(trackHistory)
+    }
+
     fun restoreSearchQuery(query: String) {
         if (query.isEmpty()) {
             _uiState.value = SearchUiState.Idle()

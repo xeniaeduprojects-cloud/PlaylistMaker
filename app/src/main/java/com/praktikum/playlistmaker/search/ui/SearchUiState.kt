@@ -24,8 +24,8 @@ sealed class SearchUiState {
     ) : SearchUiState()
 
     data class HistoryContent(
-        override val searchQuery: String = "",
         val tracks: List<Track>,
+        override val searchQuery: String = "",
     ) : SearchUiState()
 
     data class Error(
