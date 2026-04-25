@@ -33,13 +33,11 @@ class SearchActivity : AppCompatActivity() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
-            v.setPadding(
-                systemBars.left,
-                systemBars.top,
-                systemBars.right,
-                systemBars.bottom + ime.bottom
-            )
-            insets
+            
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            binding.scrollContent.setPadding(0, 0, 0, ime.bottom)
+            
+            WindowInsetsCompat.CONSUMED
         }
 
         binding.toolbarSearch.setNavigationOnClickListener {
@@ -81,6 +79,10 @@ class SearchActivity : AppCompatActivity() {
 
         binding.refreshButton.setOnClickListener {
             viewModel.onSearchQueryRequested(binding.searchEditText.text.toString())
+        }
+
+        binding.clearHistoryButton.setOnClickListener {
+            viewModel.onClearHistoryClicked()
         }
 
         observeViewModel()

@@ -110,4 +110,9 @@ class SearchViewModel(
     fun onTrackClick(track: Track) {
         trackHistoryRepository.addTrack(track)
     }
+
+    fun onClearHistoryClicked() {
+        trackHistoryRepository.clearHistory()
+        _uiState.value = SearchUiState.Idle()
+    }
 }
