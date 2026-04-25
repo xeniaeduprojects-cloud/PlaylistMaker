@@ -41,7 +41,8 @@ class SearchViewModel(
 
     fun onClearButtonClicked() {
         searchJob?.cancel()
-        _uiState.value = SearchUiState.Idle()
+        val trackHistory = trackHistoryRepository.getHistory().toList()
+        _uiState.value = SearchUiState.HistoryContent(trackHistory)
     }
 
     fun onSearchTextEditInFocus() {
