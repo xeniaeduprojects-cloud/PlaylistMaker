@@ -8,10 +8,9 @@ import com.praktikum.playlistmaker.util.RecentSet
 
 class TrackHistoryRepositoryImpl(
     private val sharedPreferences: SharedPreferences,
+    private val gson: Gson,
     private val capacity: Int = HISTORY_CAPACITY,
 ) : TrackHistoryRepository {
-    private val gson = Gson()
-
     override fun getHistory(): RecentSet<Long, Track> {
         val json =
             sharedPreferences.getString(TRACKS_HISTORY_KEY, null)

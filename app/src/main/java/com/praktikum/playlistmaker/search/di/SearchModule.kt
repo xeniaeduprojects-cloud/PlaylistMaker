@@ -2,6 +2,7 @@ package com.praktikum.playlistmaker.search.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.google.gson.Gson
 import com.praktikum.playlistmaker.search.data.network.ITunesApiService
 import com.praktikum.playlistmaker.search.data.network.ITunesRemoteDataSource
 import com.praktikum.playlistmaker.search.data.network.TrackRemoteDataSource
@@ -17,6 +18,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val searchModule =
     module {
+        single<Gson> { Gson() }
+
         single<SharedPreferences> {
             get<Context>().getSharedPreferences("playlist_maker_preferences", Context.MODE_PRIVATE)
         }
@@ -25,7 +28,7 @@ val searchModule =
             Retrofit
                 .Builder()
                 .baseUrl("https://itunes.apple.com/")
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(get()))
                 .build()
         }
 
@@ -35,7 +38,7 @@ val searchModule =
 
         single<TrackRemoteDataSource> { ITunesRemoteDataSource(get()) }
         single<TrackRepository> { TrackRepositoryImpl(get()) }
-        single<TrackHistoryRepository> { TrackHistoryRepositoryImpl(get()) }
+        single<TrackHistoryRepository> { TrackHistoryRepositoryImpl(get(), get()) }
 
         viewModelOf(::SearchViewModel)
     }

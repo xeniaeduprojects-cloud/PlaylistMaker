@@ -1,6 +1,5 @@
 package com.praktikum.playlistmaker.settings.ui
 
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -33,17 +32,7 @@ class SettingsViewModel(
     fun onDarkModeToggled(enabled: Boolean) {
         settingsRepository.setDarkMode(enabled)
         _uiState.value = SettingsUiState(isDarkModeEnabled = enabled)
-        applyTheme(enabled)
-    }
-
-    private fun applyTheme(isDarkMode: Boolean) {
-        AppCompatDelegate.setDefaultNightMode(
-            if (isDarkMode) {
-                AppCompatDelegate.MODE_NIGHT_YES
-            } else {
-                AppCompatDelegate.MODE_NIGHT_NO
-            },
-        )
+        _navigationEvent.value = SettingsNavigationEvent.ApplyTheme(enabled)
     }
 
     fun onShareClicked() {

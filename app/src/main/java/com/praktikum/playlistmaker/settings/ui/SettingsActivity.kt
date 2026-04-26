@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -91,6 +92,16 @@ class SettingsActivity : AppCompatActivity() {
             is SettingsNavigationEvent.OpenUrl -> {
                 val intent = Intent(Intent.ACTION_VIEW, event.url.toUri())
                 startActivity(intent)
+            }
+
+            is SettingsNavigationEvent.ApplyTheme -> {
+                AppCompatDelegate.setDefaultNightMode(
+                    if (event.isDarkMode) {
+                        AppCompatDelegate.MODE_NIGHT_YES
+                    } else {
+                        AppCompatDelegate.MODE_NIGHT_NO
+                    },
+                )
             }
         }
     }

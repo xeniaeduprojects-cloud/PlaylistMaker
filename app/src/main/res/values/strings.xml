@@ -26,4 +26,5 @@
     <string name="refresh">Обновить</string>
     <string name="you_searched_text_view">Вы искали</string>
     <string name="clean_history_btn">Очистить историю</string>
+    <string name="navigate_up">Navigate up</string>
 </resources>

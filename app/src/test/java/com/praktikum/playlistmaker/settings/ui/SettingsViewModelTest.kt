@@ -51,6 +51,11 @@ class SettingsViewModelTest {
 
         assertEquals(true, fakeSettingsRepository.isDarkModeEnabled())
         assertEquals(true, viewModel.uiState.value?.isDarkModeEnabled)
+
+        val event = viewModel.navigationEvent.value
+        assertNotNull(event)
+        assert(event is SettingsNavigationEvent.ApplyTheme)
+        assertEquals(true, (event as SettingsNavigationEvent.ApplyTheme).isDarkMode)
     }
 
     @Test

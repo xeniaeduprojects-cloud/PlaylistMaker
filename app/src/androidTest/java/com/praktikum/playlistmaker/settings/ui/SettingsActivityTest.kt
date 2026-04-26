@@ -4,7 +4,6 @@ import android.app.Instrumentation
 import android.content.Intent
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.intent.Intents
@@ -197,9 +196,14 @@ class SettingsActivityTest {
 
         onView(withId(R.id.toolbarSettings)).check(matches(isDisplayed()))
 
-        pressBack()
+        onView(
+            androidx.test.espresso.matcher.ViewMatchers
+                .withContentDescription("Navigate up"),
+        ).perform(click())
 
-        assert(scenario.state.name == "DESTROYED")
+        scenario.onActivity { activity ->
+            assert(activity.isFinishing)
+        }
     }
 
     private fun launchSettingsActivity() {

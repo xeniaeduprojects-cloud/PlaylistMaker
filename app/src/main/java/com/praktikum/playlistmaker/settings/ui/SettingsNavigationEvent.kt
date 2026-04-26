@@ -16,4 +16,8 @@ sealed class SettingsNavigationEvent {
     data class OpenUrl(
         val url: String,
     ) : SettingsNavigationEvent()
+
+    data class ApplyTheme(
+        val isDarkMode: Boolean,
+    ) : SettingsNavigationEvent()
 }
