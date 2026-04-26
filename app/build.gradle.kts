@@ -147,6 +147,7 @@ dependencies {
     testImplementation(libs.androidx.arch.core.testing)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.espresso.intents)
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.koin.test)
 }
