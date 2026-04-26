@@ -1,11 +1,11 @@
 package com.praktikum.playlistmaker.settings
 
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -28,10 +28,15 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
 
-        binding.switchDarkTheme.isChecked =
-            (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val sharedPreferences = getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE)
+        val isDarkMode = sharedPreferences.getBoolean(KEY_DARK_MODE, false)
+        binding.switchDarkTheme.isChecked = isDarkMode
 
         binding.switchDarkTheme.setOnCheckedChangeListener { _, isChecked ->
+            sharedPreferences.edit {
+                putBoolean(KEY_DARK_MODE, isChecked)
+            }
+
             AppCompatDelegate.setDefaultNightMode(
                 if (isChecked) {
                     AppCompatDelegate.MODE_NIGHT_YES
@@ -68,5 +73,10 @@ class SettingsActivity : AppCompatActivity() {
             val intent = Intent(Intent.ACTION_VIEW, getString(R.string.user_agreement_url).toUri())
             startActivity(intent)
         }
+    }
+
+    companion object {
+        const val PREFERENCES_NAME = "playlist_maker_preferences"
+        const val KEY_DARK_MODE = "dark_mode"
     }
 }

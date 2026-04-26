@@ -3,6 +3,7 @@ package com.praktikum.playlistmaker.app
 import android.app.Application
 import android.os.StrictMode
 import android.util.Log
+import androidx.appcompat.app.AppCompatDelegate
 import com.praktikum.playlistmaker.BuildConfig
 import com.praktikum.playlistmaker.search.di.searchModule
 import org.koin.android.ext.koin.androidContext
@@ -16,6 +17,7 @@ class PlaylistMakerApplication : Application() {
             enableStrictMode()
         }
         setupGlobalExceptionHandler()
+        applyThemePreference()
         setupKoin()
     }
 
@@ -38,6 +40,18 @@ class PlaylistMakerApplication : Application() {
         )
     }
 
+    private fun applyThemePreference() {
+        val sharedPreferences = getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE)
+        val isDarkMode = sharedPreferences.getBoolean(KEY_DARK_MODE, false)
+        AppCompatDelegate.setDefaultNightMode(
+            if (isDarkMode) {
+                AppCompatDelegate.MODE_NIGHT_YES
+            } else {
+                AppCompatDelegate.MODE_NIGHT_NO
+            },
+        )
+    }
+
     private fun setupGlobalExceptionHandler() {
         val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
 
@@ -46,5 +60,10 @@ class PlaylistMakerApplication : Application() {
 
             defaultHandler?.uncaughtException(thread, throwable)
         }
+    }
+
+    companion object {
+        private const val PREFERENCES_NAME = "playlist_maker_preferences"
+        private const val KEY_DARK_MODE = "dark_mode"
     }
 }
