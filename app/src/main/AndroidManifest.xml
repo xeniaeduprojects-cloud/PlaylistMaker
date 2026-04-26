@@ -22,7 +22,7 @@
             android:name=".medialibrary.MediaLibraryActivity"
             android:exported="false" />
         <activity
-            android:name=".settings.SettingsActivity"
+            android:name=".settings.ui.SettingsActivity"
             android:exported="false" />
         <activity
             android:name=".app.MainActivity"
