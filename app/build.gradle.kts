@@ -7,7 +7,7 @@ plugins {
     alias(libs.plugins.ktlint)
     alias(libs.plugins.detekt)
     alias(libs.plugins.koin.compiler)
-    alias(libs.plugins.kover)
+    jacoco
 }
 
 android {
@@ -70,25 +70,63 @@ android {
     }
 }
 
-kover {
-    reports {
-        filters {
-            excludes {
-                classes(
-                    "*.R",
-                    "*.R$*",
-                    "*.BuildConfig",
-                    "*.Manifest*",
-                )
-            }
-        }
+jacoco {
+    toolVersion = "0.8.12"
+}
+
+tasks.withType<Test> {
+    configure<JacocoTaskExtension> {
+        isIncludeNoLocationClasses = true
+        excludes = listOf("jdk.internal.*")
     }
+}
+
+tasks.register<JacocoReport>("jacocoTestReport") {
+    group = "verification"
+    description = "Generate merged JaCoCo coverage report from unit and instrumented tests"
+
+    dependsOn("testDebugUnitTest", "createDebugCoverageReport")
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+        csv.required.set(false)
+    }
+
+    val fileFilter =
+        listOf(
+            "**/R.class",
+            "**/R\$*.class",
+            "**/BuildConfig.*",
+            "**/Manifest*.*",
+            "**/*Test*.*",
+            "android/**/*.*",
+            "**/databinding/**/*.*",
+        )
+
+    val debugTree =
+        fileTree("${layout.buildDirectory.get().asFile}/tmp/kotlin-classes/debug") {
+            exclude(fileFilter)
+        }
+
+    val mainSrc = "${project.projectDir}/src/main/java"
+
+    sourceDirectories.setFrom(files(mainSrc))
+    classDirectories.setFrom(files(debugTree))
+    executionData.setFrom(
+        fileTree(layout.buildDirectory.get().asFile) {
+            include(
+                "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec",
+                "outputs/code_coverage/debugAndroidTest/connected/**/*.ec",
+            )
+        },
+    )
 }
 
 tasks.register("ciAllXmlReports") {
     group = "verification"
-    description = "Runs unit and instrumented tests and generates merged Kover XML report"
-    dependsOn("testDebugUnitTest", "connectedDebugAndroidTest", "koverXmlReport")
+    description = "Runs unit and instrumented tests and generates merged JaCoCo XML report"
+    dependsOn("testDebugUnitTest", "connectedDebugAndroidTest", "jacocoTestReport")
 }
 
 dependencies {
