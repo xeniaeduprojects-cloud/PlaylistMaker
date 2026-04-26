@@ -228,6 +228,38 @@ class SearchActivityTest {
         onView(withId(R.id.trackSubtitle)).check(matches(withText("Test Artist • 03:45")))
     }
 
+    @Test
+    fun search_query_is_saved_and_restored_on_configuration_change() {
+        val searchQuery = "metallica"
+
+        val scenario = ActivityScenario.launch(SearchActivity::class.java)
+
+        onView(withId(R.id.searchEditText)).perform(typeText(searchQuery), closeSoftKeyboard())
+        onView(withId(R.id.searchEditText)).check(matches(withText(searchQuery)))
+
+        scenario.recreate()
+
+        onView(withId(R.id.searchEditText)).check(matches(withText(searchQuery)))
+    }
+
+    @Test
+    fun clear_history_button_clears_history_and_hides_itself() {
+        fakeTrackHistoryRepository.addTrack(track("Song 1"))
+        fakeTrackHistoryRepository.addTrack(track("Song 2"))
+
+        launchSearchActivity()
+
+        onView(withId(R.id.searchEditText)).perform(click())
+
+        onView(withId(R.id.clearHistoryButton)).check(matches(isDisplayed()))
+        onView(withId(R.id.searchHistoryTitle)).check(matches(isDisplayed()))
+
+        onView(withId(R.id.clearHistoryButton)).perform(click())
+
+        onView(withId(R.id.clearHistoryButton)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.searchHistoryTitle)).check(matches(not(isDisplayed())))
+    }
+
     private fun launchSearchActivity() {
         ActivityScenario.launch(SearchActivity::class.java)
     }
