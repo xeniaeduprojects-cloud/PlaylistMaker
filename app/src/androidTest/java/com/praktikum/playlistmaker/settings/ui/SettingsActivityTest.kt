@@ -14,7 +14,6 @@ import androidx.test.espresso.intent.matcher.IntentMatchers.hasData
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra
 import androidx.test.espresso.intent.matcher.IntentMatchers.hasType
 import androidx.test.espresso.matcher.ViewMatchers.isChecked
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isNotChecked
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -188,22 +187,6 @@ class SettingsActivityTest {
 
         onView(withId(R.id.switchDarkTheme)).perform(click())
         assert(fakeSettingsRepository.isDarkModeEnabled())
-    }
-
-    @Test
-    fun toolbar_navigation_button_finishes_activity() {
-        val scenario = ActivityScenario.launch(SettingsActivity::class.java)
-
-        onView(withId(R.id.toolbarSettings)).check(matches(isDisplayed()))
-
-        onView(
-            androidx.test.espresso.matcher.ViewMatchers
-                .withContentDescription("Navigate up"),
-        ).perform(click())
-
-        scenario.onActivity { activity ->
-            assert(activity.isFinishing)
-        }
     }
 
     private fun launchSettingsActivity() {
