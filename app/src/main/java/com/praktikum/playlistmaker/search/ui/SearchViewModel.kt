@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.praktikum.playlistmaker.search.data.model.Track
 import com.praktikum.playlistmaker.search.data.repository.TrackHistoryRepository
 import com.praktikum.playlistmaker.search.data.repository.TrackRepository
+import com.praktikum.playlistmaker.util.SingleLiveEvent
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -17,6 +18,9 @@ class SearchViewModel(
 ) : ViewModel() {
     private val _uiState = MutableLiveData<SearchUiState>(SearchUiState.HistoryContent(emptyList()))
     val uiState: LiveData<SearchUiState> = _uiState
+
+    private val _navigateToPlayer = SingleLiveEvent<Track>()
+    val navigateToPlayer: LiveData<Track> = _navigateToPlayer
 
     private var searchJob: Job? = null
 
@@ -108,6 +112,7 @@ class SearchViewModel(
 
     fun onTrackClick(track: Track) {
         trackHistoryRepository.addTrack(track)
+        _navigateToPlayer.value = track
     }
 
     fun onClearHistoryClicked() {
