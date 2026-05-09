@@ -8,6 +8,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.praktikum.playlistmaker.R
 import com.praktikum.playlistmaker.databinding.ActivityPlayerBinding
 import com.praktikum.playlistmaker.search.data.model.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -68,7 +71,18 @@ class PlayerActivity : AppCompatActivity() {
     private fun renderState(state: PlayerUiState) {
         when (state) {
             is PlayerUiState.Content -> {
-                val unknown = getString(com.praktikum.playlistmaker.R.string.unknown)
+                val unknown = getString(R.string.unknown)
+                val cornerRadiusPx = resources.getDimensionPixelSize(R.dimen.album_art_corner_radius_big)
+
+                Glide
+                    .with(this)
+                    .load(state.artworkUrl)
+                    .placeholder(R.drawable.album_placeholder)
+                    .error(R.drawable.album_placeholder)
+                    .centerCrop()
+                    .transform(RoundedCorners(cornerRadiusPx))
+                    .into(binding.imgAlbumArt)
+
                 binding.tvTrackTitle.text = state.trackName
                 binding.tvArtistName.text = state.artistName
                 binding.tvDuration.text = state.duration

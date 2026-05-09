@@ -14,4 +14,7 @@ data class Track(
     val releaseDate: String?,
     val primaryGenreName: String?,
     val country: String?,
-) : Parcelable
+) : Parcelable {
+    val artworkUrl512: String
+        get() = artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
+}
