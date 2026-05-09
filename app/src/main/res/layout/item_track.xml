@@ -12,8 +12,8 @@
 
     <ImageView
         android:id="@+id/trackAlbumArt"
-        android:layout_width="@dimen/album_art_size"
-        android:layout_height="@dimen/album_art_size"
+        android:layout_width="@dimen/track_item_album_art_size"
+        android:layout_height="@dimen/track_item_album_art_size"
         android:layout_gravity="center_vertical"
         android:scaleType="centerCrop"
         android:contentDescription="@string/album_art_description" />
@@ -48,8 +48,8 @@
 
     <ImageView
         android:id="@+id/trackChevron"
-        android:layout_width="@dimen/track_chevron_size"
-        android:layout_height="@dimen/track_chevron_size"
+        android:layout_width="@dimen/track_item_chevron_size"
+        android:layout_height="@dimen/track_item_chevron_size"
         android:layout_gravity="center_vertical"
         android:src="@drawable/ic_arrow_forward"
         android:contentDescription="@string/view_track_description"
