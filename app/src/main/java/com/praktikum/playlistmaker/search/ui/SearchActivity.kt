@@ -49,7 +49,10 @@ class SearchActivity : AppCompatActivity() {
                 viewModel.onTrackClick(track)
             }
 
-        historyTrackAdapter = TrackAdapter()
+        historyTrackAdapter =
+            TrackAdapter { track ->
+                viewModel.onTrackClick(track)
+            }
 
         binding.tracksRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@SearchActivity)
