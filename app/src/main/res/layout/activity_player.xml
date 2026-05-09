@@ -69,7 +69,9 @@
         android:layout_marginStart="@dimen/spacing_xxl"
         android:layout_marginTop="@dimen/spacing_xxs"
         android:layout_marginEnd="@dimen/spacing_xxl"
+        android:ellipsize="end"
         android:fontFamily="@font/ys_display_medium"
+        android:maxLines="1"
         android:textColor="?attr/colorOnSecondary"
         android:textSize="@dimen/player_artist_name_text_size"
         app:layout_constraintEnd_toEndOf="parent"
@@ -145,6 +147,7 @@
         style="@style/PlayerMetaInfoValue"
         app:layout_constraintBaseline_toBaselineOf="@id/label_duration"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/label_duration"
         tools:text="5:35" />
 
     <!-- Album Row -->
@@ -160,6 +163,7 @@
         style="@style/PlayerMetaInfoValue"
         app:layout_constraintBaseline_toBaselineOf="@id/label_album"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/label_album"
         tools:text="Yesterday (Remastered 2009)" />
 
     <!-- Year Row -->
@@ -175,6 +179,7 @@
         style="@style/PlayerMetaInfoValue"
         app:layout_constraintBaseline_toBaselineOf="@id/label_year"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/label_year"
         tools:text="1965" />
 
     <!-- Genre Row -->
@@ -190,6 +195,7 @@
         style="@style/PlayerMetaInfoValue"
         app:layout_constraintBaseline_toBaselineOf="@id/label_genre"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/label_genre"
         tools:text="Rock" />
 
     <!-- Country Row -->
@@ -205,6 +211,7 @@
         style="@style/PlayerMetaInfoValue"
         app:layout_constraintBaseline_toBaselineOf="@id/label_country"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/label_country"
         tools:text="United Kingdom" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
