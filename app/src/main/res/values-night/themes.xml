@@ -8,7 +8,7 @@
         <item name="colorControlActivated">@color/yp_blue</item>
     </style>
 
-    <style name="RefreshButton" parent="RefreshButtonBase">
+    <style name="RoundedButton" parent="RoundedButtonBase">
         <item name="android:textColor">@color/yp_black</item>
     </style>
 

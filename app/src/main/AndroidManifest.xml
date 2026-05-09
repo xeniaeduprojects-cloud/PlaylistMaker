@@ -16,12 +16,16 @@
         android:theme="@style/Base.Theme.PlaylistMaker">
         <activity
             android:name=".search.ui.SearchActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".player.ui.PlayerActivity"
             android:exported="false" />
         <activity
             android:name=".medialibrary.MediaLibraryActivity"
             android:exported="false" />
         <activity
-            android:name=".settings.SettingsActivity"
+            android:name=".settings.ui.SettingsActivity"
             android:exported="false" />
         <activity
             android:name=".app.MainActivity"

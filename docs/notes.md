@@ -41,6 +41,10 @@ https://insert-koin.io/docs/reference/koin-android/instrumented-testing/
 ### Github Actions
 https://github.com/ReactiveCircus/android-emulator-runner
 
+### on rotation problem with navigation
+
+- singleliveevent vs livedata - https://medium.com/huawei-developers/comparison-of-livedata-singleliveevent-and-mediatorlivedata-in-android-6ff1a24a98e1
+
 ### Questions
 
 ```bash
@@ -54,3 +58,7 @@ https://github.com/ReactiveCircus/android-emulator-runner
                                                                                                     	at java.lang.Daemons$Daemon.run(Daemons.java:132)
                                                                                                     	at java.lang.Thread.run(Thread.java:1119)
 ```
+
+### Todo
+
+- CoroutineExceptionHandler - add in the future

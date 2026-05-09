@@ -71,16 +71,47 @@
 
         <Button
             android:id="@+id/refreshButton"
-            style="@style/RefreshButton"
+            style="@style/RoundedButton"
             android:text="@string/refresh" />
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/tracksRecyclerView"
+
+    <LinearLayout
+        android:id="@+id/scrollContent"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="@dimen/spacing_lg"
-        android:clipToPadding="false" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/searchHistoryTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/you_searched_text_view"
+            android:textColor="?attr/colorOnSecondary"
+            android:fontFamily="@font/ys_display_medium"
+            android:textSize="@dimen/text_subtitle"
+            android:letterSpacing="0"
+            android:gravity="center_horizontal"
+            android:paddingTop="@dimen/spacing_xxxl"
+            android:paddingBottom="@dimen/spacing_md"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/tracksRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="@dimen/spacing_lg"
+            android:clipToPadding="false" />
+
+        <Button
+            android:id="@+id/clearHistoryButton"
+            style="@style/RoundedButton"
+            android:text="@string/clean_history_btn"
+            android:layout_marginTop="@dimen/spacing_xxl"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
 
 </LinearLayout>

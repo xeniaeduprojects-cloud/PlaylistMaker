@@ -5,16 +5,22 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.praktikum.playlistmaker.search.data.model.Track
+import com.praktikum.playlistmaker.search.data.repository.TrackHistoryRepository
 import com.praktikum.playlistmaker.search.data.repository.TrackRepository
+import com.praktikum.playlistmaker.util.SingleLiveEvent
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
     private val trackRepository: TrackRepository,
+    private val trackHistoryRepository: TrackHistoryRepository,
 ) : ViewModel() {
-    private val _uiState = MutableLiveData<SearchUiState>(SearchUiState.Idle())
+    private val _uiState = MutableLiveData<SearchUiState>(SearchUiState.HistoryContent(emptyList()))
     val uiState: LiveData<SearchUiState> = _uiState
+
+    private val _navigateToPlayer = SingleLiveEvent<Track>()
+    val navigateToPlayer: LiveData<Track> = _navigateToPlayer
 
     private var searchJob: Job? = null
 
@@ -25,7 +31,8 @@ class SearchViewModel(
     fun onSearchQueryRequested(query: String) {
         if (query.isEmpty()) {
             searchJob?.cancel()
-            _uiState.value = SearchUiState.Idle()
+            val trackHistory = trackHistoryRepository.getHistory().toList()
+            _uiState.value = SearchUiState.HistoryContent(trackHistory)
             return
         }
 
@@ -39,12 +46,19 @@ class SearchViewModel(
 
     fun onClearButtonClicked() {
         searchJob?.cancel()
-        _uiState.value = SearchUiState.Idle()
+        val trackHistory = trackHistoryRepository.getHistory().toList()
+        _uiState.value = SearchUiState.HistoryContent(trackHistory)
+    }
+
+    fun onSearchTextEditInFocus() {
+        val trackHistory = trackHistoryRepository.getHistory().toList()
+        _uiState.value = SearchUiState.HistoryContent(trackHistory)
     }
 
     fun restoreSearchQuery(query: String) {
         if (query.isEmpty()) {
-            _uiState.value = SearchUiState.Idle()
+            val trackHistory = trackHistoryRepository.getHistory().toList()
+            _uiState.value = SearchUiState.HistoryContent(trackHistory)
             return
         }
 
@@ -58,10 +72,6 @@ class SearchViewModel(
 
     private fun searchDebounced(query: String) {
         searchJob?.cancel()
-        if (query.isEmpty()) {
-            _uiState.value = SearchUiState.Idle()
-            return
-        }
         searchJob =
             viewModelScope.launch {
                 delay(SEARCH_DEBOUNCE_DELAY_MS)
@@ -75,11 +85,11 @@ class SearchViewModel(
                 .onSuccess { tracks ->
                     _uiState.value =
                         if (tracks.isEmpty()) {
-                            SearchUiState.Empty(
+                            SearchUiState.SearchEmpty(
                                 searchQuery = query,
                             )
                         } else {
-                            SearchUiState.Content(
+                            SearchUiState.SearchContent(
                                 searchQuery = query,
                                 tracks = tracks,
                             )
@@ -95,8 +105,18 @@ class SearchViewModel(
 
     private fun currentTracks(): List<Track> =
         when (val state = _uiState.value) {
-            is SearchUiState.Content -> state.tracks
+            is SearchUiState.SearchContent -> state.tracks
             is SearchUiState.Loading -> state.tracks
             else -> emptyList()
         }
+
+    fun onTrackClick(track: Track) {
+        trackHistoryRepository.addTrack(track)
+        _navigateToPlayer.value = track
+    }
+
+    fun onClearHistoryClicked() {
+        trackHistoryRepository.clearHistory()
+        _uiState.value = SearchUiState.HistoryContent(emptyList())
+    }
 }

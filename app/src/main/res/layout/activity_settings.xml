@@ -10,6 +10,7 @@
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbarSettings"
         style="@style/ScreenToolbar"
+        app:navigationContentDescription="@string/navigate_up"
         app:title="@string/settings" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial

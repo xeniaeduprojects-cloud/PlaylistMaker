@@ -36,7 +36,7 @@ jobs:
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
-      - name: Run tests and generate Kover XML report
+      - name: Run tests and generate JaCoCo XML report
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
@@ -44,12 +44,19 @@ jobs:
           profile: pixel_7_pro
           script: ./gradlew app:ciAllXmlReports
 
-      - name: Upload Kover XML report
+      - name: Upload JaCoCo XML report
         uses: actions/upload-artifact@v4
         with:
-          name: kover-xml-report
+          name: jacoco-xml-report
           path: |
-            app/build/reports/kover/report.xml
+            app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
+
+      - name: Upload JaCoCo HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-html-report
+          path: |
+            app/build/reports/jacoco/jacocoTestReport/html/**
 
       - name: Upload instrumented test XML reports
         uses: actions/upload-artifact@v4
@@ -64,4 +71,4 @@ jobs:
         uses: pooi/coverage-comment@1.0.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          xml-test-report-path: app/build/reports/kover/report.xml
+          xml-test-report-path: app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml

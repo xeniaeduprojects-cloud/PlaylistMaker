@@ -1,12 +1,18 @@
 package com.praktikum.playlistmaker.search.data.model
 
+import android.util.Log
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-@Suppress("ForbiddenComment")
 fun ITunesTrackDto.toTrack(): Track? {
-    if (trackName == null || artistName == null || artworkUrl100 == null) {
-        // TODO: how to handle null values? should it be exception  here?
+    val requiredFields = listOf(trackId, trackName, artistName, artworkUrl100)
+    if (requiredFields.any { it == null }) {
+        Log.w(
+            "TrackMapper",
+            "Track has missing required fields: " +
+                "trackId=$trackId, trackName=$trackName, " +
+                "artistName=$artistName, artworkUrl100=$artworkUrl100",
+        )
         return null
     }
 
@@ -15,10 +21,18 @@ fun ITunesTrackDto.toTrack(): Track? {
             SimpleDateFormat("mm:ss", Locale.getDefault()).format(it)
         } ?: "00:00"
 
+    @Suppress("MagicNumber")
+    val year = releaseDate?.substring(0, 4)
+
     return Track(
-        trackName = trackName,
-        artistName = artistName,
+        trackId = trackId!!,
+        trackName = trackName!!,
+        artistName = artistName!!,
         trackTime = trackTimeFormatted,
-        artworkUrl100 = artworkUrl100,
+        artworkUrl100 = artworkUrl100!!,
+        collectionName = collectionName,
+        releaseDate = year,
+        primaryGenreName = primaryGenreName,
+        country = country,
     )
 }

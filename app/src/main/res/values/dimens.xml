@@ -6,9 +6,12 @@
     <dimen name="spacing_md">12dp</dimen>
     <dimen name="spacing_lg">16dp</dimen>
     <dimen name="spacing_xl">20dp</dimen>
+    <dimen name="spacing_xxl">24dp</dimen>
+    <dimen name="spacing_xxxl">42dp</dimen>
 
     <!-- Text sizes -->
     <dimen name="text_body">16sp</dimen>
+    <dimen name="text_subtitle">19sp</dimen>
     <dimen name="text_error">19sp</dimen>
     <dimen name="text_title">22sp</dimen>
 

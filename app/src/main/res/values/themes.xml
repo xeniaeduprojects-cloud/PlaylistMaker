@@ -64,7 +64,7 @@
         <item name="android:visibility">gone</item>
     </style>
 
-    <style name="RefreshButtonBase" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+    <style name="RoundedButtonBase" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center_horizontal</item>
@@ -81,7 +81,7 @@
         <item name="contentPaddingRight">14dp</item>
     </style>
 
-    <style name="RefreshButton" parent="RefreshButtonBase">
+    <style name="RoundedButton" parent="RoundedButtonBase">
         <item name="android:textColor">@color/yp_white</item>
     </style>
 </resources>

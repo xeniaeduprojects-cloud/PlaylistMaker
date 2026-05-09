@@ -9,6 +9,7 @@ import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
+import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -18,8 +19,10 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.praktikum.playlistmaker.R
 import com.praktikum.playlistmaker.search.data.model.Track
+import com.praktikum.playlistmaker.search.data.repository.TrackHistoryRepository
 import com.praktikum.playlistmaker.search.data.repository.TrackRepository
 import com.praktikum.playlistmaker.search.di.searchModule
+import com.praktikum.playlistmaker.util.RecentSet
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.hamcrest.Description
 import org.hamcrest.Matcher
@@ -39,11 +42,13 @@ import retrofit2.Response
 @RunWith(AndroidJUnit4::class)
 class SearchActivityTest {
     private val fakeTrackRepository = TrackRepositoryAndroidTest()
+    private val fakeTrackHistoryRepository = FakeTrackHistoryRepository()
 
     private val testModule by lazy {
         module {
             single<TrackRepository> { fakeTrackRepository }
-            viewModel { SearchViewModel(get()) }
+            single<TrackHistoryRepository> { fakeTrackHistoryRepository }
+            viewModel { SearchViewModel(get(), get()) }
         }
     }
 
@@ -160,6 +165,18 @@ class SearchActivityTest {
     }
 
     @Test
+    fun removing_all_characters_hides_clear_button() {
+        launchSearchActivity()
+
+        onView(withId(R.id.searchEditText)).perform(typeText("test"), closeSoftKeyboard())
+        onView(withId(R.id.searchClearButton)).check(matches(isDisplayed()))
+
+        onView(withId(R.id.searchEditText)).perform(replaceText(""), closeSoftKeyboard())
+
+        onView(withId(R.id.searchClearButton)).check(matches(not(isDisplayed())))
+    }
+
+    @Test
     fun refresh_button_retries_last_failed_search() {
         val query = "offline"
         val httpException = HttpException(Response.error<Any>(500, "".toResponseBody()))
@@ -192,6 +209,7 @@ class SearchActivityTest {
             Result.success(
                 listOf(
                     Track(
+                        trackId = 1L,
                         trackName = "Test Song",
                         artistName = "Test Artist",
                         trackTime = "03:45",
@@ -208,6 +226,38 @@ class SearchActivityTest {
 
         onView(withId(R.id.trackSubtitle)).check(matches(isDisplayed()))
         onView(withId(R.id.trackSubtitle)).check(matches(withText("Test Artist • 03:45")))
+    }
+
+    @Test
+    fun search_query_is_saved_and_restored_on_configuration_change() {
+        val searchQuery = "metallica"
+
+        val scenario = ActivityScenario.launch(SearchActivity::class.java)
+
+        onView(withId(R.id.searchEditText)).perform(typeText(searchQuery), closeSoftKeyboard())
+        onView(withId(R.id.searchEditText)).check(matches(withText(searchQuery)))
+
+        scenario.recreate()
+
+        onView(withId(R.id.searchEditText)).check(matches(withText(searchQuery)))
+    }
+
+    @Test
+    fun clear_history_button_clears_history_and_hides_itself() {
+        fakeTrackHistoryRepository.addTrack(track("Song 1"))
+        fakeTrackHistoryRepository.addTrack(track("Song 2"))
+
+        launchSearchActivity()
+
+        onView(withId(R.id.searchEditText)).perform(click())
+
+        onView(withId(R.id.clearHistoryButton)).check(matches(isDisplayed()))
+        onView(withId(R.id.searchHistoryTitle)).check(matches(isDisplayed()))
+
+        onView(withId(R.id.clearHistoryButton)).perform(click())
+
+        onView(withId(R.id.clearHistoryButton)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.searchHistoryTitle)).check(matches(not(isDisplayed())))
     }
 
     private fun launchSearchActivity() {
@@ -250,9 +300,24 @@ class SearchActivityTest {
         artist: String = "Artist",
     ): Track =
         Track(
+            trackId = name.hashCode().toLong(),
             trackName = name,
             artistName = artist,
             trackTime = "03:30",
             artworkUrl100 = "https://example.com/art.jpg",
         )
+
+    private class FakeTrackHistoryRepository : TrackHistoryRepository {
+        private val history = RecentSet<Long, Track>(10) { it.trackId }
+
+        override fun getHistory(): RecentSet<Long, Track> = history
+
+        override fun addTrack(track: Track) {
+            history.put(track)
+        }
+
+        override fun clearHistory() {
+            // No-op for tests
+        }
+    }
 }
