@@ -19,9 +19,6 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".player.ui.PlayerActivity"
-            android:exported="false" />
-        <activity
             android:name=".medialibrary.MediaLibraryActivity"
             android:exported="false" />
         <activity

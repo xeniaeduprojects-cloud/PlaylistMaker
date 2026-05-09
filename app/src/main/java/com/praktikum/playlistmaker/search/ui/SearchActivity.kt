@@ -10,7 +10,6 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.praktikum.playlistmaker.databinding.ActivitySearchBinding
-import com.praktikum.playlistmaker.player.ui.PlayerActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
@@ -91,11 +90,6 @@ class SearchActivity : AppCompatActivity() {
     private fun observeViewModel() {
         viewModel.uiState.observe(this) { state ->
             renderState(state)
-        }
-
-        viewModel.navigateToPlayer.observe(this) { track ->
-            val intent = PlayerActivity.createIntent(context = this, track = track)
-            startActivity(intent)
         }
     }
 
