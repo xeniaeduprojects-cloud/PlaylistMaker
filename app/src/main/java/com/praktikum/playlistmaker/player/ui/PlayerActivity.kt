@@ -73,7 +73,7 @@ class PlayerActivity : AppCompatActivity() {
     private fun renderState(state: PlayerUiState) {
         when (state) {
             is PlayerUiState.Content -> {
-                val cornerRadiusPx = resources.getDimensionPixelSize(R.dimen.album_art_corner_radius_big)
+                val cornerRadiusPx = resources.getDimensionPixelSize(R.dimen.player_album_art_corner_radius)
 
                 Glide
                     .with(this)
