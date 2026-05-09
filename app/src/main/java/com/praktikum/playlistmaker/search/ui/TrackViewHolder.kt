@@ -17,7 +17,11 @@ class TrackViewHolder private constructor(
     )
 
     fun bind(track: Track) {
-        val cornerRadiusPx = itemView.context.resources.getDimensionPixelSize(R.dimen.album_art_corner_radius_small)
+        val cornerRadiusPx =
+            itemView.context.resources.getDimensionPixelSize(
+                R.dimen.track_item_album_art_corner_radius_small,
+            )
+
         Glide
             .with(itemView.context)
             .load(track.artworkUrl100)
