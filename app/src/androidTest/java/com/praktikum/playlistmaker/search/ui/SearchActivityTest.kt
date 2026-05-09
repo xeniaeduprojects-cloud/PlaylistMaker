@@ -214,6 +214,10 @@ class SearchActivityTest {
                         artistName = "Test Artist",
                         trackTime = "03:45",
                         artworkUrl100 = "https://example.com/art.jpg",
+                        collectionName = null,
+                        releaseDate = null,
+                        primaryGenreName = null,
+                        country = null,
                     ),
                 ),
             ),
@@ -305,6 +309,10 @@ class SearchActivityTest {
             artistName = artist,
             trackTime = "03:30",
             artworkUrl100 = "https://example.com/art.jpg",
+            collectionName = null,
+            releaseDate = null,
+            primaryGenreName = null,
+            country = null,
         )
 
     private class FakeTrackHistoryRepository : TrackHistoryRepository {
