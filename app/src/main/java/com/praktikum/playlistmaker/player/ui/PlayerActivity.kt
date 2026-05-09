@@ -4,10 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.praktikum.playlistmaker.R
@@ -71,7 +73,6 @@ class PlayerActivity : AppCompatActivity() {
     private fun renderState(state: PlayerUiState) {
         when (state) {
             is PlayerUiState.Content -> {
-                val unknown = getString(R.string.unknown)
                 val cornerRadiusPx = resources.getDimensionPixelSize(R.dimen.album_art_corner_radius_big)
 
                 Glide
@@ -86,11 +87,23 @@ class PlayerActivity : AppCompatActivity() {
                 binding.tvTrackTitle.text = state.trackName
                 binding.tvArtistName.text = state.artistName
                 binding.tvDuration.text = state.duration
-                binding.tvAlbum.text = state.album ?: unknown
-                binding.tvYear.text = state.year ?: unknown
-                binding.tvGenre.text = state.genre ?: unknown
-                binding.tvCountry.text = state.country ?: unknown
+
+                setMetaInfoRowVisibility(state.album, binding.labelAlbum, binding.tvAlbum)
+                setMetaInfoRowVisibility(state.year, binding.labelYear, binding.tvYear)
+                setMetaInfoRowVisibility(state.genre, binding.labelGenre, binding.tvGenre)
+                setMetaInfoRowVisibility(state.country, binding.labelCountry, binding.tvCountry)
             }
         }
+    }
+
+    private fun setMetaInfoRowVisibility(
+        value: String?,
+        labelView: TextView,
+        valueView: TextView,
+    ) {
+        val isVisible = value != null
+        labelView.isVisible = isVisible
+        valueView.isVisible = isVisible
+        valueView.text = value
     }
 }
