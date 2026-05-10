@@ -16,5 +16,9 @@ data class Track(
     val country: String?,
 ) : Parcelable {
     val artworkUrl512: String
-        get() = artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
+        get() =
+            artworkUrl100
+                .takeIf { it.contains('/') }
+                ?.replaceAfterLast('/', "512x512bb.jpg")
+                ?: artworkUrl100
 }
