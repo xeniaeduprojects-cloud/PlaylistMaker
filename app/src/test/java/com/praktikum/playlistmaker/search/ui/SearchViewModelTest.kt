@@ -218,6 +218,10 @@ class SearchViewModelTest {
             artistName = "Artist",
             trackTime = "3:00",
             artworkUrl100 = "https://example.com/artwork.jpg",
+            collectionName = null,
+            releaseDate = null,
+            primaryGenreName = null,
+            country = null,
         )
 
     private class FakeTrackRepository : TrackRepository {

@@ -41,6 +41,13 @@ https://insert-koin.io/docs/reference/koin-android/instrumented-testing/
 ### Github Actions
 https://github.com/ReactiveCircus/android-emulator-runner
 
+### on rotation problem with navigation
+
+- singleliveevent vs livedata - https://medium.com/huawei-developers/comparison-of-livedata-singleliveevent-and-mediatorlivedata-in-android-6ff1a24a98e1
+- receiveAsFlow: https://slack-chats.kotlinlang.org/t/490166/how-can-a-singleliveevent-android-pattern-when-using-view-mo
+
+
+
 ### Questions
 
 ```bash

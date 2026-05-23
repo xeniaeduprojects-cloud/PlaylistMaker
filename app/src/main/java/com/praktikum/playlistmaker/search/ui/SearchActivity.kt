@@ -8,8 +8,13 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.praktikum.playlistmaker.databinding.ActivitySearchBinding
+import com.praktikum.playlistmaker.player.ui.PlayerActivity
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
@@ -48,7 +53,10 @@ class SearchActivity : AppCompatActivity() {
                 viewModel.onTrackClick(track)
             }
 
-        historyTrackAdapter = TrackAdapter()
+        historyTrackAdapter =
+            TrackAdapter { track ->
+                viewModel.onTrackClick(track)
+            }
 
         binding.tracksRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@SearchActivity)
@@ -90,6 +98,14 @@ class SearchActivity : AppCompatActivity() {
     private fun observeViewModel() {
         viewModel.uiState.observe(this) { state ->
             renderState(state)
+        }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.navigateToPlayer.collect { track ->
+                    startActivity(PlayerActivity.createIntent(this@SearchActivity, track))
+                }
+            }
         }
     }
 

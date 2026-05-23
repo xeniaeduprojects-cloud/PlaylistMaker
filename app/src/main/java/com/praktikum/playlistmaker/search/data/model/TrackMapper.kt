@@ -21,11 +21,18 @@ fun ITunesTrackDto.toTrack(): Track? {
             SimpleDateFormat("mm:ss", Locale.getDefault()).format(it)
         } ?: "00:00"
 
+    @Suppress("MagicNumber")
+    val year = releaseDate?.substring(0, 4)
+
     return Track(
         trackId = trackId!!,
         trackName = trackName!!,
         artistName = artistName!!,
         trackTime = trackTimeFormatted,
         artworkUrl100 = artworkUrl100!!,
+        collectionName = collectionName,
+        releaseDate = year,
+        primaryGenreName = primaryGenreName,
+        country = country,
     )
 }
