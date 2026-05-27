@@ -34,12 +34,12 @@ class SearchActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.llMain) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
 
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            binding.scrollContent.setPadding(0, 0, 0, ime.bottom)
+            binding.llScrollContent.setPadding(0, 0, 0, ime.bottom)
 
             WindowInsetsCompat.CONSUMED
         }
@@ -58,37 +58,37 @@ class SearchActivity : AppCompatActivity() {
                 viewModel.onTrackClick(track)
             }
 
-        binding.tracksRecyclerView.apply {
+        binding.rvTracks.apply {
             layoutManager = LinearLayoutManager(this@SearchActivity)
             adapter = searchTrackAdapter
         }
 
-        binding.searchEditText.addTextChangedListener(
+        binding.etSearch.addTextChangedListener(
             afterTextChanged = { s ->
                 viewModel.onSearchQueryRequested(s.toString())
             },
         )
 
-        binding.searchEditText.setOnFocusChangeListener { _, hasFocus ->
+        binding.etSearch.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 viewModel.onSearchTextEditInFocus()
             }
         }
 
-        binding.searchClearButton.setOnClickListener {
-            binding.searchEditText.text.clear()
+        binding.imgSearchClear.setOnClickListener {
+            binding.etSearch.text.clear()
             viewModel.onClearButtonClicked()
 
             WindowCompat
-                .getInsetsController(window, binding.searchEditText)
+                .getInsetsController(window, binding.etSearch)
                 .hide(WindowInsetsCompat.Type.ime())
         }
 
-        binding.refreshButton.setOnClickListener {
-            viewModel.onSearchQueryRequested(binding.searchEditText.text.toString())
+        binding.btnRefresh.setOnClickListener {
+            viewModel.onSearchQueryRequested(binding.etSearch.text.toString())
         }
 
-        binding.clearHistoryButton.setOnClickListener {
+        binding.btnClearHistory.setOnClickListener {
             viewModel.onClearHistoryClicked()
         }
 
@@ -110,13 +110,13 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun renderState(state: SearchUiState) {
-        binding.searchClearButton.isVisible = state.searchQuery.isNotEmpty()
-        binding.nothingFoundText.isVisible = state is SearchUiState.SearchEmpty
-        binding.noConnectionLayout.isVisible = state is SearchUiState.Error
+        binding.imgSearchClear.isVisible = state.searchQuery.isNotEmpty()
+        binding.tvNothingFound.isVisible = state is SearchUiState.SearchEmpty
+        binding.llNoConnection.isVisible = state is SearchUiState.Error
 
         val hasHistory = state is SearchUiState.HistoryContent && state.tracks.isNotEmpty()
-        binding.searchHistoryTitle.isVisible = hasHistory
-        binding.clearHistoryButton.isVisible = hasHistory
+        binding.tvSearchHistoryTitle.isVisible = hasHistory
+        binding.btnClearHistory.isVisible = hasHistory
 
         renderTracks(state)
     }
@@ -132,8 +132,8 @@ class SearchActivity : AppCompatActivity() {
                 -> searchTrackAdapter to emptyList()
             }
 
-        if (binding.tracksRecyclerView.adapter != adapter) {
-            binding.tracksRecyclerView.adapter = adapter
+        if (binding.rvTracks.adapter != adapter) {
+            binding.rvTracks.adapter = adapter
         }
         adapter.updateTracks(tracks)
     }
@@ -146,7 +146,7 @@ class SearchActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         val searchQuery = savedInstanceState.getString(SEARCH_QUERY_KEY, "")
-        binding.searchEditText.setText(searchQuery)
+        binding.etSearch.setText(searchQuery)
         viewModel.restoreSearchQuery(searchQuery)
     }
 }

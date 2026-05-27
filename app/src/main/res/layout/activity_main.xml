@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main"
+    android:id="@+id/ll_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary"
@@ -9,13 +9,13 @@
     android:paddingTop="@dimen/spacing_lg">
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbarMain"
+        android:id="@+id/toolbar_main"
         style="@style/AppToolbar"
         app:title="@string/playlist_maker"
         app:titleTextColor="?attr/colorOnPrimary" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnSearch"
+        android:id="@+id/btn_search"
         style="@style/MainMenuButton"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -26,7 +26,7 @@
         app:icon="@drawable/ic_search" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnMediaLibrary"
+        android:id="@+id/btn_media_library"
         style="@style/MainMenuButton"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -37,7 +37,7 @@
         app:icon="@drawable/ic_media" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnSettings"
+        android:id="@+id/btn_settings"
         style="@style/MainMenuButton"
         android:layout_width="match_parent"
         android:layout_height="0dp"

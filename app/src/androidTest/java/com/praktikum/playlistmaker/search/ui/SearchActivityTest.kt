@@ -68,9 +68,9 @@ class SearchActivityTest {
     fun typing_query_shows_clear_button() {
         launchSearchActivity()
 
-        onView(withId(R.id.searchEditText)).perform(typeText("metallica"), closeSoftKeyboard())
+        onView(withId(R.id.et_search)).perform(typeText("metallica"), closeSoftKeyboard())
 
-        onView(withId(R.id.searchClearButton)).check(matches(isDisplayed()))
+        onView(withId(R.id.img_search_clear)).check(matches(isDisplayed()))
     }
 
     @Test
@@ -80,11 +80,11 @@ class SearchActivityTest {
 
         launchSearchActivity()
 
-        onView(withId(R.id.searchEditText)).perform(typeText(query), closeSoftKeyboard())
+        onView(withId(R.id.et_search)).perform(typeText(query), closeSoftKeyboard())
         onView(isRoot()).perform(waitFor(350))
 
-        onView(withId(R.id.nothingFoundText)).check(matches(isDisplayed()))
-        onView(withId(R.id.noConnectionLayout)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.tv_nothing_found)).check(matches(isDisplayed()))
+        onView(withId(R.id.ll_no_connection)).check(matches(not(isDisplayed())))
     }
 
     @Test
@@ -95,11 +95,11 @@ class SearchActivityTest {
 
         launchSearchActivity()
 
-        onView(withId(R.id.searchEditText)).perform(typeText(query), closeSoftKeyboard())
+        onView(withId(R.id.et_search)).perform(typeText(query), closeSoftKeyboard())
         onView(isRoot()).perform(waitFor(350))
 
-        onView(withId(R.id.noConnectionLayout)).check(matches(isDisplayed()))
-        onView(withId(R.id.nothingFoundText)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.ll_no_connection)).check(matches(isDisplayed()))
+        onView(withId(R.id.tv_nothing_found)).check(matches(not(isDisplayed())))
     }
 
     @Test
@@ -120,11 +120,11 @@ class SearchActivityTest {
 
         launchSearchActivity()
 
-        onView(withId(R.id.searchEditText)).perform(typeText(query), closeSoftKeyboard())
+        onView(withId(R.id.et_search)).perform(typeText(query), closeSoftKeyboard())
         onView(isRoot()).perform(waitFor(350))
 
-        onView(withId(R.id.trackTitle)).check(matches(isDisplayed()))
-        onView(withId(R.id.trackTitle)).check(matches(isEllipsized()))
+        onView(withId(R.id.tv_track_title)).check(matches(isDisplayed()))
+        onView(withId(R.id.tv_track_title)).check(matches(isEllipsized()))
     }
 
     @Test
@@ -146,34 +146,34 @@ class SearchActivityTest {
 
         launchSearchActivity()
 
-        onView(withId(R.id.searchEditText)).perform(typeText(query), closeSoftKeyboard())
+        onView(withId(R.id.et_search)).perform(typeText(query), closeSoftKeyboard())
         onView(isRoot()).perform(waitFor(350))
 
-        onView(withId(R.id.trackSubtitle)).check(matches(isDisplayed()))
-        onView(withId(R.id.trackSubtitle)).check(matches(isEllipsized()))
+        onView(withId(R.id.tv_track_subtitle)).check(matches(isDisplayed()))
+        onView(withId(R.id.tv_track_subtitle)).check(matches(isEllipsized()))
     }
 
     @Test
     fun clear_button_clears_query_and_hides_itself() {
         launchSearchActivity()
 
-        onView(withId(R.id.searchEditText)).perform(typeText("abba"), closeSoftKeyboard())
-        onView(withId(R.id.searchClearButton)).perform(click())
+        onView(withId(R.id.et_search)).perform(typeText("abba"), closeSoftKeyboard())
+        onView(withId(R.id.img_search_clear)).perform(click())
 
-        onView(withId(R.id.searchEditText)).check(matches(withText("")))
-        onView(withId(R.id.searchClearButton)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.et_search)).check(matches(withText("")))
+        onView(withId(R.id.img_search_clear)).check(matches(not(isDisplayed())))
     }
 
     @Test
     fun removing_all_characters_hides_clear_button() {
         launchSearchActivity()
 
-        onView(withId(R.id.searchEditText)).perform(typeText("test"), closeSoftKeyboard())
-        onView(withId(R.id.searchClearButton)).check(matches(isDisplayed()))
+        onView(withId(R.id.et_search)).perform(typeText("test"), closeSoftKeyboard())
+        onView(withId(R.id.img_search_clear)).check(matches(isDisplayed()))
 
-        onView(withId(R.id.searchEditText)).perform(replaceText(""), closeSoftKeyboard())
+        onView(withId(R.id.et_search)).perform(replaceText(""), closeSoftKeyboard())
 
-        onView(withId(R.id.searchClearButton)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.img_search_clear)).check(matches(not(isDisplayed())))
     }
 
     @Test
@@ -184,21 +184,21 @@ class SearchActivityTest {
 
         launchSearchActivity()
 
-        onView(withId(R.id.searchEditText)).perform(typeText(query), closeSoftKeyboard())
+        onView(withId(R.id.et_search)).perform(typeText(query), closeSoftKeyboard())
         onView(isRoot()).perform(waitFor(350))
 
-        onView(withId(R.id.noConnectionLayout)).check(matches(isDisplayed()))
-        onView(withId(R.id.refreshButton)).check(matches(isDisplayed()))
+        onView(withId(R.id.ll_no_connection)).check(matches(isDisplayed()))
+        onView(withId(R.id.btn_refresh)).check(matches(isDisplayed()))
 
         fakeTrackRepository.setResponse(query, Result.success(listOf(track("Recovered Song"))))
         fakeTrackRepository.resetCallCount()
 
-        onView(withId(R.id.refreshButton)).perform(click())
+        onView(withId(R.id.btn_refresh)).perform(click())
         onView(isRoot()).perform(waitFor(350))
 
-        onView(withId(R.id.noConnectionLayout)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.trackTitle)).check(matches(isDisplayed()))
-        onView(withId(R.id.trackTitle)).check(matches(withText("Recovered Song")))
+        onView(withId(R.id.ll_no_connection)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.tv_track_title)).check(matches(isDisplayed()))
+        onView(withId(R.id.tv_track_title)).check(matches(withText("Recovered Song")))
     }
 
     @Test
@@ -225,11 +225,11 @@ class SearchActivityTest {
 
         launchSearchActivity()
 
-        onView(withId(R.id.searchEditText)).perform(typeText(query), closeSoftKeyboard())
+        onView(withId(R.id.et_search)).perform(typeText(query), closeSoftKeyboard())
         onView(isRoot()).perform(waitFor(350))
 
-        onView(withId(R.id.trackSubtitle)).check(matches(isDisplayed()))
-        onView(withId(R.id.trackSubtitle)).check(matches(withText("Test Artist • 03:45")))
+        onView(withId(R.id.tv_track_subtitle)).check(matches(isDisplayed()))
+        onView(withId(R.id.tv_track_subtitle)).check(matches(withText("Test Artist • 03:45")))
     }
 
     @Test
@@ -238,12 +238,12 @@ class SearchActivityTest {
 
         val scenario = ActivityScenario.launch(SearchActivity::class.java)
 
-        onView(withId(R.id.searchEditText)).perform(typeText(searchQuery), closeSoftKeyboard())
-        onView(withId(R.id.searchEditText)).check(matches(withText(searchQuery)))
+        onView(withId(R.id.et_search)).perform(typeText(searchQuery), closeSoftKeyboard())
+        onView(withId(R.id.et_search)).check(matches(withText(searchQuery)))
 
         scenario.recreate()
 
-        onView(withId(R.id.searchEditText)).check(matches(withText(searchQuery)))
+        onView(withId(R.id.et_search)).check(matches(withText(searchQuery)))
     }
 
     @Test
@@ -253,15 +253,15 @@ class SearchActivityTest {
 
         launchSearchActivity()
 
-        onView(withId(R.id.searchEditText)).perform(click())
+        onView(withId(R.id.et_search)).perform(click())
 
-        onView(withId(R.id.clearHistoryButton)).check(matches(isDisplayed()))
-        onView(withId(R.id.searchHistoryTitle)).check(matches(isDisplayed()))
+        onView(withId(R.id.btn_clear_history)).check(matches(isDisplayed()))
+        onView(withId(R.id.tv_search_history_title)).check(matches(isDisplayed()))
 
-        onView(withId(R.id.clearHistoryButton)).perform(click())
+        onView(withId(R.id.btn_clear_history)).perform(click())
 
-        onView(withId(R.id.clearHistoryButton)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.searchHistoryTitle)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.btn_clear_history)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.tv_search_history_title)).check(matches(not(isDisplayed())))
     }
 
     private fun launchSearchActivity() {

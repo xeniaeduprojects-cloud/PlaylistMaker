@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main"
+    android:id="@+id/ll_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbarSettings"
+        android:id="@+id/toolbar_settings"
         style="@style/ScreenToolbar"
         app:navigationContentDescription="@string/navigate_up"
         app:title="@string/settings" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
-        android:id="@+id/switchDarkTheme"
+        android:id="@+id/switch_dark_theme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_lg"
@@ -26,19 +26,19 @@
         android:textSize="@dimen/text_body" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/textViewShare"
+        android:id="@+id/tv_share"
         style="@style/SettingsMenuItem"
         android:drawableEnd="@drawable/ic_share"
         android:text="@string/settings_share" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/textViewSupport"
+        android:id="@+id/tv_support"
         style="@style/SettingsMenuItem"
         android:drawableEnd="@drawable/ic_support"
         android:text="@string/settings_support" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/textViewUserAgreement"
+        android:id="@+id/tv_user_agreement"
         style="@style/SettingsMenuItem"
         android:drawableEnd="@drawable/ic_arrow_forward"
         android:text="@string/settings_user_agreement" />
