@@ -169,4 +169,9 @@ class PlayerActivity : AppCompatActivity() {
         binding.btnPlayPause.alpha = resources.getInteger(R.integer.disabled_alpha) / 100f
         Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
     }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.pausePlayer()
+    }
 }

@@ -100,16 +100,21 @@ class PlayerViewModel(
                         currentPositionSeconds = currentState.currentPositionSeconds,
                     )
             }
-            is PlayerUiState.Playing -> {
-                Log.d(TAG, "Pausing playback")
-                audioPlayerManager.pause()
-                stopPositionUpdates()
-                _uiState.value =
-                    PlayerUiState.Paused(
-                        content = trackContent,
-                        currentPositionSeconds = currentState.currentPositionSeconds,
-                    )
-            }
+            is PlayerUiState.Playing -> pausePlayer()
+        }
+    }
+
+    fun pausePlayer() {
+        val currentState = _uiState.value ?: return
+        if (currentState is PlayerUiState.Playing) {
+            Log.d(TAG, "Pausing playback")
+            audioPlayerManager.pause()
+            stopPositionUpdates()
+            _uiState.value =
+                PlayerUiState.Paused(
+                    content = trackContent,
+                    currentPositionSeconds = currentState.currentPositionSeconds,
+                )
         }
     }
 
