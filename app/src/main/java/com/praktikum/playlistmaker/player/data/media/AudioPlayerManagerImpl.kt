@@ -15,6 +15,7 @@ class AudioPlayerManagerImpl(
 
     private val player = ExoPlayer.Builder(context).build()
     private var stateCallback: ((PlayerState) -> Unit)? = null
+    private var lastEmittedState: PlayerState? = null
 
     private val listener =
         object : Player.Listener {
@@ -37,22 +38,21 @@ class AudioPlayerManagerImpl(
                         Player.STATE_ENDED -> PlayerState.ENDED
                         else -> PlayerState.IDLE
                     }
-                Log.d(TAG, "Emitting state: $state")
-                stateCallback?.invoke(state)
+                emitState(state)
             }
 
             override fun onIsPlayingChanged(isPlaying: Boolean) {
                 Log.d(TAG, "onIsPlayingChanged: $isPlaying, playbackState=${player.playbackState}")
                 if (isPlaying) {
-                    stateCallback?.invoke(PlayerState.PLAYING)
+                    emitState(PlayerState.PLAYING)
                 } else if (player.playbackState == Player.STATE_READY) {
-                    stateCallback?.invoke(PlayerState.PAUSED)
+                    emitState(PlayerState.PAUSED)
                 }
             }
 
             override fun onPlayerError(error: androidx.media3.common.PlaybackException) {
                 Log.e(TAG, "Player error: ${error.message}", error)
-                stateCallback?.invoke(PlayerState.ERROR)
+                emitState(PlayerState.ERROR)
             }
         }
 
@@ -62,6 +62,8 @@ class AudioPlayerManagerImpl(
     ) {
         Log.d(TAG, "prepare: $url")
         stateCallback = onStateChanged
+        lastEmittedState = null
+        player.removeListener(listener)
         player.addListener(listener)
         val mediaItem = MediaItem.fromUri(url)
         player.setMediaItem(mediaItem)
@@ -78,10 +80,21 @@ class AudioPlayerManagerImpl(
         player.pause()
     }
 
+    private fun emitState(state: PlayerState) {
+        if (state != lastEmittedState) {
+            Log.d(TAG, "Emitting state: $state")
+            lastEmittedState = state
+            stateCallback?.invoke(state)
+        } else {
+            Log.d(TAG, "Skipping duplicate state: $state")
+        }
+    }
+
     override fun release() {
         player.removeListener(listener)
         player.release()
         stateCallback = null
+        lastEmittedState = null
     }
 
     override fun isPlaying(): Boolean = player.isPlaying
