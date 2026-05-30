@@ -30,10 +30,10 @@ class TrackViewHolder private constructor(
             .centerCrop()
             .fitCenter()
             .transform(RoundedCorners(cornerRadiusPx))
-            .into(binding.trackAlbumArt)
+            .into(binding.imgAlbumArt)
 
-        binding.trackTitle.text = track.trackName
-        binding.trackSubtitle.text =
+        binding.tvTrackTitle.text = track.trackName
+        binding.tvTrackSubtitle.text =
             itemView.context.getString(
                 R.string.track_subtitle_format,
                 track.artistName,

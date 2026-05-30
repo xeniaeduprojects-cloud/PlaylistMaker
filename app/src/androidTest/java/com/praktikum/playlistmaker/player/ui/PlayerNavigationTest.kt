@@ -23,9 +23,8 @@ import com.praktikum.playlistmaker.search.data.repository.TrackRepository
 import com.praktikum.playlistmaker.search.di.searchModule
 import com.praktikum.playlistmaker.search.ui.SearchActivity
 import com.praktikum.playlistmaker.search.ui.SearchViewModel
+import com.praktikum.playlistmaker.search.ui.TrackRepositoryAndroidTest
 import com.praktikum.playlistmaker.util.RecentSet
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 import org.hamcrest.Matcher
 import org.junit.After
 import org.junit.Before
@@ -38,7 +37,7 @@ import org.koin.dsl.module
 
 @RunWith(AndroidJUnit4::class)
 class PlayerNavigationTest {
-    private val fakeTrackRepository = FakeTrackRepository()
+    private val fakeTrackRepository = TrackRepositoryAndroidTest()
     private val fakeTrackHistoryRepository = FakeTrackHistoryRepository()
 
     private val testModule by lazy {
@@ -81,10 +80,10 @@ class PlayerNavigationTest {
 
         ActivityScenario.launch(SearchActivity::class.java)
 
-        onView(withId(R.id.searchEditText)).perform(typeText(query), closeSoftKeyboard())
+        onView(withId(R.id.et_search)).perform(typeText(query), closeSoftKeyboard())
         onView(isRoot()).perform(waitFor(500))
 
-        onView(withId(R.id.tracksRecyclerView)).perform(
+        onView(withId(R.id.rv_tracks)).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()),
         )
 
@@ -111,10 +110,10 @@ class PlayerNavigationTest {
 
         ActivityScenario.launch(SearchActivity::class.java)
 
-        onView(withId(R.id.searchEditText)).perform(click())
+        onView(withId(R.id.et_search)).perform(click())
         onView(isRoot()).perform(waitFor(200))
 
-        onView(withId(R.id.tracksRecyclerView)).perform(
+        onView(withId(R.id.rv_tracks)).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()),
         )
 
@@ -170,10 +169,10 @@ class PlayerNavigationTest {
 
         ActivityScenario.launch(SearchActivity::class.java)
 
-        onView(withId(R.id.searchEditText)).perform(typeText(query), closeSoftKeyboard())
+        onView(withId(R.id.et_search)).perform(typeText(query), closeSoftKeyboard())
         onView(isRoot()).perform(waitFor(500))
 
-        onView(withId(R.id.tracksRecyclerView)).perform(
+        onView(withId(R.id.rv_tracks)).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()),
         )
 
@@ -181,7 +180,7 @@ class PlayerNavigationTest {
 
         onView(withId(R.id.btn_back)).perform(click())
 
-        onView(withId(R.id.searchEditText)).check(matches(isDisplayed()))
+        onView(withId(R.id.et_search)).check(matches(isDisplayed()))
     }
 
     @Test
@@ -204,10 +203,10 @@ class PlayerNavigationTest {
 
         ActivityScenario.launch(SearchActivity::class.java)
 
-        onView(withId(R.id.searchEditText)).perform(typeText(query), closeSoftKeyboard())
+        onView(withId(R.id.et_search)).perform(typeText(query), closeSoftKeyboard())
         onView(isRoot()).perform(waitFor(500))
 
-        onView(withId(R.id.tracksRecyclerView)).perform(
+        onView(withId(R.id.rv_tracks)).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()),
         )
 
@@ -216,20 +215,7 @@ class PlayerNavigationTest {
         androidx.test.espresso.Espresso
             .pressBackUnconditionally()
 
-        onView(withId(R.id.searchEditText)).check(matches(isDisplayed()))
-    }
-
-    private class FakeTrackRepository : TrackRepository {
-        private val responses = mutableMapOf<String, Flow<Result<List<Track>>>>()
-
-        fun setResponse(
-            query: String,
-            result: Result<List<Track>>,
-        ) {
-            responses[query] = flowOf(result)
-        }
-
-        override fun searchTracks(query: String): Flow<Result<List<Track>>> = responses[query] ?: flowOf(Result.success(emptyList()))
+        onView(withId(R.id.et_search)).check(matches(isDisplayed()))
     }
 
     private class FakeTrackHistoryRepository : TrackHistoryRepository {

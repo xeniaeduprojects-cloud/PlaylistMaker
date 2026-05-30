@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/main"
+    android:id="@+id/ll_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSecondary"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbarSearch"
+        android:id="@+id/toolbar_search"
         style="@style/ScreenToolbar"
         app:title="@string/search" />
 
@@ -19,7 +19,7 @@
         android:background="@drawable/rounded_search_bar">
 
         <EditText
-            android:id="@+id/searchEditText"
+            android:id="@+id/et_search"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:autofillHints="search"
@@ -36,7 +36,7 @@
             android:textSize="@dimen/text_body" />
 
         <ImageView
-            android:id="@+id/searchClearButton"
+            android:id="@+id/img_search_clear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|center_vertical"
@@ -47,14 +47,14 @@
     </FrameLayout>
 
     <TextView
-        android:id="@+id/nothingFoundText"
+        android:id="@+id/tv_nothing_found"
         style="@style/ErrorMessage"
         android:text="@string/nothing_found"
         android:contentDescription="@string/nothing_found_ic_description"
         app:drawableTopCompat="@drawable/ic_nothing_found" />
 
     <LinearLayout
-        android:id="@+id/noConnectionLayout"
+        android:id="@+id/ll_no_connection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -62,7 +62,7 @@
         android:visibility="gone">
 
         <TextView
-            android:id="@+id/noConnectionText"
+            android:id="@+id/tv_no_connection"
             style="@style/ErrorMessage"
             android:visibility="visible"
             android:text="@string/no_connection"
@@ -70,20 +70,20 @@
             app:drawableTopCompat="@drawable/ic_no_connection" />
 
         <Button
-            android:id="@+id/refreshButton"
+            android:id="@+id/btn_refresh"
             style="@style/RoundedButton"
             android:text="@string/refresh" />
     </LinearLayout>
 
 
     <LinearLayout
-        android:id="@+id/scrollContent"
+        android:id="@+id/ll_scroll_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/searchHistoryTitle"
+            android:id="@+id/tv_search_history_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/you_searched_text_view"
@@ -97,7 +97,7 @@
             android:visibility="gone" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/tracksRecyclerView"
+            android:id="@+id/rv_tracks"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -105,7 +105,7 @@
             android:clipToPadding="false" />
 
         <Button
-            android:id="@+id/clearHistoryButton"
+            android:id="@+id/btn_clear_history"
             style="@style/RoundedButton"
             android:text="@string/clean_history_btn"
             android:layout_marginTop="@dimen/spacing_xxl"

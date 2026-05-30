@@ -21,7 +21,7 @@ class SettingsActivity : AppCompatActivity() {
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         enableEdgeToEdge()
         setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.llMain) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
@@ -35,15 +35,15 @@ class SettingsActivity : AppCompatActivity() {
             viewModel.onDarkModeToggled(isChecked)
         }
 
-        binding.textViewShare.setOnClickListener {
+        binding.tvShare.setOnClickListener {
             viewModel.onShareClicked()
         }
 
-        binding.textViewSupport.setOnClickListener {
+        binding.tvSupport.setOnClickListener {
             viewModel.onSupportClicked()
         }
 
-        binding.textViewUserAgreement.setOnClickListener {
+        binding.tvUserAgreement.setOnClickListener {
             viewModel.onUserAgreementClicked()
         }
 

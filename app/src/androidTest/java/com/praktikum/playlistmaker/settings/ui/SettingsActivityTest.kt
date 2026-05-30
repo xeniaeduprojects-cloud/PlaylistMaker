@@ -61,7 +61,7 @@ class SettingsActivityTest {
 
         launchSettingsActivity()
 
-        onView(withId(R.id.switchDarkTheme)).check(matches(isChecked()))
+        onView(withId(R.id.switch_dark_theme)).check(matches(isChecked()))
     }
 
     @Test
@@ -70,7 +70,7 @@ class SettingsActivityTest {
 
         launchSettingsActivity()
 
-        onView(withId(R.id.switchDarkTheme)).check(matches(isNotChecked()))
+        onView(withId(R.id.switch_dark_theme)).check(matches(isNotChecked()))
     }
 
     @Test
@@ -79,7 +79,7 @@ class SettingsActivityTest {
 
         launchSettingsActivity()
 
-        onView(withId(R.id.switchDarkTheme)).perform(click())
+        onView(withId(R.id.switch_dark_theme)).perform(click())
 
         assert(fakeSettingsRepository.isDarkModeEnabled())
     }
@@ -90,7 +90,7 @@ class SettingsActivityTest {
 
         launchSettingsActivity()
 
-        onView(withId(R.id.switchDarkTheme)).perform(click())
+        onView(withId(R.id.switch_dark_theme)).perform(click())
 
         assert(!fakeSettingsRepository.isDarkModeEnabled())
     }
@@ -103,7 +103,7 @@ class SettingsActivityTest {
 
         launchSettingsActivity()
 
-        onView(withId(R.id.textViewShare)).perform(click())
+        onView(withId(R.id.tv_share)).perform(click())
 
         intended(
             allOf(
@@ -127,7 +127,7 @@ class SettingsActivityTest {
 
         launchSettingsActivity()
 
-        onView(withId(R.id.textViewSupport)).perform(click())
+        onView(withId(R.id.tv_support)).perform(click())
 
         intended(
             allOf(
@@ -148,7 +148,7 @@ class SettingsActivityTest {
 
         launchSettingsActivity()
 
-        onView(withId(R.id.textViewUserAgreement)).perform(click())
+        onView(withId(R.id.tv_user_agreement)).perform(click())
 
         intended(
             allOf(
@@ -164,13 +164,13 @@ class SettingsActivityTest {
 
         val scenario = ActivityScenario.launch(SettingsActivity::class.java)
 
-        onView(withId(R.id.switchDarkTheme)).check(matches(isNotChecked()))
-        onView(withId(R.id.switchDarkTheme)).perform(click())
-        onView(withId(R.id.switchDarkTheme)).check(matches(isChecked()))
+        onView(withId(R.id.switch_dark_theme)).check(matches(isNotChecked()))
+        onView(withId(R.id.switch_dark_theme)).perform(click())
+        onView(withId(R.id.switch_dark_theme)).check(matches(isChecked()))
 
         scenario.recreate()
 
-        onView(withId(R.id.switchDarkTheme)).check(matches(isChecked()))
+        onView(withId(R.id.switch_dark_theme)).check(matches(isChecked()))
     }
 
     @Test
@@ -179,13 +179,13 @@ class SettingsActivityTest {
 
         launchSettingsActivity()
 
-        onView(withId(R.id.switchDarkTheme)).perform(click())
+        onView(withId(R.id.switch_dark_theme)).perform(click())
         assert(fakeSettingsRepository.isDarkModeEnabled())
 
-        onView(withId(R.id.switchDarkTheme)).perform(click())
+        onView(withId(R.id.switch_dark_theme)).perform(click())
         assert(!fakeSettingsRepository.isDarkModeEnabled())
 
-        onView(withId(R.id.switchDarkTheme)).perform(click())
+        onView(withId(R.id.switch_dark_theme)).perform(click())
         assert(fakeSettingsRepository.isDarkModeEnabled())
     }
 
