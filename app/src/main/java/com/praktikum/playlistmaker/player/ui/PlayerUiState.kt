@@ -1,5 +1,15 @@
 package com.praktikum.playlistmaker.player.ui
 
+sealed class PlaybackState {
+    data object Idle : PlaybackState()
+
+    data object Buffering : PlaybackState()
+
+    data object Playing : PlaybackState()
+
+    data object Paused : PlaybackState()
+}
+
 data class TrackContent(
     val trackName: String,
     val artistName: String,

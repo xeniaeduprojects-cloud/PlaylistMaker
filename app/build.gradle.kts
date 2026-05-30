@@ -143,6 +143,7 @@ dependencies {
     implementation(libs.retrofit.converter.gson)
     implementation(libs.koin.core)
     implementation(libs.koin.android)
+    implementation(libs.androidx.media3.exoplayer)
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.androidx.arch.core.testing)
