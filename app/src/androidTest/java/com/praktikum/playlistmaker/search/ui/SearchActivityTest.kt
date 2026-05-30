@@ -14,6 +14,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.LargeTest
 import com.praktikum.playlistmaker.R
 import com.praktikum.playlistmaker.search.data.model.Track
 import com.praktikum.playlistmaker.search.data.repository.TrackHistoryRepository
@@ -252,6 +253,25 @@ class SearchActivityTest {
 
         onView(withId(R.id.btn_clear_history)).check(matches(not(isDisplayed())))
         onView(withId(R.id.tv_search_history_title)).check(matches(not(isDisplayed())))
+    }
+
+    @LargeTest
+    @Test
+    fun loading_state_shows_progress_bar_before_results() {
+        val query = "loading"
+        fakeTrackRepository.setDelay(500)
+        fakeTrackRepository.setResponse(query, Result.success(listOf(track("Test Track"))))
+
+        launchSearchActivity()
+
+        onView(withId(R.id.et_search)).perform(typeText(query), closeSoftKeyboard())
+
+        onView(withId(R.id.pb_loading)).check(matches(isDisplayed()))
+
+        Thread.sleep(1000)
+
+        onView(withId(R.id.pb_loading)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.tv_track_title)).check(matches(isDisplayed()))
     }
 
     private fun launchSearchActivity() {

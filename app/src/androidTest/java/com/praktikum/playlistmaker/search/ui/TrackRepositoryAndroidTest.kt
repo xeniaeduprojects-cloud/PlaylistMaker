@@ -2,12 +2,14 @@ package com.praktikum.playlistmaker.search.ui
 
 import com.praktikum.playlistmaker.search.data.model.Track
 import com.praktikum.playlistmaker.search.data.repository.TrackRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flow
 
 class TrackRepositoryAndroidTest : TrackRepository {
     private val responses = mutableMapOf<String, Result<List<Track>>>()
     val searchCallCount = mutableMapOf<String, Int>()
+    private var delayMs: Long = 0
 
     fun setResponse(
         query: String,
@@ -20,8 +22,17 @@ class TrackRepositoryAndroidTest : TrackRepository {
         searchCallCount.clear()
     }
 
+    fun setDelay(delayMs: Long) {
+        this.delayMs = delayMs
+    }
+
     override fun searchTracks(query: String): Flow<Result<List<Track>>> {
         searchCallCount[query] = (searchCallCount[query] ?: 0) + 1
-        return flowOf(responses[query] ?: Result.success(emptyList()))
+        return flow {
+            if (delayMs > 0) {
+                delay(delayMs)
+            }
+            emit(responses[query] ?: Result.success(emptyList()))
+        }
     }
 }
