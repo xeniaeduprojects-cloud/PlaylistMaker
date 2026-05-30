@@ -16,9 +16,9 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.praktikum.playlistmaker.R
 import com.praktikum.playlistmaker.databinding.ActivityPlayerBinding
 import com.praktikum.playlistmaker.search.data.model.Track
+import com.praktikum.playlistmaker.util.formatSecondsToMinutesSeconds
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlayerBinding
@@ -109,21 +109,14 @@ class PlayerActivity : AppCompatActivity() {
             is PlayerUiState.Playing -> {
                 renderContent(state.content)
                 binding.btnPlayPause.setImageResource(R.drawable.ic_pause_button)
-                binding.tvPlaybackTime.text = formatTime(state.currentPositionSeconds)
+                binding.tvPlaybackTime.text = formatSecondsToMinutesSeconds(state.currentPositionSeconds)
             }
             is PlayerUiState.Paused -> {
                 renderContent(state.content)
                 binding.btnPlayPause.setImageResource(R.drawable.ic_play_button)
-                binding.tvPlaybackTime.text = formatTime(state.currentPositionSeconds)
+                binding.tvPlaybackTime.text = formatSecondsToMinutesSeconds(state.currentPositionSeconds)
             }
         }
-    }
-
-    @Suppress("MagicNumber")
-    private fun formatTime(seconds: Int): String {
-        val minutes = seconds / 60
-        val secs = seconds % 60
-        return String.format(Locale.ROOT, "%d:%02d", minutes, secs)
     }
 
     private fun renderContent(content: TrackContent) {
