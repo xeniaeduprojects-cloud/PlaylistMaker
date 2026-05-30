@@ -33,5 +33,6 @@ fun ITunesTrackDto.toTrack(): Track? {
         releaseDate = year,
         primaryGenreName = primaryGenreName,
         country = country,
+        previewUrl = previewUrl,
     )
 }

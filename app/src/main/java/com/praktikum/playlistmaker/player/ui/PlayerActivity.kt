@@ -26,11 +26,6 @@ class PlayerActivity : AppCompatActivity() {
         parametersOf(getTrackFromIntent())
     }
 
-    private val url =
-        "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview112/" +
-            "v4/ac/c7/d1/acc7d13f-6634-495f-caf6-491eccb505e8/" +
-            "mzaf_4002676889906514534.plus.aac.p.m4a"
-
     private fun getTrackFromIntent(): Track? =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableExtra(EXTRA_TRACK, Track::class.java)
@@ -75,8 +70,20 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         observeViewModel()
-        Log.d(TAG, "Preparing player with URL: $url")
-        viewModel.prepare(url)
+
+        val track = getTrackFromIntent()
+        val url = track?.previewUrl
+        if (url != null) {
+            Log.d(TAG, "Preparing player with URL: $url")
+            viewModel.prepare(url)
+            binding.btnPlayPause.isEnabled = true
+        } else {
+            Log.e(TAG, "No preview URL available for track")
+            binding.btnPlayPause.isEnabled = false
+
+            @Suppress("MagicNumber")
+            binding.btnPlayPause.alpha = resources.getInteger(R.integer.disabled_alpha) / 100f
+        }
     }
 
     private fun observeViewModel() {
