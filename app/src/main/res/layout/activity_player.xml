@@ -88,13 +88,13 @@
         android:background="@android:color/transparent"
         android:contentDescription="@string/add_to_playlist"
         android:src="@drawable/ic_add_to_playlist_button"
-        app:layout_constraintBottom_toBottomOf="@id/btn_play"
-        app:layout_constraintEnd_toStartOf="@id/btn_play"
-        app:layout_constraintTop_toTopOf="@id/btn_play" />
+        app:layout_constraintBottom_toBottomOf="@id/btn_play_pause"
+        app:layout_constraintEnd_toStartOf="@id/btn_play_pause"
+        app:layout_constraintTop_toTopOf="@id/btn_play_pause" />
 
-    <!-- Play Button -->
+    <!-- Play/Pause Button -->
     <ImageButton
-        android:id="@+id/btn_play"
+        android:id="@+id/btn_play_pause"
         android:layout_width="@dimen/player_play_button_size"
         android:layout_height="@dimen/player_play_button_size"
         android:layout_marginTop="@dimen/spacing_xl"
@@ -114,9 +114,9 @@
         android:background="@android:color/transparent"
         android:contentDescription="@string/favourite"
         android:src="@drawable/ic_add_to_favorites_button"
-        app:layout_constraintBottom_toBottomOf="@id/btn_play"
-        app:layout_constraintStart_toEndOf="@id/btn_play"
-        app:layout_constraintTop_toTopOf="@id/btn_play" />
+        app:layout_constraintBottom_toBottomOf="@id/btn_play_pause"
+        app:layout_constraintStart_toEndOf="@id/btn_play_pause"
+        app:layout_constraintTop_toTopOf="@id/btn_play_pause" />
 
     <!-- Playback Time -->
     <TextView
@@ -130,7 +130,7 @@
         android:text="@string/current_playback_zero"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_play"
+        app:layout_constraintTop_toBottomOf="@id/btn_play_pause"
         tools:text="0:30" />
 
     <!-- Duration Row -->

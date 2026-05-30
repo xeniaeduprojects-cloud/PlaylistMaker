@@ -61,6 +61,10 @@ class PlayerActivity : AppCompatActivity() {
             finish()
         }
 
+        binding.btnPlayPause.setOnClickListener {
+            viewModel.onPlayPauseClick()
+        }
+
         observeViewModel()
     }
 
@@ -72,28 +76,37 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun renderState(state: PlayerUiState) {
         when (state) {
-            is PlayerUiState.Content -> {
-                val cornerRadiusPx = resources.getDimensionPixelSize(R.dimen.player_album_art_corner_radius)
-
-                Glide
-                    .with(this)
-                    .load(state.artworkUrl)
-                    .placeholder(R.drawable.album_placeholder)
-                    .error(R.drawable.album_placeholder)
-                    .centerCrop()
-                    .transform(RoundedCorners(cornerRadiusPx))
-                    .into(binding.imgAlbumArt)
-
-                binding.tvTrackTitle.text = state.trackName
-                binding.tvArtistName.text = state.artistName
-                binding.tvDuration.text = state.duration
-
-                setMetaInfoRowVisibility(state.album, binding.labelAlbum, binding.tvAlbum)
-                setMetaInfoRowVisibility(state.year, binding.labelYear, binding.tvYear)
-                setMetaInfoRowVisibility(state.genre, binding.labelGenre, binding.tvGenre)
-                setMetaInfoRowVisibility(state.country, binding.labelCountry, binding.tvCountry)
+            is PlayerUiState.Playing -> {
+                renderContent(state.content)
+                binding.btnPlayPause.setImageResource(R.drawable.ic_pause_button)
+            }
+            is PlayerUiState.Paused -> {
+                renderContent(state.content)
+                binding.btnPlayPause.setImageResource(R.drawable.ic_play_button)
             }
         }
+    }
+
+    private fun renderContent(content: TrackContent) {
+        val cornerRadiusPx = resources.getDimensionPixelSize(R.dimen.player_album_art_corner_radius)
+
+        Glide
+            .with(this)
+            .load(content.artworkUrl)
+            .placeholder(R.drawable.album_placeholder)
+            .error(R.drawable.album_placeholder)
+            .centerCrop()
+            .transform(RoundedCorners(cornerRadiusPx))
+            .into(binding.imgAlbumArt)
+
+        binding.tvTrackTitle.text = content.trackName
+        binding.tvArtistName.text = content.artistName
+        binding.tvDuration.text = content.duration
+
+        setMetaInfoRowVisibility(content.album, binding.labelAlbum, binding.tvAlbum)
+        setMetaInfoRowVisibility(content.year, binding.labelYear, binding.tvYear)
+        setMetaInfoRowVisibility(content.genre, binding.labelGenre, binding.tvGenre)
+        setMetaInfoRowVisibility(content.country, binding.labelCountry, binding.tvCountry)
     }
 
     private fun setMetaInfoRowVisibility(
