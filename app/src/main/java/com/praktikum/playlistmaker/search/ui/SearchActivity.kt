@@ -113,6 +113,7 @@ class SearchActivity : AppCompatActivity() {
         binding.imgSearchClear.isVisible = state.searchQuery.isNotEmpty()
         binding.tvNothingFound.isVisible = state is SearchUiState.SearchEmpty
         binding.llNoConnection.isVisible = state is SearchUiState.Error
+        binding.pbLoading.isVisible = state is SearchUiState.Loading
 
         val hasHistory = state is SearchUiState.HistoryContent && state.tracks.isNotEmpty()
         binding.tvSearchHistoryTitle.isVisible = hasHistory
@@ -125,10 +126,10 @@ class SearchActivity : AppCompatActivity() {
         val (adapter, tracks) =
             when (state) {
                 is SearchUiState.HistoryContent -> historyTrackAdapter to state.tracks
-                is SearchUiState.Loading -> searchTrackAdapter to state.tracks
                 is SearchUiState.SearchContent -> searchTrackAdapter to state.tracks
                 is SearchUiState.SearchEmpty,
                 is SearchUiState.Error,
+                is SearchUiState.Loading,
                 -> searchTrackAdapter to emptyList()
             }
 
