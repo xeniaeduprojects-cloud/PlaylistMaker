@@ -222,6 +222,7 @@ class SearchViewModelTest {
             releaseDate = null,
             primaryGenreName = null,
             country = null,
+            previewUrl = null,
         )
 
     private class FakeTrackRepository : TrackRepository {

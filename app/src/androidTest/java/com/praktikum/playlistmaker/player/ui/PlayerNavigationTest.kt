@@ -69,6 +69,7 @@ class PlayerNavigationTest {
                 releaseDate = "2020",
                 primaryGenreName = "Rock",
                 country = "USA",
+                previewUrl = "https://example.com/preview.mp3",
             )
 
         fakeTrackRepository.setResponse(query, Result.success(listOf(track)))
@@ -98,6 +99,7 @@ class PlayerNavigationTest {
                 releaseDate = "2019",
                 primaryGenreName = "Pop",
                 country = "UK",
+                previewUrl = "https://example.com/preview.mp3",
             )
 
         fakeTrackHistoryRepository.addTrack(track)
@@ -127,6 +129,7 @@ class PlayerNavigationTest {
                 releaseDate = "2021",
                 primaryGenreName = "Jazz",
                 country = "France",
+                previewUrl = "https://example.com/preview.mp3",
             )
 
         val scenario =
@@ -156,6 +159,7 @@ class PlayerNavigationTest {
                 releaseDate = "2022",
                 primaryGenreName = "Electronic",
                 country = "Germany",
+                previewUrl = "https://example.com/preview.mp3",
             )
 
         fakeTrackRepository.setResponse(query, Result.success(listOf(track)))
@@ -189,6 +193,7 @@ class PlayerNavigationTest {
                 releaseDate = "2023",
                 primaryGenreName = "Classical",
                 country = "Austria",
+                previewUrl = "https://example.com/preview.mp3",
             )
 
         fakeTrackRepository.setResponse(query, Result.success(listOf(track)))

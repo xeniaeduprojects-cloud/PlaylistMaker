@@ -56,16 +56,19 @@ android {
     }
 
     testOptions {
-        unitTests.all {
-            it.testLogging {
-                events =
-                    setOf(
-                        TestLogEvent.PASSED,
-                        TestLogEvent.FAILED,
-                        TestLogEvent.SKIPPED,
-                    )
-                showStandardStreams = true
-                exceptionFormat = TestExceptionFormat.FULL
+        unitTests {
+            isReturnDefaultValues = true
+            all {
+                it.testLogging {
+                    events =
+                        setOf(
+                            TestLogEvent.PASSED,
+                            TestLogEvent.FAILED,
+                            TestLogEvent.SKIPPED,
+                        )
+                    showStandardStreams = true
+                    exceptionFormat = TestExceptionFormat.FULL
+                }
             }
         }
     }

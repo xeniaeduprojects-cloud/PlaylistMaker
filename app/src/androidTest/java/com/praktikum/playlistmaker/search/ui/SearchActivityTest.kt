@@ -210,6 +210,7 @@ class SearchActivityTest {
                         releaseDate = null,
                         primaryGenreName = null,
                         country = null,
+                        previewUrl = "https://example.com/preview.mp3",
                     ),
                 ),
             ),
@@ -309,6 +310,7 @@ class SearchActivityTest {
             releaseDate = null,
             primaryGenreName = null,
             country = null,
+            previewUrl = "https://example.com/preview.mp3",
         )
 
     private class FakeTrackHistoryRepository : TrackHistoryRepository {
