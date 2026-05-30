@@ -26,7 +26,7 @@ class SearchViewModel(
     private var searchJob: Job? = null
 
     companion object {
-        private const val SEARCH_DEBOUNCE_DELAY_MS = 300L
+        private const val SEARCH_DEBOUNCE_DELAY_MS = 2000L
     }
 
     fun onSearchQueryRequested(query: String) {
