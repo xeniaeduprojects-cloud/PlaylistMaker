@@ -39,4 +39,6 @@
     <string name="unknown">неизвестно</string>
     <string name="back">Back</string>
     <string name="album_art">Album art</string>
+    <string name="player_error">Ошибка воспроизведения</string>
+    <string name="no_preview_url">Нет доступного превью</string>
 </resources>

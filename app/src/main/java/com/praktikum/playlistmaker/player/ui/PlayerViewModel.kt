@@ -11,6 +11,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import com.praktikum.playlistmaker.player.data.media.PlayerState as MediaPlayerState
 
 class PlayerViewModel(
     track: Track,
@@ -54,18 +55,18 @@ class PlayerViewModel(
             Log.d(TAG, "Player state callback: $playerState")
             _playbackState.value =
                 when (playerState) {
-                    com.praktikum.playlistmaker.player.data.media.PlayerState.IDLE -> PlaybackState.Idle
-                    com.praktikum.playlistmaker.player.data.media.PlayerState.BUFFERING -> PlaybackState.Buffering
-                    com.praktikum.playlistmaker.player.data.media.PlayerState.READY -> PlaybackState.Paused
-                    com.praktikum.playlistmaker.player.data.media.PlayerState.PLAYING -> {
+                    MediaPlayerState.IDLE -> PlaybackState.Idle
+                    MediaPlayerState.BUFFERING -> PlaybackState.Buffering
+                    MediaPlayerState.READY -> PlaybackState.Paused
+                    MediaPlayerState.PLAYING -> {
                         startPositionUpdates()
                         PlaybackState.Playing
                     }
-                    com.praktikum.playlistmaker.player.data.media.PlayerState.PAUSED -> {
+                    MediaPlayerState.PAUSED -> {
                         stopPositionUpdates()
                         PlaybackState.Paused
                     }
-                    com.praktikum.playlistmaker.player.data.media.PlayerState.ENDED -> {
+                    MediaPlayerState.ENDED -> {
                         stopPositionUpdates()
                         _uiState.value =
                             PlayerUiState.Paused(
@@ -73,6 +74,10 @@ class PlayerViewModel(
                                 currentPositionSeconds = 0,
                             )
                         PlaybackState.Paused
+                    }
+                    MediaPlayerState.ERROR -> {
+                        stopPositionUpdates()
+                        PlaybackState.Error
                     }
                 }
         }

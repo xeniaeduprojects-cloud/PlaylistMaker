@@ -49,6 +49,11 @@ class AudioPlayerManagerImpl(
                     stateCallback?.invoke(PlayerState.PAUSED)
                 }
             }
+
+            override fun onPlayerError(error: androidx.media3.common.PlaybackException) {
+                Log.e(TAG, "Player error: ${error.message}", error)
+                stateCallback?.invoke(PlayerState.ERROR)
+            }
         }
 
     override fun prepare(

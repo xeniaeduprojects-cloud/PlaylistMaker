@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -79,10 +80,7 @@ class PlayerActivity : AppCompatActivity() {
             binding.btnPlayPause.isEnabled = true
         } else {
             Log.e(TAG, "No preview URL available for track")
-            binding.btnPlayPause.isEnabled = false
-
-            @Suppress("MagicNumber")
-            binding.btnPlayPause.alpha = resources.getInteger(R.integer.disabled_alpha) / 100f
+            disablePlayButton(R.string.no_preview_url)
         }
     }
 
@@ -97,15 +95,21 @@ class PlayerActivity : AppCompatActivity() {
             when (playbackState) {
                 is PlaybackState.Playing -> {
                     Log.d(TAG, "State: Playing")
+                    binding.btnPlayPause.isEnabled = true
                 }
                 is PlaybackState.Paused -> {
                     Log.d(TAG, "State: Paused")
+                    binding.btnPlayPause.isEnabled = true
                 }
                 is PlaybackState.Buffering -> {
                     Log.d(TAG, "State: Buffering")
                 }
                 is PlaybackState.Idle -> {
                     Log.d(TAG, "State: Idle")
+                }
+                is PlaybackState.Error -> {
+                    Log.e(TAG, "State: Error")
+                    disablePlayButton(R.string.player_error)
                 }
             }
         }
@@ -157,5 +161,12 @@ class PlayerActivity : AppCompatActivity() {
         labelView.isVisible = isVisible
         valueView.isVisible = isVisible
         valueView.text = value
+    }
+
+    private fun disablePlayButton(messageResId: Int) {
+        binding.btnPlayPause.isEnabled = false
+        @Suppress("MagicNumber")
+        binding.btnPlayPause.alpha = resources.getInteger(R.integer.disabled_alpha) / 100f
+        Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
     }
 }

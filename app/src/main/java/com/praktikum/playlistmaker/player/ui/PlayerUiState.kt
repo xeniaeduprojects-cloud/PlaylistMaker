@@ -8,6 +8,8 @@ sealed class PlaybackState {
     data object Playing : PlaybackState()
 
     data object Paused : PlaybackState()
+
+    data object Error : PlaybackState()
 }
 
 data class TrackContent(

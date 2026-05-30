@@ -26,4 +26,5 @@ enum class PlayerState {
     PLAYING,
     PAUSED,
     ENDED,
+    ERROR,
 }
