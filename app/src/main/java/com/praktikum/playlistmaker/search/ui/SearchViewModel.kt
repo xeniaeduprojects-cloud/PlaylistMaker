@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 class SearchViewModel(
     private val trackRepository: TrackRepository,
     private val trackHistoryRepository: TrackHistoryRepository,
+    private val searchDebounceDelayMs: Long = SEARCH_DEBOUNCE_DELAY_MS,
 ) : ViewModel() {
     private val _uiState = MutableLiveData<SearchUiState>(SearchUiState.HistoryContent(emptyList()))
     val uiState: LiveData<SearchUiState> = _uiState
@@ -75,7 +76,7 @@ class SearchViewModel(
         searchJob?.cancel()
         searchJob =
             viewModelScope.launch {
-                delay(SEARCH_DEBOUNCE_DELAY_MS)
+                delay(searchDebounceDelayMs)
                 searchTracks(query)
             }
     }

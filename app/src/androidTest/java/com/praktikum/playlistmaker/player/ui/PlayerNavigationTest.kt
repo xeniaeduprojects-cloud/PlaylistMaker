@@ -1,18 +1,14 @@
 package com.praktikum.playlistmaker.player.ui
 
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.UiController
-import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
@@ -25,7 +21,6 @@ import com.praktikum.playlistmaker.search.ui.SearchActivity
 import com.praktikum.playlistmaker.search.ui.SearchViewModel
 import com.praktikum.playlistmaker.search.ui.TrackRepositoryAndroidTest
 import com.praktikum.playlistmaker.util.RecentSet
-import org.hamcrest.Matcher
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -44,7 +39,7 @@ class PlayerNavigationTest {
         module {
             single<TrackRepository> { fakeTrackRepository }
             single<TrackHistoryRepository> { fakeTrackHistoryRepository }
-            viewModel { SearchViewModel(get(), get()) }
+            viewModel { SearchViewModel(get(), get(), searchDebounceDelayMs = 0L) }
         }
     }
 
@@ -81,7 +76,6 @@ class PlayerNavigationTest {
         ActivityScenario.launch(SearchActivity::class.java)
 
         onView(withId(R.id.et_search)).perform(typeText(query), closeSoftKeyboard())
-        onView(isRoot()).perform(waitFor(500))
 
         onView(withId(R.id.rv_tracks)).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()),
@@ -111,7 +105,6 @@ class PlayerNavigationTest {
         ActivityScenario.launch(SearchActivity::class.java)
 
         onView(withId(R.id.et_search)).perform(click())
-        onView(isRoot()).perform(waitFor(200))
 
         onView(withId(R.id.rv_tracks)).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()),
@@ -170,7 +163,6 @@ class PlayerNavigationTest {
         ActivityScenario.launch(SearchActivity::class.java)
 
         onView(withId(R.id.et_search)).perform(typeText(query), closeSoftKeyboard())
-        onView(isRoot()).perform(waitFor(500))
 
         onView(withId(R.id.rv_tracks)).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()),
@@ -204,7 +196,6 @@ class PlayerNavigationTest {
         ActivityScenario.launch(SearchActivity::class.java)
 
         onView(withId(R.id.et_search)).perform(typeText(query), closeSoftKeyboard())
-        onView(isRoot()).perform(waitFor(500))
 
         onView(withId(R.id.rv_tracks)).perform(
             RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()),
@@ -230,18 +221,4 @@ class PlayerNavigationTest {
         override fun clearHistory() {
         }
     }
-
-    private fun waitFor(delayMs: Long): ViewAction =
-        object : ViewAction {
-            override fun getConstraints(): Matcher<View> = isRoot()
-
-            override fun getDescription(): String = "wait for $delayMs milliseconds"
-
-            override fun perform(
-                uiController: UiController,
-                view: View,
-            ) {
-                uiController.loopMainThreadForAtLeast(delayMs)
-            }
-        }
 }

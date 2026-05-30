@@ -5,15 +5,12 @@ import android.view.View
 import android.widget.TextView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.UiController
-import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -48,7 +45,7 @@ class SearchActivityTest {
         module {
             single<TrackRepository> { fakeTrackRepository }
             single<TrackHistoryRepository> { fakeTrackHistoryRepository }
-            viewModel { SearchViewModel(get(), get()) }
+            viewModel { SearchViewModel(get(), get(), searchDebounceDelayMs = 0L) }
         }
     }
 
@@ -81,7 +78,6 @@ class SearchActivityTest {
         launchSearchActivity()
 
         onView(withId(R.id.et_search)).perform(typeText(query), closeSoftKeyboard())
-        onView(isRoot()).perform(waitFor(350))
 
         onView(withId(R.id.tv_nothing_found)).check(matches(isDisplayed()))
         onView(withId(R.id.ll_no_connection)).check(matches(not(isDisplayed())))
@@ -96,7 +92,6 @@ class SearchActivityTest {
         launchSearchActivity()
 
         onView(withId(R.id.et_search)).perform(typeText(query), closeSoftKeyboard())
-        onView(isRoot()).perform(waitFor(350))
 
         onView(withId(R.id.ll_no_connection)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_nothing_found)).check(matches(not(isDisplayed())))
@@ -121,7 +116,6 @@ class SearchActivityTest {
         launchSearchActivity()
 
         onView(withId(R.id.et_search)).perform(typeText(query), closeSoftKeyboard())
-        onView(isRoot()).perform(waitFor(350))
 
         onView(withId(R.id.tv_track_title)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_track_title)).check(matches(isEllipsized()))
@@ -147,7 +141,6 @@ class SearchActivityTest {
         launchSearchActivity()
 
         onView(withId(R.id.et_search)).perform(typeText(query), closeSoftKeyboard())
-        onView(isRoot()).perform(waitFor(350))
 
         onView(withId(R.id.tv_track_subtitle)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_track_subtitle)).check(matches(isEllipsized()))
@@ -185,7 +178,6 @@ class SearchActivityTest {
         launchSearchActivity()
 
         onView(withId(R.id.et_search)).perform(typeText(query), closeSoftKeyboard())
-        onView(isRoot()).perform(waitFor(350))
 
         onView(withId(R.id.ll_no_connection)).check(matches(isDisplayed()))
         onView(withId(R.id.btn_refresh)).check(matches(isDisplayed()))
@@ -194,7 +186,6 @@ class SearchActivityTest {
         fakeTrackRepository.resetCallCount()
 
         onView(withId(R.id.btn_refresh)).perform(click())
-        onView(isRoot()).perform(waitFor(350))
 
         onView(withId(R.id.ll_no_connection)).check(matches(not(isDisplayed())))
         onView(withId(R.id.tv_track_title)).check(matches(isDisplayed()))
@@ -226,7 +217,6 @@ class SearchActivityTest {
         launchSearchActivity()
 
         onView(withId(R.id.et_search)).perform(typeText(query), closeSoftKeyboard())
-        onView(isRoot()).perform(waitFor(350))
 
         onView(withId(R.id.tv_track_subtitle)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_track_subtitle)).check(matches(withText("Test Artist • 03:45")))
@@ -267,20 +257,6 @@ class SearchActivityTest {
     private fun launchSearchActivity() {
         ActivityScenario.launch(SearchActivity::class.java)
     }
-
-    private fun waitFor(delayMs: Long): ViewAction =
-        object : ViewAction {
-            override fun getConstraints(): Matcher<View> = isRoot()
-
-            override fun getDescription(): String = "wait for $delayMs milliseconds"
-
-            override fun perform(
-                uiController: UiController,
-                view: View,
-            ) {
-                uiController.loopMainThreadForAtLeast(delayMs)
-            }
-        }
 
     private fun isEllipsized(): Matcher<View> =
         object : TypeSafeMatcher<View>() {
