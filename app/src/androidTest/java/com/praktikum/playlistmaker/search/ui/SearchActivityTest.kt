@@ -260,7 +260,7 @@ class SearchActivityTest {
     @Test
     fun loading_state_shows_progress_bar_before_results() {
         val query = "loading"
-        fakeTrackRepository.setDelay(500)
+        fakeTrackRepository.setDelay(1000)
         fakeTrackRepository.setResponse(query, Result.success(listOf(track("Test Track"))))
 
         launchSearchActivity()
