@@ -4,21 +4,34 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.praktikum.playlistmaker.player.data.media.AudioPlayerManager
 import com.praktikum.playlistmaker.player.data.media.PlayerState
 import com.praktikum.playlistmaker.search.data.model.Track
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.test.TestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.test.setMain
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TestWatcher
+import org.junit.runner.Description
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class PlayerViewModelTest {
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
 
     private lateinit var fakeAudioPlayerManager: FakeAudioPlayerManager
     private lateinit var viewModel: PlayerViewModel
@@ -37,18 +50,22 @@ class PlayerViewModelTest {
             previewUrl = "http://test.com/preview.mp3",
         )
 
-    private val testTrackNoUrl =
-        testTrack.copy(previewUrl = null)
+    private val testTrackNoUrl = testTrack.copy(previewUrl = null)
 
     @Before
     fun setup() {
         fakeAudioPlayerManager = FakeAudioPlayerManager()
     }
 
+    private fun buildViewModel(
+        track: Track = testTrack,
+        positionFlowProvider: () -> Flow<Int> = { emptyFlow() },
+    ) = PlayerViewModel(track, fakeAudioPlayerManager, positionFlowProvider)
+
     @Test
     fun when_track_has_no_url_ui_shows_error_state() =
-        runTest {
-            viewModel = PlayerViewModel(testTrackNoUrl, fakeAudioPlayerManager)
+        runTest(mainDispatcherRule.testDispatcher) {
+            viewModel = buildViewModel(track = testTrackNoUrl)
             advanceUntilIdle()
 
             var uiState: PlayerUiState? = null
@@ -60,8 +77,8 @@ class PlayerViewModelTest {
 
     @Test
     fun pressing_play_when_ready_calls_play_on_manager() =
-        runTest {
-            viewModel = PlayerViewModel(testTrack, fakeAudioPlayerManager)
+        runTest(mainDispatcherRule.testDispatcher) {
+            viewModel = buildViewModel()
             viewModel.uiState.observeForever { }
 
             viewModel.prepare("http://test.com/preview.mp3")
@@ -78,14 +95,17 @@ class PlayerViewModelTest {
 
     @Test
     fun pressing_pause_when_playing_calls_pause_on_manager() =
-        runTest {
-            viewModel = PlayerViewModel(testTrack, fakeAudioPlayerManager)
+        runTest(mainDispatcherRule.testDispatcher) {
+            viewModel = buildViewModel()
             viewModel.uiState.observeForever { }
 
             viewModel.prepare("http://test.com/preview.mp3")
             advanceUntilIdle()
 
-            fakeAudioPlayerManager.emitState(PlayerState.PLAYING)
+            fakeAudioPlayerManager.emitState(PlayerState.READY)
+            advanceUntilIdle()
+
+            viewModel.onPlayPauseClick()
             advanceUntilIdle()
 
             viewModel.onPlayPauseClick()
@@ -96,8 +116,8 @@ class PlayerViewModelTest {
 
     @Test
     fun when_player_ends_ui_state_resets_to_ready() =
-        runTest {
-            viewModel = PlayerViewModel(testTrack, fakeAudioPlayerManager)
+        runTest(mainDispatcherRule.testDispatcher) {
+            viewModel = buildViewModel()
             viewModel.prepare("http://test.com/preview.mp3")
             advanceUntilIdle()
 
@@ -116,8 +136,8 @@ class PlayerViewModelTest {
 
     @Test
     fun when_player_errors_ui_shows_error_state() =
-        runTest {
-            viewModel = PlayerViewModel(testTrack, fakeAudioPlayerManager)
+        runTest(mainDispatcherRule.testDispatcher) {
+            viewModel = buildViewModel()
             viewModel.prepare("http://test.com/preview.mp3")
             advanceUntilIdle()
 
@@ -132,8 +152,9 @@ class PlayerViewModelTest {
 
     @Test
     fun position_updates_periodically_while_playing() =
-        runTest {
-            viewModel = PlayerViewModel(testTrack, fakeAudioPlayerManager)
+        runTest(mainDispatcherRule.testDispatcher) {
+            val positionChannel = Channel<Int>(Channel.UNLIMITED)
+            viewModel = buildViewModel(positionFlowProvider = { positionChannel.receiveAsFlow() })
             viewModel.prepare("http://test.com/preview.mp3")
             advanceUntilIdle()
 
@@ -146,14 +167,14 @@ class PlayerViewModelTest {
             viewModel.onPlayPauseClick()
             advanceUntilIdle()
 
-            fakeAudioPlayerManager.positionMs = 1000L
-            advanceTimeBy(300L)
+            positionChannel.send(1)
+            advanceUntilIdle()
 
             assertTrue(uiState is PlayerUiState.Playing)
             assertEquals(1, (uiState as PlayerUiState.Playing).currentPositionSeconds)
 
-            fakeAudioPlayerManager.positionMs = 3000L
-            advanceTimeBy(300L)
+            positionChannel.send(3)
+            advanceUntilIdle()
 
             val uiState2 = uiState
             assertTrue(uiState2 is PlayerUiState.Playing)
@@ -162,19 +183,23 @@ class PlayerViewModelTest {
 
     @Test
     fun position_stops_updating_when_paused() =
-        runTest {
-            viewModel = PlayerViewModel(testTrack, fakeAudioPlayerManager)
+        runTest(mainDispatcherRule.testDispatcher) {
+            val positionChannel = Channel<Int>(Channel.UNLIMITED)
+            viewModel = buildViewModel(positionFlowProvider = { positionChannel.receiveAsFlow() })
             viewModel.prepare("http://test.com/preview.mp3")
             advanceUntilIdle()
 
             var uiState: PlayerUiState? = null
             viewModel.uiState.observeForever { uiState = it }
 
-            fakeAudioPlayerManager.emitState(PlayerState.PLAYING)
+            fakeAudioPlayerManager.emitState(PlayerState.READY)
             advanceUntilIdle()
 
-            fakeAudioPlayerManager.positionMs = 2000L
-            advanceTimeBy(300L)
+            viewModel.onPlayPauseClick()
+            advanceUntilIdle()
+
+            positionChannel.send(2)
+            advanceUntilIdle()
 
             assertTrue(uiState is PlayerUiState.Playing)
             assertEquals(2, (uiState as PlayerUiState.Playing).currentPositionSeconds)
@@ -182,8 +207,8 @@ class PlayerViewModelTest {
             viewModel.onPlayPauseClick()
             advanceUntilIdle()
 
-            fakeAudioPlayerManager.positionMs = 5000L
-            advanceTimeBy(600L)
+            positionChannel.send(5)
+            advanceUntilIdle()
 
             val uiStatePaused = uiState
             assertTrue(uiStatePaused is PlayerUiState.Paused)
@@ -192,8 +217,8 @@ class PlayerViewModelTest {
 
     @Test
     fun on_cleared_calls_release_on_manager() =
-        runTest {
-            viewModel = PlayerViewModel(testTrack, fakeAudioPlayerManager)
+        runTest(mainDispatcherRule.testDispatcher) {
+            viewModel = buildViewModel()
             viewModel.prepare("http://test.com/preview.mp3")
             advanceUntilIdle()
 
@@ -243,5 +268,18 @@ class PlayerViewModelTest {
         fun emitState(state: PlayerState) {
             stateCallback?.invoke(state)
         }
+    }
+}
+
+@OptIn(ExperimentalCoroutinesApi::class)
+class MainDispatcherRule(
+    val testDispatcher: TestDispatcher = UnconfinedTestDispatcher(),
+) : TestWatcher() {
+    override fun starting(description: Description) {
+        Dispatchers.setMain(testDispatcher)
+    }
+
+    override fun finished(description: Description) {
+        Dispatchers.resetMain()
     }
 }

@@ -9,13 +9,22 @@ import com.praktikum.playlistmaker.player.data.media.AudioPlayerManager
 import com.praktikum.playlistmaker.search.data.model.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import com.praktikum.playlistmaker.player.data.media.PlayerState as MediaPlayerState
 
 class PlayerViewModel(
     track: Track,
     private val audioPlayerManager: AudioPlayerManager,
+    private val positionFlowProvider: () -> Flow<Int> = {
+        flow {
+            while (true) {
+                emit((audioPlayerManager.getCurrentPosition() / MILLIS_IN_SECOND).toInt())
+                delay(POSITION_UPDATE_DELAY_MS)
+            }
+        }
+    },
 ) : ViewModel() {
     companion object {
         private const val TAG = "PlayerViewModel"
@@ -123,14 +132,11 @@ class PlayerViewModel(
         stopPositionUpdates()
         positionUpdateJob =
             viewModelScope.launch {
-                while (isActive) {
-                    val positionMs = audioPlayerManager.getCurrentPosition()
-                    val positionSeconds = (positionMs / MILLIS_IN_SECOND).toInt()
+                positionFlowProvider().collect { positionSeconds ->
                     val currentState = _uiState.value
                     if (currentState is PlayerUiState.Playing) {
                         _uiState.value = currentState.copy(currentPositionSeconds = positionSeconds)
                     }
-                    delay(POSITION_UPDATE_DELAY_MS)
                 }
             }
     }
