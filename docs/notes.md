@@ -46,7 +46,9 @@ https://github.com/ReactiveCircus/android-emulator-runner
 - singleliveevent vs livedata - https://medium.com/huawei-developers/comparison-of-livedata-singleliveevent-and-mediatorlivedata-in-android-6ff1a24a98e1
 - receiveAsFlow: https://slack-chats.kotlinlang.org/t/490166/how-can-a-singleliveevent-android-pattern-when-using-view-mo
 
+### Sound doesn't play on emulator
 
+- https://stackoverflow.com/questions/67385075/sound-not-working-in-android-emulator-on-macos
 
 ### Questions
 

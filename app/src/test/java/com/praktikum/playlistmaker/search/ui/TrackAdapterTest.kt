@@ -95,6 +95,7 @@ class TrackAdapterTest {
             releaseDate = null,
             primaryGenreName = null,
             country = null,
+            previewUrl = null,
         )
 
     private fun createDiffCallback(

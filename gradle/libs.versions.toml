@@ -21,6 +21,7 @@ koin-plugin = "0.6.2"
 coroutines = "1.10.2"
 archCore = "2.2.0"
 jacoco = "0.8.12"
+exoplayer = "1.10.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -44,6 +45,7 @@ koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin"
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 androidx-arch-core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "archCore" }
+androidx-media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "exoplayer" }
 
 
 [plugins]

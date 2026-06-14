@@ -11,7 +11,7 @@ import com.praktikum.playlistmaker.search.data.repository.TrackHistoryRepository
 import com.praktikum.playlistmaker.search.data.repository.TrackRepository
 import com.praktikum.playlistmaker.search.data.repository.TrackRepositoryImpl
 import com.praktikum.playlistmaker.search.ui.SearchViewModel
-import org.koin.core.module.dsl.viewModelOf
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -40,5 +40,5 @@ val searchModule =
         single<TrackRepository> { TrackRepositoryImpl(get()) }
         single<TrackHistoryRepository> { TrackHistoryRepositoryImpl(get(), get()) }
 
-        viewModelOf(::SearchViewModel)
+        viewModel { SearchViewModel(get(), get()) }
     }

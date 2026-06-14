@@ -1,8 +1,7 @@
 package com.praktikum.playlistmaker.search.data.model
 
 import android.util.Log
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.praktikum.playlistmaker.util.formatMillisToMinutesSeconds
 
 fun ITunesTrackDto.toTrack(): Track? {
     val requiredFields = listOf(trackId, trackName, artistName, artworkUrl100)
@@ -18,7 +17,7 @@ fun ITunesTrackDto.toTrack(): Track? {
 
     val trackTimeFormatted =
         trackTimeMillis?.let {
-            SimpleDateFormat("mm:ss", Locale.getDefault()).format(it)
+            formatMillisToMinutesSeconds(it)
         } ?: "00:00"
 
     @Suppress("MagicNumber")
@@ -34,5 +33,6 @@ fun ITunesTrackDto.toTrack(): Track? {
         releaseDate = year,
         primaryGenreName = primaryGenreName,
         country = country,
+        previewUrl = previewUrl,
     )
 }

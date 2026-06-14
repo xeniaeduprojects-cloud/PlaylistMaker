@@ -33,4 +33,6 @@
     <dimen name="player_action_button_margin">55dp</dimen>
     <dimen name="player_meta_info_text_size">13sp</dimen>
     <dimen name="player_meta_info_first_row_margin_top">30dp</dimen>
+    <dimen name="progress_bar_size">44dp</dimen>
+    <dimen name="progress_bar_margin_top">140dp</dimen>
 </resources>

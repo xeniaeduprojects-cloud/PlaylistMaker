@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -15,6 +17,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.praktikum.playlistmaker.R
 import com.praktikum.playlistmaker.databinding.ActivityPlayerBinding
 import com.praktikum.playlistmaker.search.data.model.Track
+import com.praktikum.playlistmaker.util.formatSecondsToMinutesSeconds
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -34,6 +37,7 @@ class PlayerActivity : AppCompatActivity() {
 
     companion object {
         private const val EXTRA_TRACK = "EXTRA_TRACK"
+        private const val TAG = "PlayerActivity"
 
         fun createIntent(
             context: Context,
@@ -61,39 +65,91 @@ class PlayerActivity : AppCompatActivity() {
             finish()
         }
 
+        binding.btnPlayPause.setOnClickListener {
+            Log.d(TAG, "Play/Pause button clicked")
+            viewModel.onPlayPauseClick()
+        }
+
         observeViewModel()
+
+        val track = getTrackFromIntent()
+        val url = track?.previewUrl
+        if (url != null) {
+            Log.d(TAG, "Preparing player with URL: $url")
+            viewModel.prepare(url)
+            binding.btnPlayPause.isEnabled = true
+        } else {
+            Log.e(TAG, "No preview URL available for track")
+            disablePlayButton(R.string.no_preview_url)
+        }
     }
 
     private fun observeViewModel() {
         viewModel.uiState.observe(this) { state ->
+            Log.d(TAG, "UI State changed: $state")
             renderState(state)
+        }
+
+        viewModel.playbackState.observe(this) { playbackState ->
+            Log.d(TAG, "Playback State changed: $playbackState")
+            when (playbackState) {
+                is PlaybackState.Playing -> {
+                    Log.d(TAG, "State: Playing")
+                    binding.btnPlayPause.isEnabled = true
+                }
+                is PlaybackState.Paused -> {
+                    Log.d(TAG, "State: Paused")
+                    binding.btnPlayPause.isEnabled = true
+                }
+                is PlaybackState.Buffering -> {
+                    Log.d(TAG, "State: Buffering")
+                }
+                is PlaybackState.Idle -> {
+                    Log.d(TAG, "State: Idle")
+                }
+                is PlaybackState.Error -> {
+                    Log.e(TAG, "State: Error")
+                    disablePlayButton(R.string.player_error)
+                }
+            }
         }
     }
 
     private fun renderState(state: PlayerUiState) {
         when (state) {
-            is PlayerUiState.Content -> {
-                val cornerRadiusPx = resources.getDimensionPixelSize(R.dimen.player_album_art_corner_radius)
-
-                Glide
-                    .with(this)
-                    .load(state.artworkUrl)
-                    .placeholder(R.drawable.album_placeholder)
-                    .error(R.drawable.album_placeholder)
-                    .centerCrop()
-                    .transform(RoundedCorners(cornerRadiusPx))
-                    .into(binding.imgAlbumArt)
-
-                binding.tvTrackTitle.text = state.trackName
-                binding.tvArtistName.text = state.artistName
-                binding.tvDuration.text = state.duration
-
-                setMetaInfoRowVisibility(state.album, binding.labelAlbum, binding.tvAlbum)
-                setMetaInfoRowVisibility(state.year, binding.labelYear, binding.tvYear)
-                setMetaInfoRowVisibility(state.genre, binding.labelGenre, binding.tvGenre)
-                setMetaInfoRowVisibility(state.country, binding.labelCountry, binding.tvCountry)
+            is PlayerUiState.Playing -> {
+                renderContent(state.content)
+                binding.btnPlayPause.setImageResource(R.drawable.ic_pause_button)
+                binding.tvPlaybackTime.text = formatSecondsToMinutesSeconds(state.currentPositionSeconds)
+            }
+            is PlayerUiState.Paused -> {
+                renderContent(state.content)
+                binding.btnPlayPause.setImageResource(R.drawable.ic_play_button)
+                binding.tvPlaybackTime.text = formatSecondsToMinutesSeconds(state.currentPositionSeconds)
             }
         }
+    }
+
+    private fun renderContent(content: TrackContent) {
+        val cornerRadiusPx = resources.getDimensionPixelSize(R.dimen.player_album_art_corner_radius)
+
+        Glide
+            .with(this)
+            .load(content.artworkUrl)
+            .placeholder(R.drawable.album_placeholder)
+            .error(R.drawable.album_placeholder)
+            .centerCrop()
+            .transform(RoundedCorners(cornerRadiusPx))
+            .into(binding.imgAlbumArt)
+
+        binding.tvTrackTitle.text = content.trackName
+        binding.tvArtistName.text = content.artistName
+        binding.tvDuration.text = content.duration
+
+        setMetaInfoRowVisibility(content.album, binding.labelAlbum, binding.tvAlbum)
+        setMetaInfoRowVisibility(content.year, binding.labelYear, binding.tvYear)
+        setMetaInfoRowVisibility(content.genre, binding.labelGenre, binding.tvGenre)
+        setMetaInfoRowVisibility(content.country, binding.labelCountry, binding.tvCountry)
     }
 
     private fun setMetaInfoRowVisibility(
@@ -105,5 +161,17 @@ class PlayerActivity : AppCompatActivity() {
         labelView.isVisible = isVisible
         valueView.isVisible = isVisible
         valueView.text = value
+    }
+
+    private fun disablePlayButton(messageResId: Int) {
+        binding.btnPlayPause.isEnabled = false
+        @Suppress("MagicNumber")
+        binding.btnPlayPause.alpha = resources.getInteger(R.integer.disabled_alpha) / 100f
+        Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewModel.pausePlayer()
     }
 }

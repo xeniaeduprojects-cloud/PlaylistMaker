@@ -40,6 +40,7 @@ class PlayerUiTest {
                 releaseDate = "1965",
                 primaryGenreName = "Rock",
                 country = "UK",
+                previewUrl = "https://example.com/preview.mp3",
             )
 
         ActivityScenario.launch<PlayerActivity>(
@@ -77,7 +78,7 @@ class PlayerUiTest {
 
         onView(withId(R.id.btn_add_to_playlist)).check(matches(isDisplayed()))
         onView(withId(R.id.btn_favourite)).check(matches(isDisplayed()))
-        onView(withId(R.id.btn_play)).check(matches(isDisplayed()))
+        onView(withId(R.id.btn_play_pause)).check(matches(isDisplayed()))
 
         onView(withId(R.id.tv_playback_time)).check(matches(isDisplayed()))
     }
@@ -125,6 +126,7 @@ class PlayerUiTest {
                 releaseDate = "2020",
                 primaryGenreName = "Pop",
                 country = "USA",
+                previewUrl = "https://example.com/preview.mp3",
             )
 
         ActivityScenario.launch<PlayerActivity>(
@@ -150,6 +152,7 @@ class PlayerUiTest {
                 releaseDate = null,
                 primaryGenreName = "Pop",
                 country = "USA",
+                previewUrl = "https://example.com/preview.mp3",
             )
 
         ActivityScenario.launch<PlayerActivity>(
@@ -175,6 +178,7 @@ class PlayerUiTest {
                 releaseDate = "2020",
                 primaryGenreName = null,
                 country = "USA",
+                previewUrl = "https://example.com/preview.mp3",
             )
 
         ActivityScenario.launch<PlayerActivity>(
@@ -200,6 +204,7 @@ class PlayerUiTest {
                 releaseDate = "2020",
                 primaryGenreName = "Pop",
                 country = null,
+                previewUrl = "https://example.com/preview.mp3",
             )
 
         ActivityScenario.launch<PlayerActivity>(
@@ -343,6 +348,7 @@ class PlayerUiTest {
                 releaseDate = null,
                 primaryGenreName = null,
                 country = null,
+                previewUrl = "https://example.com/preview.mp3",
             )
 
         ActivityScenario.launch<PlayerActivity>(
@@ -381,6 +387,7 @@ class PlayerUiTest {
             releaseDate = releaseDate,
             primaryGenreName = primaryGenreName,
             country = country,
+            previewUrl = "https://example.com/preview.mp3",
         )
 
     private fun doesNotOverlapWith(labelId: Int): ViewAssertion =
