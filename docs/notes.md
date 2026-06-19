@@ -79,9 +79,10 @@ python3 - <<'EOF'
 import re
 
 PKG = "playlistmaker"
-MERGED_APP = "com.praktikum.playlistmaker(.app)"
-TOP_PKGS = {'com.praktikum.playlistmaker', 'com.praktikum.playlistmaker.app'}
-IGNORE = ('.di', '.databinding', '.medialibrary')
+MERGED_APP = "com.praktikum.playlistmaker.app"
+TOP_PKGS = {'com.praktikum.playlistmaker.app'}
+IGNORE = ('.di', '.databinding', '.medialibrary', '.util')
+ROOT_PKG = 'com.praktikum.playlistmaker'
 
 with open("app/build/jdeps/debug.dot") as f:
     lines = f.readlines()
@@ -116,6 +117,8 @@ for line in lines:
     src = clean(src_m.group(1))
     dst = clean(dst_m.group(1))
     if PKG in src and PKG in dst and src != dst:
+        if src == ROOT_PKG or dst == ROOT_PKG:
+            continue
         if not any(ig in src or ig in dst for ig in IGNORE):
             edges.add((src, dst))
             nodes.add(src)
