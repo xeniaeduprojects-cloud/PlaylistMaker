@@ -50,6 +50,10 @@ https://github.com/ReactiveCircus/android-emulator-runner
 
 - https://stackoverflow.com/questions/67385075/sound-not-working-in-android-emulator-on-macos
 
+### Architecture sample 
+
+- https://github.com/android/nowinandroid
+
 ### Questions
 
 ```bash

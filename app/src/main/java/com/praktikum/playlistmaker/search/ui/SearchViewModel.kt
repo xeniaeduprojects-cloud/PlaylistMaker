@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.praktikum.playlistmaker.search.data.model.Track
 import com.praktikum.playlistmaker.search.domain.AddTrackToHistoryUseCase
 import com.praktikum.playlistmaker.search.domain.ClearSearchHistoryUseCase
 import com.praktikum.playlistmaker.search.domain.GetSearchHistoryUseCase
 import com.praktikum.playlistmaker.search.domain.SearchTracksUseCase
+import com.praktikum.playlistmaker.search.domain.model.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay

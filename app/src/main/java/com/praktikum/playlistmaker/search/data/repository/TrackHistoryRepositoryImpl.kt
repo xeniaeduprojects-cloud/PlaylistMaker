@@ -3,7 +3,7 @@ package com.praktikum.playlistmaker.search.data.repository
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.google.gson.Gson
-import com.praktikum.playlistmaker.search.data.model.Track
+import com.praktikum.playlistmaker.search.domain.model.Track
 import com.praktikum.playlistmaker.util.RecentSet
 
 class TrackHistoryRepositoryImpl(

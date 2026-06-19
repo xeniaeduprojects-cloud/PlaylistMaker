@@ -1,6 +1,7 @@
 package com.praktikum.playlistmaker.search.data.model
 
 import android.util.Log
+import com.praktikum.playlistmaker.search.domain.model.Track
 import com.praktikum.playlistmaker.util.formatMillisToMinutesSeconds
 
 fun ITunesTrackDto.toTrack(): Track? {

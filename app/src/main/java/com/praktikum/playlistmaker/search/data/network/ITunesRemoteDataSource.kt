@@ -1,7 +1,7 @@
 package com.praktikum.playlistmaker.search.data.network
 
-import com.praktikum.playlistmaker.search.data.model.Track
 import com.praktikum.playlistmaker.search.data.model.toTrack
+import com.praktikum.playlistmaker.search.domain.model.Track
 
 class ITunesRemoteDataSource(
     private val apiService: ITunesApiService,

@@ -16,7 +16,6 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.praktikum.playlistmaker.R
-import com.praktikum.playlistmaker.search.data.model.Track
 import com.praktikum.playlistmaker.search.data.repository.TrackHistoryRepository
 import com.praktikum.playlistmaker.search.data.repository.TrackRepository
 import com.praktikum.playlistmaker.search.di.searchModule
@@ -24,6 +23,7 @@ import com.praktikum.playlistmaker.search.domain.AddTrackToHistoryUseCase
 import com.praktikum.playlistmaker.search.domain.ClearSearchHistoryUseCase
 import com.praktikum.playlistmaker.search.domain.GetSearchHistoryUseCase
 import com.praktikum.playlistmaker.search.domain.SearchTracksUseCase
+import com.praktikum.playlistmaker.search.domain.model.Track
 import com.praktikum.playlistmaker.util.RecentSet
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.hamcrest.Description

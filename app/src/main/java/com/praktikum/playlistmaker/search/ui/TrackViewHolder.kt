@@ -7,7 +7,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.praktikum.playlistmaker.R
 import com.praktikum.playlistmaker.databinding.ItemTrackBinding
-import com.praktikum.playlistmaker.search.data.model.Track
+import com.praktikum.playlistmaker.search.domain.model.Track
 
 class TrackViewHolder private constructor(
     private val binding: ItemTrackBinding,

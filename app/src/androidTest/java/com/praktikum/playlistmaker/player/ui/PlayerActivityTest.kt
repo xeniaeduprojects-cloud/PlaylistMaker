@@ -21,7 +21,7 @@ import com.praktikum.playlistmaker.player.domain.PlayTrackUseCase
 import com.praktikum.playlistmaker.player.domain.PreparePlayerUseCase
 import com.praktikum.playlistmaker.player.domain.ReleasePlayerUseCase
 import com.praktikum.playlistmaker.player.domain.SeekToPositionUseCase
-import com.praktikum.playlistmaker.search.data.model.Track
+import com.praktikum.playlistmaker.search.domain.model.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
