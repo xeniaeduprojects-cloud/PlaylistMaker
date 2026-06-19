@@ -15,16 +15,21 @@ import org.koin.dsl.module
 
 val playerModule =
     module {
-        factory<AudioPlayerManager> { AudioPlayerManagerImpl(get()) }
-
-        factory { PreparePlayerUseCase(get()) }
-        factory { PlayTrackUseCase(get()) }
-        factory { PauseTrackUseCase(get()) }
-        factory { SeekToPositionUseCase(get()) }
-        factory { GetCurrentPositionUseCase(get()) }
-        factory { ReleasePlayerUseCase(get()) }
-
+        // The AudioPlayerManager (and its single ExoPlayer) must be shared by every
+        // use case of one player screen, otherwise prepare() and play() would target
+        // different ExoPlayer instances and no audio would play. We build it once per
+        // PlayerViewModel here so it lives and dies with the ViewModel (released via
+        // ReleasePlayerUseCase in onCleared).
         viewModel { params ->
-            PlayerViewModel(params.get<Track>(), get(), get(), get(), get(), get(), get())
+            val audioPlayerManager: AudioPlayerManager = AudioPlayerManagerImpl(get())
+            PlayerViewModel(
+                track = params.get<Track>(),
+                preparePlayerUseCase = PreparePlayerUseCase(audioPlayerManager),
+                playTrackUseCase = PlayTrackUseCase(audioPlayerManager),
+                pauseTrackUseCase = PauseTrackUseCase(audioPlayerManager),
+                seekToPositionUseCase = SeekToPositionUseCase(audioPlayerManager),
+                getCurrentPositionUseCase = GetCurrentPositionUseCase(audioPlayerManager),
+                releasePlayerUseCase = ReleasePlayerUseCase(audioPlayerManager),
+            )
         }
     }
