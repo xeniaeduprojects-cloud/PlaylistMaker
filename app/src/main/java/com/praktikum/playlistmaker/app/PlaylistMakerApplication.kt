@@ -7,8 +7,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.praktikum.playlistmaker.BuildConfig
 import com.praktikum.playlistmaker.player.di.playerModule
 import com.praktikum.playlistmaker.search.di.searchModule
-import com.praktikum.playlistmaker.settings.data.repository.SettingsRepository
 import com.praktikum.playlistmaker.settings.di.settingsModule
+import com.praktikum.playlistmaker.settings.domain.GetDarkModeUseCase
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -44,10 +44,10 @@ class PlaylistMakerApplication : Application() {
     }
 
     private fun applyThemePreference() {
-        val settingsRepository =
+        val getDarkModeUseCase =
             org.koin.java.KoinJavaComponent
-                .get<SettingsRepository>(SettingsRepository::class.java)
-        val isDarkMode = settingsRepository.isDarkModeEnabled()
+                .get<GetDarkModeUseCase>(GetDarkModeUseCase::class.java)
+        val isDarkMode = getDarkModeUseCase()
         AppCompatDelegate.setDefaultNightMode(
             if (isDarkMode) {
                 AppCompatDelegate.MODE_NIGHT_YES

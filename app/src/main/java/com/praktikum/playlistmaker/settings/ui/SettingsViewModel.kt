@@ -4,10 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.praktikum.playlistmaker.R
-import com.praktikum.playlistmaker.settings.data.repository.SettingsRepository
+import com.praktikum.playlistmaker.settings.domain.GetDarkModeUseCase
+import com.praktikum.playlistmaker.settings.domain.SetDarkModeUseCase
 
 class SettingsViewModel(
-    private val settingsRepository: SettingsRepository,
+    private val getDarkModeUseCase: GetDarkModeUseCase,
+    private val setDarkModeUseCase: SetDarkModeUseCase,
 ) : ViewModel() {
     private val _uiState = MutableLiveData<SettingsUiState>()
     val uiState: LiveData<SettingsUiState> = _uiState
@@ -25,12 +27,12 @@ class SettingsViewModel(
     }
 
     private fun loadSettings() {
-        val isDarkMode = settingsRepository.isDarkModeEnabled()
+        val isDarkMode = getDarkModeUseCase()
         _uiState.value = SettingsUiState(isDarkModeEnabled = isDarkMode)
     }
 
     fun onDarkModeToggled(enabled: Boolean) {
-        settingsRepository.setDarkMode(enabled)
+        setDarkModeUseCase(enabled)
         _uiState.value = SettingsUiState(isDarkModeEnabled = enabled)
         _navigationEvent.value = SettingsNavigationEvent.ApplyTheme(enabled)
     }
