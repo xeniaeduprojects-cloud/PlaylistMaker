@@ -17,6 +17,10 @@ import com.praktikum.playlistmaker.search.data.model.Track
 import com.praktikum.playlistmaker.search.data.repository.TrackHistoryRepository
 import com.praktikum.playlistmaker.search.data.repository.TrackRepository
 import com.praktikum.playlistmaker.search.di.searchModule
+import com.praktikum.playlistmaker.search.domain.AddTrackToHistoryUseCase
+import com.praktikum.playlistmaker.search.domain.ClearSearchHistoryUseCase
+import com.praktikum.playlistmaker.search.domain.GetSearchHistoryUseCase
+import com.praktikum.playlistmaker.search.domain.SearchTracksUseCase
 import com.praktikum.playlistmaker.search.ui.SearchActivity
 import com.praktikum.playlistmaker.search.ui.SearchViewModel
 import com.praktikum.playlistmaker.search.ui.TrackRepositoryAndroidTest
@@ -39,7 +43,11 @@ class PlayerNavigationTest {
         module {
             single<TrackRepository> { fakeTrackRepository }
             single<TrackHistoryRepository> { fakeTrackHistoryRepository }
-            viewModel { SearchViewModel(get(), get(), searchDebounceDelayMs = 0L) }
+            single { SearchTracksUseCase(get()) }
+            single { GetSearchHistoryUseCase(get()) }
+            single { AddTrackToHistoryUseCase(get()) }
+            single { ClearSearchHistoryUseCase(get()) }
+            viewModel { SearchViewModel(get(), get(), get(), get(), searchDebounceDelayMs = 0L) }
         }
     }
 

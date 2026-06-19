@@ -15,6 +15,12 @@ import com.praktikum.playlistmaker.R
 import com.praktikum.playlistmaker.player.data.media.AudioPlayerManager
 import com.praktikum.playlistmaker.player.data.media.PlayerState
 import com.praktikum.playlistmaker.player.di.playerModule
+import com.praktikum.playlistmaker.player.domain.GetCurrentPositionUseCase
+import com.praktikum.playlistmaker.player.domain.PauseTrackUseCase
+import com.praktikum.playlistmaker.player.domain.PlayTrackUseCase
+import com.praktikum.playlistmaker.player.domain.PreparePlayerUseCase
+import com.praktikum.playlistmaker.player.domain.ReleasePlayerUseCase
+import com.praktikum.playlistmaker.player.domain.SeekToPositionUseCase
 import com.praktikum.playlistmaker.search.data.model.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -56,7 +62,13 @@ class PlayerActivityTest {
         testModule =
             module {
                 factory<AudioPlayerManager> { fakeAudioPlayerManager }
-                viewModel { PlayerViewModel(get(), get()) }
+                factory { PreparePlayerUseCase(get()) }
+                factory { PlayTrackUseCase(get()) }
+                factory { PauseTrackUseCase(get()) }
+                factory { SeekToPositionUseCase(get()) }
+                factory { GetCurrentPositionUseCase(get()) }
+                factory { ReleasePlayerUseCase(get()) }
+                viewModel { params -> PlayerViewModel(params.get(), get(), get(), get(), get(), get(), get()) }
             }
         unloadKoinModules(playerModule)
         loadKoinModules(testModule)

@@ -3,6 +3,8 @@ package com.praktikum.playlistmaker.settings.ui
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.praktikum.playlistmaker.R
 import com.praktikum.playlistmaker.settings.data.repository.SettingsRepository
+import com.praktikum.playlistmaker.settings.domain.GetDarkModeUseCase
+import com.praktikum.playlistmaker.settings.domain.SetDarkModeUseCase
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
@@ -20,13 +22,21 @@ class SettingsViewModelTest {
     @Before
     fun setUp() {
         fakeSettingsRepository = FakeSettingsRepository()
-        viewModel = SettingsViewModel(fakeSettingsRepository)
+        viewModel =
+            SettingsViewModel(
+                getDarkModeUseCase = GetDarkModeUseCase(fakeSettingsRepository),
+                setDarkModeUseCase = SetDarkModeUseCase(fakeSettingsRepository),
+            )
     }
 
     @Test
     fun `initial state loads dark mode setting from repository`() {
         fakeSettingsRepository.setDarkMode(true)
-        val viewModel = SettingsViewModel(fakeSettingsRepository)
+        val viewModel =
+            SettingsViewModel(
+                getDarkModeUseCase = GetDarkModeUseCase(fakeSettingsRepository),
+                setDarkModeUseCase = SetDarkModeUseCase(fakeSettingsRepository),
+            )
 
         val state = viewModel.uiState.value
 
@@ -37,7 +47,11 @@ class SettingsViewModelTest {
     @Test
     fun `initial state is false when dark mode is disabled`() {
         fakeSettingsRepository.setDarkMode(false)
-        val viewModel = SettingsViewModel(fakeSettingsRepository)
+        val viewModel =
+            SettingsViewModel(
+                getDarkModeUseCase = GetDarkModeUseCase(fakeSettingsRepository),
+                setDarkModeUseCase = SetDarkModeUseCase(fakeSettingsRepository),
+            )
 
         val state = viewModel.uiState.value
 
@@ -61,7 +75,11 @@ class SettingsViewModelTest {
     @Test
     fun `onDarkModeToggled to false updates repository and ui state`() {
         fakeSettingsRepository.setDarkMode(true)
-        viewModel = SettingsViewModel(fakeSettingsRepository)
+        viewModel =
+            SettingsViewModel(
+                getDarkModeUseCase = GetDarkModeUseCase(fakeSettingsRepository),
+                setDarkModeUseCase = SetDarkModeUseCase(fakeSettingsRepository),
+            )
 
         viewModel.onDarkModeToggled(false)
 
