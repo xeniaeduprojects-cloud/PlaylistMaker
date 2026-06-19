@@ -1,7 +1,7 @@
 package com.praktikum.playlistmaker.search.data.repository
 
+import com.praktikum.playlistmaker.search.data.model.Track
 import com.praktikum.playlistmaker.search.data.network.TrackRemoteDataSource
-import com.praktikum.playlistmaker.search.domain.model.Track
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 

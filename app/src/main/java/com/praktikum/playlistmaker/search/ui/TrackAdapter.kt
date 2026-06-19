@@ -3,7 +3,7 @@ package com.praktikum.playlistmaker.search.ui
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.praktikum.playlistmaker.search.domain.model.Track
+import com.praktikum.playlistmaker.search.data.model.Track
 
 class TrackAdapter(
     private val onTrackClick: (Track) -> Unit = {},

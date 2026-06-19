@@ -17,7 +17,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.praktikum.playlistmaker.R
-import com.praktikum.playlistmaker.search.domain.model.Track
+import com.praktikum.playlistmaker.search.data.model.Track
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.not

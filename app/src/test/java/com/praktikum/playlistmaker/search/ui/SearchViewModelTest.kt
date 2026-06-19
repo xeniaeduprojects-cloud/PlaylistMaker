@@ -1,13 +1,13 @@
 package com.praktikum.playlistmaker.search.ui
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.praktikum.playlistmaker.search.data.model.Track
 import com.praktikum.playlistmaker.search.data.repository.TrackHistoryRepository
 import com.praktikum.playlistmaker.search.data.repository.TrackRepository
 import com.praktikum.playlistmaker.search.domain.AddTrackToHistoryUseCase
 import com.praktikum.playlistmaker.search.domain.ClearSearchHistoryUseCase
 import com.praktikum.playlistmaker.search.domain.GetSearchHistoryUseCase
 import com.praktikum.playlistmaker.search.domain.SearchTracksUseCase
-import com.praktikum.playlistmaker.search.domain.model.Track
 import com.praktikum.playlistmaker.util.RecentSet
 import com.praktikum.playlistmaker.utils.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -1,6 +1,6 @@
 package com.praktikum.playlistmaker.search.ui
 
-import com.praktikum.playlistmaker.search.domain.model.Track
+import com.praktikum.playlistmaker.search.data.model.Track
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

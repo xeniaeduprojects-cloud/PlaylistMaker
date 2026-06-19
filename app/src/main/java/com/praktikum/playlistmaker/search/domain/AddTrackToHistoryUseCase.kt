@@ -1,7 +1,7 @@
 package com.praktikum.playlistmaker.search.domain
 
+import com.praktikum.playlistmaker.search.data.model.Track
 import com.praktikum.playlistmaker.search.data.repository.TrackHistoryRepository
-import com.praktikum.playlistmaker.search.domain.model.Track
 
 class AddTrackToHistoryUseCase(
     private val trackHistoryRepository: TrackHistoryRepository,

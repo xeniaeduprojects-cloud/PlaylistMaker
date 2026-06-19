@@ -1,7 +1,7 @@
 package com.praktikum.playlistmaker.search.ui
 
+import com.praktikum.playlistmaker.search.data.model.Track
 import com.praktikum.playlistmaker.search.data.repository.TrackRepository
-import com.praktikum.playlistmaker.search.domain.model.Track
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

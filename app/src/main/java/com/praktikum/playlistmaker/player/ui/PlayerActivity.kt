@@ -16,7 +16,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.praktikum.playlistmaker.R
 import com.praktikum.playlistmaker.databinding.ActivityPlayerBinding
-import com.praktikum.playlistmaker.search.domain.model.Track
+import com.praktikum.playlistmaker.search.data.model.Track
 import com.praktikum.playlistmaker.util.formatSecondsToMinutesSeconds
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
