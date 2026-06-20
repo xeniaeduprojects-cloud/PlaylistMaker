@@ -15,6 +15,12 @@ import com.praktikum.playlistmaker.R
 import com.praktikum.playlistmaker.player.data.media.AudioPlayerManager
 import com.praktikum.playlistmaker.player.data.media.PlayerState
 import com.praktikum.playlistmaker.player.di.playerModule
+import com.praktikum.playlistmaker.player.domain.GetCurrentPositionUseCase
+import com.praktikum.playlistmaker.player.domain.PauseTrackUseCase
+import com.praktikum.playlistmaker.player.domain.PlayTrackUseCase
+import com.praktikum.playlistmaker.player.domain.PreparePlayerUseCase
+import com.praktikum.playlistmaker.player.domain.ReleasePlayerUseCase
+import com.praktikum.playlistmaker.player.domain.SeekToPositionUseCase
 import com.praktikum.playlistmaker.search.data.model.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -55,8 +61,19 @@ class PlayerActivityTest {
         fakeAudioPlayerManager = FakeAudioPlayerManager()
         testModule =
             module {
-                factory<AudioPlayerManager> { fakeAudioPlayerManager }
-                viewModel { PlayerViewModel(get(), get()) }
+                // Mirror production wiring: a single shared AudioPlayerManager per ViewModel,
+                // here swapped for the fake so prepare()/play()/pause() all hit one instance.
+                viewModel { params ->
+                    PlayerViewModel(
+                        track = params.get<Track>(),
+                        preparePlayerUseCase = PreparePlayerUseCase(fakeAudioPlayerManager),
+                        playTrackUseCase = PlayTrackUseCase(fakeAudioPlayerManager),
+                        pauseTrackUseCase = PauseTrackUseCase(fakeAudioPlayerManager),
+                        seekToPositionUseCase = SeekToPositionUseCase(fakeAudioPlayerManager),
+                        getCurrentPositionUseCase = GetCurrentPositionUseCase(fakeAudioPlayerManager),
+                        releasePlayerUseCase = ReleasePlayerUseCase(fakeAudioPlayerManager),
+                    )
+                }
             }
         unloadKoinModules(playerModule)
         loadKoinModules(testModule)

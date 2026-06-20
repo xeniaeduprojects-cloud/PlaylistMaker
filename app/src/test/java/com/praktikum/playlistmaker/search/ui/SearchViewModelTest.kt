@@ -4,6 +4,10 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.praktikum.playlistmaker.search.data.model.Track
 import com.praktikum.playlistmaker.search.data.repository.TrackHistoryRepository
 import com.praktikum.playlistmaker.search.data.repository.TrackRepository
+import com.praktikum.playlistmaker.search.domain.AddTrackToHistoryUseCase
+import com.praktikum.playlistmaker.search.domain.ClearSearchHistoryUseCase
+import com.praktikum.playlistmaker.search.domain.GetSearchHistoryUseCase
+import com.praktikum.playlistmaker.search.domain.SearchTracksUseCase
 import com.praktikum.playlistmaker.util.RecentSet
 import com.praktikum.playlistmaker.utils.MainDispatcherRule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -28,7 +32,13 @@ class SearchViewModelTest {
 
     private val fakeTrackRepository = FakeTrackRepository()
     private val fakeTrackHistoryRepository = FakeTrackHistoryRepository()
-    private val viewModel = SearchViewModel(fakeTrackRepository, fakeTrackHistoryRepository)
+    private val viewModel =
+        SearchViewModel(
+            searchTracksUseCase = SearchTracksUseCase(fakeTrackRepository),
+            getSearchHistoryUseCase = GetSearchHistoryUseCase(fakeTrackHistoryRepository),
+            addTrackToHistoryUseCase = AddTrackToHistoryUseCase(fakeTrackHistoryRepository),
+            clearSearchHistoryUseCase = ClearSearchHistoryUseCase(fakeTrackHistoryRepository),
+        )
 
     @Test
     fun `initial state is history content`() {

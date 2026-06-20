@@ -5,7 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.praktikum.playlistmaker.player.data.media.AudioPlayerManager
+import com.praktikum.playlistmaker.player.domain.GetCurrentPositionUseCase
+import com.praktikum.playlistmaker.player.domain.PauseTrackUseCase
+import com.praktikum.playlistmaker.player.domain.PlayTrackUseCase
+import com.praktikum.playlistmaker.player.domain.PreparePlayerUseCase
+import com.praktikum.playlistmaker.player.domain.ReleasePlayerUseCase
+import com.praktikum.playlistmaker.player.domain.SeekToPositionUseCase
 import com.praktikum.playlistmaker.search.data.model.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -14,13 +19,19 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import com.praktikum.playlistmaker.player.data.media.PlayerState as MediaPlayerState
 
+@Suppress("LongParameterList")
 class PlayerViewModel(
     track: Track,
-    private val audioPlayerManager: AudioPlayerManager,
+    private val preparePlayerUseCase: PreparePlayerUseCase,
+    private val playTrackUseCase: PlayTrackUseCase,
+    private val pauseTrackUseCase: PauseTrackUseCase,
+    private val seekToPositionUseCase: SeekToPositionUseCase,
+    private val getCurrentPositionUseCase: GetCurrentPositionUseCase,
+    private val releasePlayerUseCase: ReleasePlayerUseCase,
     private val positionFlowProvider: () -> Flow<Int> = {
         flow {
             while (true) {
-                emit((audioPlayerManager.getCurrentPosition() / MILLIS_IN_SECOND).toInt())
+                emit((getCurrentPositionUseCase() / MILLIS_IN_SECOND).toInt())
                 delay(POSITION_UPDATE_DELAY_MS)
             }
         }
@@ -60,7 +71,7 @@ class PlayerViewModel(
 
     fun prepare(url: String) {
         Log.d(TAG, "prepare: $url")
-        audioPlayerManager.prepare(url) { playerState ->
+        preparePlayerUseCase(url) { playerState ->
             Log.d(TAG, "Player state callback: $playerState")
             _playbackState.value =
                 when (playerState) {
@@ -99,9 +110,9 @@ class PlayerViewModel(
             is PlayerUiState.Paused -> {
                 Log.d(TAG, "Starting playback")
                 if (currentState.currentPositionSeconds == 0) {
-                    audioPlayerManager.seekTo(0)
+                    seekToPositionUseCase(0)
                 }
-                audioPlayerManager.play()
+                playTrackUseCase()
                 startPositionUpdates()
                 _uiState.value =
                     PlayerUiState.Playing(
@@ -117,7 +128,7 @@ class PlayerViewModel(
         val currentState = _uiState.value ?: return
         if (currentState is PlayerUiState.Playing) {
             Log.d(TAG, "Pausing playback")
-            audioPlayerManager.pause()
+            pauseTrackUseCase()
             stopPositionUpdates()
             _uiState.value =
                 PlayerUiState.Paused(
@@ -150,6 +161,6 @@ class PlayerViewModel(
     override fun onCleared() {
         super.onCleared()
         stopPositionUpdates()
-        audioPlayerManager.release()
+        releasePlayerUseCase()
     }
 }

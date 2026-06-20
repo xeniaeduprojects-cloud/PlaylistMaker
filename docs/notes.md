@@ -50,6 +50,10 @@ https://github.com/ReactiveCircus/android-emulator-runner
 
 - https://stackoverflow.com/questions/67385075/sound-not-working-in-android-emulator-on-macos
 
+### Architecture sample 
+
+- https://github.com/android/nowinandroid
+
 ### Questions
 
 ```bash
@@ -67,3 +71,95 @@ https://github.com/ReactiveCircus/android-emulator-runner
 ### Todo
 
 - CoroutineExceptionHandler - add in the future
+
+### Make visualization
+
+`jdeps -dotoutput app/build/jdeps app/build/tmp/kotlin-classes/debug/`
+
+```
+python3 - <<'EOF'
+import re
+
+PKG = "playlistmaker"
+MERGED_APP = "com.praktikum.playlistmaker.app"
+TOP_PKGS = {'com.praktikum.playlistmaker.app'}
+IGNORE = ('.di', '.databinding', '.medialibrary', '.util')
+ROOT_PKG = 'com.praktikum.playlistmaker'
+
+with open("app/build/jdeps/debug.dot") as f:
+    lines = f.readlines()
+
+def clean(s):
+    s = re.sub(r'\s*\([^)]+\)\s*$', '', s).strip()
+    if s in TOP_PKGS:
+        return MERGED_APP
+    s = re.sub(r'(\.data)\..+$', r'\1', s)
+    s = re.sub(r'(\.domain)\..+$', r'\1', s)
+    return s
+
+def rank_block(rank, node_list):
+    if not node_list:
+        return ""
+    names = "; ".join('"' + n + '"' for n in node_list)
+    return '  { rank=' + rank + '; ' + names + '; }\n'
+
+edges = set()
+nodes = set()
+
+for line in lines:
+    if '->' not in line:
+        continue
+    parts = re.split(r'\s*->\s*', line, maxsplit=1)
+    if len(parts) < 2:
+        continue
+    src_m = re.search(r'"([^"]+)"', parts[0])
+    dst_m = re.search(r'"([^"]+)"', parts[1])
+    if not src_m or not dst_m:
+        continue
+    src = clean(src_m.group(1))
+    dst = clean(dst_m.group(1))
+    if PKG in src and PKG in dst and src != dst:
+        if src == ROOT_PKG or dst == ROOT_PKG:
+            continue
+        if not any(ig in src or ig in dst for ig in IGNORE):
+            edges.add((src, dst))
+            nodes.add(src)
+            nodes.add(dst)
+
+top_nodes    = [MERGED_APP] if MERGED_APP in nodes else []
+ui_nodes     = sorted(n for n in nodes if '.ui'     in n)
+domain_nodes = sorted(n for n in nodes if '.domain' in n)
+data_nodes   = sorted(n for n in nodes if '.data'   in n)
+util_nodes   = sorted(n for n in nodes if '.util'   in n)
+
+out = 'digraph "app" {\n  rankdir=BT;\n  edge [dir=back];\n'
+out += rank_block("min", util_nodes)
+out += rank_block("same", data_nodes)
+out += rank_block("same", domain_nodes)
+out += rank_block("same", ui_nodes)
+out += rank_block("max", top_nodes)
+
+layers = [util_nodes, data_nodes, domain_nodes, ui_nodes, top_nodes]
+for i in range(len(layers) - 1):
+    if layers[i] and layers[i+1]:
+        out += '  "' + layers[i][0] + '" -> "' + layers[i+1][0] + '" [style=invis];\n'
+
+for src, dst in sorted(edges):
+    out += '  "' + src + '" -> "' + dst + '";\n'
+out += "}\n"
+
+with open("app/build/jdeps/full.dot", "w") as f:
+    f.write(out)
+EOF
+
+dot -Tsvg app/build/jdeps/full.dot -o app/build/jdeps/full.svg && open app/build/jdeps/full.svg
+```
+
+How it works:
+
+Build — ./gradlew assembleDebug compiles .class files to app/build/tmp/kotlin-classes/debug/
+jdeps — scans compiled classes, outputs package-level dependency graph as .dot file
+Python filter — parses the dot file, strips (debug)/(not found) suffixes, collapses data.* and domain.* subpackages into parent, merges app + root package, drops ignored packages (.di, .databinding, .medialibrary), deduplicates edges
+Layout — assigns rank groups to enforce layers: util(bottom) → data → domain → ui → app(top); invisible edges enforce vertical order
+Graphviz dot — renders the filtered .dot to SVG
+

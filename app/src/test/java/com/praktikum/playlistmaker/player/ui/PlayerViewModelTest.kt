@@ -3,6 +3,12 @@ package com.praktikum.playlistmaker.player.ui
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.praktikum.playlistmaker.player.data.media.AudioPlayerManager
 import com.praktikum.playlistmaker.player.data.media.PlayerState
+import com.praktikum.playlistmaker.player.domain.GetCurrentPositionUseCase
+import com.praktikum.playlistmaker.player.domain.PauseTrackUseCase
+import com.praktikum.playlistmaker.player.domain.PlayTrackUseCase
+import com.praktikum.playlistmaker.player.domain.PreparePlayerUseCase
+import com.praktikum.playlistmaker.player.domain.ReleasePlayerUseCase
+import com.praktikum.playlistmaker.player.domain.SeekToPositionUseCase
 import com.praktikum.playlistmaker.search.data.model.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -60,7 +66,16 @@ class PlayerViewModelTest {
     private fun buildViewModel(
         track: Track = testTrack,
         positionFlowProvider: () -> Flow<Int> = { emptyFlow() },
-    ) = PlayerViewModel(track, fakeAudioPlayerManager, positionFlowProvider)
+    ) = PlayerViewModel(
+        track = track,
+        preparePlayerUseCase = PreparePlayerUseCase(fakeAudioPlayerManager),
+        playTrackUseCase = PlayTrackUseCase(fakeAudioPlayerManager),
+        pauseTrackUseCase = PauseTrackUseCase(fakeAudioPlayerManager),
+        seekToPositionUseCase = SeekToPositionUseCase(fakeAudioPlayerManager),
+        getCurrentPositionUseCase = GetCurrentPositionUseCase(fakeAudioPlayerManager),
+        releasePlayerUseCase = ReleasePlayerUseCase(fakeAudioPlayerManager),
+        positionFlowProvider = positionFlowProvider,
+    )
 
     @Test
     fun when_track_has_no_url_ui_shows_error_state() =

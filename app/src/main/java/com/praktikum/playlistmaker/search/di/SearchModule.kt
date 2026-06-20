@@ -10,6 +10,10 @@ import com.praktikum.playlistmaker.search.data.repository.TrackHistoryRepository
 import com.praktikum.playlistmaker.search.data.repository.TrackHistoryRepositoryImpl
 import com.praktikum.playlistmaker.search.data.repository.TrackRepository
 import com.praktikum.playlistmaker.search.data.repository.TrackRepositoryImpl
+import com.praktikum.playlistmaker.search.domain.AddTrackToHistoryUseCase
+import com.praktikum.playlistmaker.search.domain.ClearSearchHistoryUseCase
+import com.praktikum.playlistmaker.search.domain.GetSearchHistoryUseCase
+import com.praktikum.playlistmaker.search.domain.SearchTracksUseCase
 import com.praktikum.playlistmaker.search.ui.SearchViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -40,5 +44,10 @@ val searchModule =
         single<TrackRepository> { TrackRepositoryImpl(get()) }
         single<TrackHistoryRepository> { TrackHistoryRepositoryImpl(get(), get()) }
 
-        viewModel { SearchViewModel(get(), get()) }
+        single { SearchTracksUseCase(get()) }
+        single { GetSearchHistoryUseCase(get()) }
+        single { AddTrackToHistoryUseCase(get()) }
+        single { ClearSearchHistoryUseCase(get()) }
+
+        viewModel { SearchViewModel(get(), get(), get(), get()) }
     }

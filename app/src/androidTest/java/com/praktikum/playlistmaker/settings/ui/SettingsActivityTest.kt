@@ -20,6 +20,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.praktikum.playlistmaker.R
 import com.praktikum.playlistmaker.settings.data.repository.SettingsRepository
 import com.praktikum.playlistmaker.settings.di.settingsModule
+import com.praktikum.playlistmaker.settings.domain.GetDarkModeUseCase
+import com.praktikum.playlistmaker.settings.domain.SetDarkModeUseCase
 import org.hamcrest.Matchers.allOf
 import org.junit.After
 import org.junit.Before
@@ -37,7 +39,9 @@ class SettingsActivityTest {
     private val testModule by lazy {
         module {
             single<SettingsRepository> { fakeSettingsRepository }
-            viewModel { SettingsViewModel(get()) }
+            single { GetDarkModeUseCase(get()) }
+            single { SetDarkModeUseCase(get()) }
+            viewModel { SettingsViewModel(get(), get()) }
         }
     }
 
