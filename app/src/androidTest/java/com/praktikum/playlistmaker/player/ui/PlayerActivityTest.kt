@@ -61,14 +61,19 @@ class PlayerActivityTest {
         fakeAudioPlayerManager = FakeAudioPlayerManager()
         testModule =
             module {
-                factory<AudioPlayerManager> { fakeAudioPlayerManager }
-                factory { PreparePlayerUseCase(get()) }
-                factory { PlayTrackUseCase(get()) }
-                factory { PauseTrackUseCase(get()) }
-                factory { SeekToPositionUseCase(get()) }
-                factory { GetCurrentPositionUseCase(get()) }
-                factory { ReleasePlayerUseCase(get()) }
-                viewModel { params -> PlayerViewModel(params.get(), get(), get(), get(), get(), get(), get()) }
+                // Mirror production wiring: a single shared AudioPlayerManager per ViewModel,
+                // here swapped for the fake so prepare()/play()/pause() all hit one instance.
+                viewModel { params ->
+                    PlayerViewModel(
+                        track = params.get<Track>(),
+                        preparePlayerUseCase = PreparePlayerUseCase(fakeAudioPlayerManager),
+                        playTrackUseCase = PlayTrackUseCase(fakeAudioPlayerManager),
+                        pauseTrackUseCase = PauseTrackUseCase(fakeAudioPlayerManager),
+                        seekToPositionUseCase = SeekToPositionUseCase(fakeAudioPlayerManager),
+                        getCurrentPositionUseCase = GetCurrentPositionUseCase(fakeAudioPlayerManager),
+                        releasePlayerUseCase = ReleasePlayerUseCase(fakeAudioPlayerManager),
+                    )
+                }
             }
         unloadKoinModules(playerModule)
         loadKoinModules(testModule)

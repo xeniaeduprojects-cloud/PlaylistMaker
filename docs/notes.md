@@ -74,6 +74,8 @@ https://github.com/ReactiveCircus/android-emulator-runner
 
 ### Make visualization
 
+`jdeps -dotoutput app/build/jdeps app/build/tmp/kotlin-classes/debug/`
+
 ```
 python3 - <<'EOF'
 import re
